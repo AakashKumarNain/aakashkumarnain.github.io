@@ -1,1 +1,1 @@
-# Blog
+# Welcome to The Latent
