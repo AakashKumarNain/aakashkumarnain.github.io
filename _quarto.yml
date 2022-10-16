@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Aakash Nain"
+  site-url: ""
+  description: ""
+  navbar:
+    right:
+      - icon: github
+        href: https://github.com/AakashKumarNain
+      - icon: twitter
+        href: https://twitter.com/A_K_Nain
+      - icon: linkedin
+        href: https://www.linkedin.com/in/aakash-kumar-nain
+      - text: Blog
+        href: blog.qmd 
+      - text: Archive
+        href: archive.qmd
+      - text: Resources
+        menu:
+          - text: Annotated Research Papers
+            href: https://github.com/AakashKumarNain/annotated_research_papers
+          - text: Kaggle Notebooks
+            href: https://www.kaggle.com/aakashnain/code?userId=536977
+          - text: TF-JAX Tutorials
+            href: https://github.com/AakashKumarNain/TF_JAX_tutorials
+          - text: Diffusion Models Tutorials
+            href: https://github.com/AakashKumarNain/diffusion_models
+format:
+  html:
+    theme: theme.scss
+    highlight-style: oblivion
+
+
+
