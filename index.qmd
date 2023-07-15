@@ -45,14 +45,27 @@ Diffusion models are a class of likelihood-based generative models that recently
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
+## Keras Core Contributions
+
+1. JAX NN ops
+2. Merging layers
+3. Metrics
+4. Loss functions
+5. Applications
+6. Data adapters
+7. Code examples
+:::
+
+::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
 ## Keras Contributions
 
-1. [OCR model for reading captchas](https://keras.io/examples/vision/captcha_ocr/)
-2. [Handwriting recognition](https://keras.io/examples/vision/handwriting_recognition/)
-3. [Image captioning](https://keras.io/examples/vision/image_captioning/)
-4. [WGAN-GP](https://keras.io/examples/generative/wgan_gp/)
-4. [CycleGAN](https://keras.io/examples/generative/cyclegan/)
-5. [Model interpretability with Integrated Gradients](https://keras.io/examples/vision/integrated_gradients/)
+1. [Denoising Diffusion Models](https://keras.io/examples/generative/ddpm/)
+2. [OCR model for reading captchas](https://keras.io/examples/vision/captcha_ocr/)
+3. [Handwriting recognition](https://keras.io/examples/vision/handwriting_recognition/)
+4. [Image captioning](https://keras.io/examples/vision/image_captioning/)
+5. [WGAN-GP](https://keras.io/examples/generative/wgan_gp/)
+6. [CycleGAN](https://keras.io/examples/generative/cyclegan/)
+7. [Model interpretability with Integrated Gradients](https://keras.io/examples/vision/integrated_gradients/)
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
