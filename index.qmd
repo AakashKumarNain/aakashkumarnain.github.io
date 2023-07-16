@@ -45,7 +45,7 @@ Diffusion models are a class of likelihood-based generative models that recently
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## Keras Core Contributions
+## [Keras Core Contributions](https://keras.io/keras_core/announcement/)
 
 1. JAX NN ops
 2. Merging layers
