@@ -37,6 +37,7 @@
 }
 
 code span.al {
+  background-color: #451e1a;
   font-weight: bold;
   color: #e85848;
 }
@@ -149,6 +150,7 @@ code span.pp {
 }
 
 code span.re {
+  background-color: #1c2c3f;
   color: #508ed8;
 }
 

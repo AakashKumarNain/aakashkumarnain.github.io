@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Blog posts",
+    "section": "",
+    "text": "Blog posts\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "archive.html",
     "href": "archive.html",
     "title": "Archive",
@@ -9,36 +16,36 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Aakash Nain",
+    "title": "About me",
     "section": "",
     "text": "Hello, I am Aakash Nain.\nI am a Data Scientist with 5+ years of experience in the industry. Currently, I work as a Senior Data Scientist at H2O I am also a Google Developers Expert in Machine Learning and JAX. I actively contribute to Keras, TensorFlow, and the JAX ecosystem, and I am also one of the maintainers of the TensorFlow-addons package.\nIn terms of work, my knowledge in Data Science and Machine Learning spans in T-shape. I have worked in multiple domains, but Computer Vision with Deep Learning is my favorite field. I love simplifying Data Science and Machine Learning concepts, especially the maths behind them. Love and support OSS because without OSS, we wouldn’t have witnessed so many breakthroughs in Machine Learning and Deep Learning. Python is my favorite language to work with, and I absolutely love coding in it. Always up for a discussion involving anything related to Machine Learning, Deep Learning, MLOps, and API design. Simply put: Python in breakfast, Machine Learning in lunch, and Deep Learning in dinner!\nFollow me on Twitter to get the latest updates related to Machine Learning."
   },
   {
     "objectID": "index.html#popular-projects",
     "href": "index.html#popular-projects",
-    "title": "Aakash Nain",
+    "title": "About me",
     "section": "Popular Projects",
     "text": "Popular Projects\nAnnotated Research Papers   \nMost researchers and Machine Learning engineers want to remain up-to-date with the latest research work, but the field of machine learning moves crazy fast. The number of papers uploaded on arXiv is witnessing exponential growth. Reading all the papers that come out daily is an impossible task. To help with this, I maintain this repository where I annotate and upload the papers that I find exceptionally good. Annotations make it easier to understand and grasp the main concepts explained in the paper. \nTF-JAX Tutorials   \nIt is a series of tutorials built to teach the fundamental concepts and the underlying working of two famous libraries: TensorFlow and JAX. These tutorials aren’t typical documentation-type tutorials. It doesn’t matter whether you are a beginner or an advanced user, these tutorials will give you a fresh perspective on building things using TensorFlow or JAX.\nDiffusion Models   \nDiffusion models are a class of likelihood-based generative models that recently have been used to produce very high-quality images compared to other existing generative models like GANs. It’s hard to find quality resources to learn about diffusion models. The mathematics behind the diffusion models is also a bit harder to understand. The material presented in this repo is enough to make you understand the working of diffusion models and the underlying math."
   },
   {
+    "objectID": "index.html#keras-core-contributions",
+    "href": "index.html#keras-core-contributions",
+    "title": "About me",
+    "section": "Keras Core Contributions",
+    "text": "Keras Core Contributions\n\nJAX NN ops\nMerging layers\nMetrics\nLoss functions\nApplications\nData adapters\nCode examples"
+  },
+  {
     "objectID": "index.html#keras-contributions",
     "href": "index.html#keras-contributions",
-    "title": "Aakash Nain",
+    "title": "About me",
     "section": "Keras Contributions",
-    "text": "Keras Contributions\n\nOCR model for reading captchas\nHandwriting recognition\nImage captioning\nWGAN-GP\nCycleGAN\nModel interpretability with Integrated Gradients"
+    "text": "Keras Contributions\n\nDenoising Diffusion Models\nOCR model for reading captchas\nHandwriting recognition\nImage captioning\nWGAN-GP\nCycleGAN\nModel interpretability with Integrated Gradients"
   },
   {
     "objectID": "index.html#tensoflow-contributions",
     "href": "index.html#tensoflow-contributions",
-    "title": "Aakash Nain",
+    "title": "About me",
     "section": "TensoFlow Contributions",
     "text": "TensoFlow Contributions\n\nKappa\nGelu activation\nFocal loss\nThresholded Linear Unit"
-  },
-  {
-    "objectID": "blog.html",
-    "href": "blog.html",
-    "title": "Aakash Nain",
-    "section": "",
-    "text": "No matching items"
   }
 ]

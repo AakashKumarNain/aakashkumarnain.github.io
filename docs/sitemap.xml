@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>/blog.html</loc>
+    <lastmod>2023-07-16T08:01:24.719Z</lastmod>
+  </url>
+  <url>
     <loc>/archive.html</loc>
-    <lastmod>2022-10-17T02:08:01.054Z</lastmod>
+    <lastmod>2023-07-16T08:01:24.021Z</lastmod>
   </url>
   <url>
     <loc>/index.html</loc>
-    <lastmod>2022-10-17T02:08:01.442Z</lastmod>
-  </url>
-  <url>
-    <loc>/blog.html</loc>
-    <lastmod>2022-10-17T02:08:01.807Z</lastmod>
+    <lastmod>2023-07-16T08:01:24.433Z</lastmod>
   </url>
 </urlset>
