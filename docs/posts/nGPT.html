@@ -146,6 +146,9 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#token-embeddings-and-output-logits" id="toc-token-embeddings-and-output-logits" class="nav-link active" data-scroll-target="#token-embeddings-and-output-logits">Token embeddings and output logits</a></li>
   <li><a href="#layers-and-blocks" id="toc-layers-and-blocks" class="nav-link" data-scroll-target="#layers-and-blocks">Layers and Blocks</a></li>
+  <li><a href="#self-attention-blocks" id="toc-self-attention-blocks" class="nav-link" data-scroll-target="#self-attention-blocks">Self-Attention Blocks</a></li>
+  <li><a href="#mlp" id="toc-mlp" class="nav-link" data-scroll-target="#mlp">MLP</a></li>
+  <li><a href="#summary-of-all-modifications" id="toc-summary-of-all-modifications" class="nav-link" data-scroll-target="#summary-of-all-modifications">Summary of all modifications</a></li>
   </ul>
 </nav>
     </div>
@@ -204,6 +207,37 @@ ul.task-list li input[type="checkbox"] {
 <p><br><br> 2. If we are on a hypersphere, we can use spherical linear interpolation to compute the geodesic distance between two points a and b on the hypersphere. We can approximate SLERP with approximate linear interpolation (LERP) as shown below: <br><br> <img src="paper_screenshots/nGPT/2.png" class="img-fluid" alt="SLERP and LERP"></p>
 <p><br><br> 3. If point a is our hidden state h, and point b represents the point suggested by the attention or MLP block, we can represent our equations for the transformer blocks like this: <br><br> <img src="paper_screenshots/nGPT/3.png" class="img-fluid" alt="Representing hidden state and attention or MLP outputs on hypersphere"></p>
 <p><br><br> 4. Here α<sub>A</sub> ≥0 and α<sub>M</sub> ≥0, with dimensionality d<sub>model</sub>, are learnable parameters applied to the normalized outputs of the attention and MLP blocks, respectively. The norm function normalizes any vector x to have a unit norm and, unlike RMSNorm or LayerNorm, does not introduce any element-wise scaling factors. This normalization can be viewed as the retraction step in Riemannian optimization, mapping the updated solution back to the manifold.</p>
+</section>
+<section id="self-attention-blocks" class="level1">
+<h1>Self-Attention Blocks</h1>
+<ol type="1">
+<li><p>The qkv values produced by the weight matrics W<sub>q</sub>, W<sub>k</sub>, and W<sub>v</sub> in the original transformer are unconstrained, leading to unbounded values in <em>q</em>.</p></li>
+<li><p>In nGPT the authors normalize W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub> and W<sub>o</sub> along their embedding dimension so that the computed dot products with h can be interpreted as cosine similarity between unit norm vectors bounded in [−1, 1]. Thus, all attention matrices can be viewed as collections of normalized embedding vectors to be compared.</p></li>
+<li><p>Though each element of <em>q</em> and <em>k</em> is now bounded, the norms of these two vectors can still vary. Also, the addition of positional embeddings can further distort <em>q</em> and <em>k</em>. To this end, the authors additionally normalize <em>q</em> and <em>k</em> by introducing a scaling factor s<sub>qk</sub> for each head, ensuring that the dot product of every query and key is under control.</p></li>
+<li><p>In the original Transformer, the query-key dot product is scaled by 1/√d_k before applying softmax to account for the expected variance of d<sub>k</sub> in the dot product of non-normalized query and key vectors. In the normalized Transformer, the expected variance of the dot product between the normalized query and key vectors is 1/dk. The softmax scaling factor should instead be √d_k to restore a variance of 1</p></li>
+</ol>
+<p><br><br></p>
+</section>
+<section id="mlp" class="level1">
+<h1>MLP</h1>
+<ol type="1">
+<li><p>The input hidden state <em>h</em> of the MLP block of a classical transformer is first normalized using RMSNorm(or LayerNorm) and then passed through two separate linear projections, producing two intermediate vectors <em>u</em> and <em>v</em>, which are then combined using SwiGLU.</p></li>
+<li><p>The weight matrices W<sub>u</sub> and W<sub>v</sub> in nGPT are normalized. The authors introduce scaling factors s<sub>u</sub> and s<sub>ν</sub> to control their impact. They also rescale ν by √d_model to optimize SiLU performance.</p></li>
+</ol>
+<p><br><br></p>
+</section>
+<section id="summary-of-all-modifications" class="level1">
+<h1>Summary of all modifications</h1>
+<ol type="1">
+<li>Remove all normalization layers like RMSNorm or LayerNorm.</li>
+<li>After each training step, normalize all matrices (E<sub>input</sub>, E<sub>output</sub>, W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub>, W<sub>o</sub>, W<sub>u</sub>, W<sub>ν</sub>, and W<sub>o</sub>) along their embedding dimension.</li>
+<li>Replace the updates as follows where α<sub>A</sub> (and also α<sub>M</sub>) is treated with α<sub>A,init</sub> = 0.05 (in order of 1/n_layers) and α<sub>A,scale</sub> = 1/√d_model.</li>
+<li>Change the softmax scaling factor in attention from 1/√d_k to √d_k.</li>
+<li>Implement the rescaling and normalization of q and k where s<sub>qk</sub> is treated with s<sub>qk,init</sub> = 1 and s<sub>qk,scale</sub> = 1/√d_model.</li>
+<li>Implement the rescaling of the intermediate state of the MLP block where s<sub>u</sub> (and also s<sub>ν</sub>) is treated with s<sub>u,init</sub> = 1 and s<sub>u,scale</sub> = 1</li>
+<li>Implement the rescaling of logits using equation 3, where sz is treated with s<sub>z,init</sub> = 1, s<sub>z,scale</sub> = 1/√d_model.</li>
+<li>Remove weight decay and learning rate warmup.</li>
+</ol>
 
 
 </section>
