@@ -42,10 +42,17 @@
     "text": "Keras Contributions\n\nDenoising Diffusion Models\nOCR model for reading captchas\nHandwriting recognition\nImage captioning\nWGAN-GP\nCycleGAN\nModel interpretability with Integrated Gradients"
   },
   {
-    "objectID": "index.html#tensoflow-contributions",
-    "href": "index.html#tensoflow-contributions",
+    "objectID": "index.html#equinox-contributions",
+    "href": "index.html#equinox-contributions",
     "title": "About me",
-    "section": "TensoFlow Contributions",
-    "text": "TensoFlow Contributions\n\nKappa\nGelu activation\nFocal loss\nThresholded Linear Unit"
+    "section": "Equinox Contributions",
+    "text": "Equinox Contributions\n\nMistral-7B implementation\nBug fix in RMSNorm Layer\nAMP in Normalization Layers"
+  },
+  {
+    "objectID": "index.html#tensorflow-contributions",
+    "href": "index.html#tensorflow-contributions",
+    "title": "About me",
+    "section": "TensorFlow Contributions",
+    "text": "TensorFlow Contributions\n\nKappa\nGelu activation\nFocal loss\nThresholded Linear Unit"
   }
 ]
