@@ -58,16 +58,24 @@ We have been using transformers daily for a couple of years now, but the advance
 
 # MLP
 1. The input hidden state *h* of the MLP block of a classical transformer is first normalized using RMSNorm(or LayerNorm) and then passed through two separate linear projections, producing two intermediate vectors *u* and *v*, which are then combined using SwiGLU.
+
 2. The weight matrices W~u~ and W~v~ in nGPT are normalized. The authors introduce scaling factors s~u~ and s~ν~ to control their impact. They also rescale ν by √d_model to optimize SiLU performance.
 
 
 
 # Summary of all modifications
-1.Remove all normalization layers like RMSNorm or LayerNorm.
+1. Remove all normalization layers like RMSNorm or LayerNorm.
+
 2. After each training step, normalize all matrices (E~input~, E~output~, W~q~, W~k~, W~v~, W~o~, W~u~, W~ν~, and W~o~) along their embedding dimension.
+
 3. Replace the updates as follows where α~A~ (and also α~M~) is treated with α~A,init~ = 0.05 (in order of 1/n_layers) and α~A,scale~ = 1/√d_model.
-4. Change the softmax scaling factor in attention from 1/√d_k to √d_k. 
+
+4. Change the softmax scaling factor in attention from 1/√d_k to √d_k.
+
 5. Implement the rescaling and normalization of q and k where s~qk~ is treated with s~qk,init~ = 1 and s~qk,scale~ = 1/√d_model.
+
 6. Implement the rescaling of the intermediate state of the MLP block where s~u~ (and also s~ν~) is treated with s~u,init~ = 1 and s~u,scale~ = 1
+
 7. Implement the rescaling of logits using equation 3, where sz is treated with s~z,init~ = 1, s~z,scale~ = 1/√d_model.
+
 8. Remove weight decay and learning rate warmup.
