@@ -2,14 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2024-10-23T18:06:06.900Z</lastmod>
+    <lastmod>2024-10-23T18:39:12.060Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2024-10-23T18:06:05.905Z</lastmod>
+    <lastmod>2024-10-23T18:39:11.094Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/nGPT.html</loc>
+    <lastmod>2024-10-23T18:39:10.198Z</lastmod>
   </url>
   <url>
     <loc>/index.html</loc>
-    <lastmod>2024-10-23T18:06:06.497Z</lastmod>
+    <lastmod>2024-10-23T18:39:11.656Z</lastmod>
   </url>
 </urlset>
