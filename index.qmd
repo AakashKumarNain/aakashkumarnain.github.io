@@ -69,7 +69,15 @@ Diffusion models are a class of likelihood-based generative models that recently
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## TensoFlow Contributions
+## Equinox Contributions
+
+1. [Mistral-7B implementation](https://docs.kidger.site/equinox/examples/mistral_7b/)
+2. [Bug fix in RMSNorm Layer](https://github.com/patrick-kidger/equinox/pull/723)
+3. [AMP in Normalization Layers](https://github.com/patrick-kidger/equinox/pull/876y)
+:::
+
+::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
+## TensorFlow Contributions
 
 1. [Kappa](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/metrics/cohens_kappa.py)
 2. [Gelu activation](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/gelu.py)
