@@ -13,3 +13,6 @@ title-block-banner: false
 ---
 
 # Blog posts
+
+##### [Normalized Transformer](posts/nGPT.html)
+Normalized Transformer: Cooked by Nvidia!
