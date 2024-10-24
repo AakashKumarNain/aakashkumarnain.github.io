@@ -52,7 +52,7 @@ We have been using transformers daily for a couple of years now, but the advance
 
 3. Though each element of *q* and *k* is now bounded, the norms of these two vectors can still vary. Also, the addition of positional embeddings can further distort *q* and *k*. To this end, the authors additionally normalize *q* and *k* by introducing a scaling factor s~qk~ for each head, ensuring that the dot product of every query and key is under control.
 
-4. In the original Transformer, the query-key dot product is scaled by 1/√d_k before applying softmax to account for the expected variance of d~k~ in the dot product of non-normalized query and key vectors. In the normalized Transformer, the expected variance of the dot product between the normalized query and key vectors is 1/dk. The softmax scaling factor should instead be √d_k to restore a variance of 1
+4. In the original Transformer, the query-key dot product is scaled by 1/√d~k~ before applying softmax to account for the expected variance of d~k~ in the dot product of non-normalized query and key vectors. In the normalized Transformer, the expected variance of the dot product between the normalized query and key vectors is 1/dk. The softmax scaling factor should instead be √d~k~ to restore a variance of 1
 
 
 <br><br>
@@ -60,7 +60,7 @@ We have been using transformers daily for a couple of years now, but the advance
 # MLP
 1. The input hidden state *h* of the MLP block of a classical transformer is first normalized using RMSNorm(or LayerNorm) and then passed through two separate linear projections, producing two intermediate vectors *u* and *v*, which are then combined using SwiGLU.
 
-2. The weight matrices W~u~ and W~v~ in nGPT are normalized. The authors introduce scaling factors s~u~ and s~ν~ to control their impact. They also rescale ν by √d_model to optimize SiLU performance.
+2. The weight matrices W~u~ and W~v~ in nGPT are normalized. The authors introduce scaling factors s~u~ and s~ν~ to control their impact. They also rescale ν by √d~model~ to optimize SiLU performance.
 
 
 <br><br>
@@ -68,9 +68,40 @@ We have been using transformers daily for a couple of years now, but the advance
 # Summary of all modifications
 1. Remove all normalization layers like RMSNorm or LayerNorm.
 2. After each training step, normalize all matrices (E~input~, E~output~, W~q~, W~k~, W~v~, W~o~, W~u~, W~ν~, and W~o~) along their embedding dimension.
-3. Replace the updates as follows where α~A~ (and also α~M~) is treated with α~A,init~ = 0.05 (in order of 1/n_layers) and α~A,scale~ = 1/√d_model.
-4. Change the softmax scaling factor in attention from 1/√d_k to √d_k.
-5. Implement the rescaling and normalization of q and k where s~qk~ is treated with s~qk,init~ = 1 and s~qk,scale~ = 1/√d_model.
+3. Replace the updates as follows where α~A~ (and also α~M~) is treated with α~A,init~ = 0.05 (in order of 1/n_layers) and α~A,scale~ = 1/√d~model~.
+4. Change the softmax scaling factor in attention from 1/√d~k~ to √d~k~.
+5. Implement the rescaling and normalization of q and k where s~qk~ is treated with s~qk,init~ = 1 and s~qk,scale~ = 1/√d~model~.
 6. Implement the rescaling of the intermediate state of the MLP block where s~u~ (and also s~ν~) is treated with s~u,init~ = 1 and s~u,scale~ = 1
-7. Implement the rescaling of logits using equation 3, where sz is treated with s~z,init~ = 1, s~z,scale~ = 1/√d_model.
+7. Implement the rescaling of logits using equation 3, where sz is treated with s~z,init~ = 1, s~z,scale~ = 1/√d~model~.
 8. Remove weight decay and learning rate warmup.
+
+<br><br>
+![Summary of the changes](paper_screenshots/nGPT/4.png)
+
+<br><br>
+
+
+# How fast is nGPT compared to GPT?
+
+A lot! Training the 0.5B and 1B nGPT models is approximately 4x, 10x, and 20x faster at context lengths of 1k, 4k, and 8k tokens, respectively.
+
+![speed_comparison](paper_screenshots/nGPT/5.png)
+<br><br>
+
+
+# What about the params and hparams?
+<br><br>
+![nGPT_hparams](paper_screenshots/nGPT/6.png)
+<br><br>
+
+
+# There should be a catch somewhere, right?
+Of course, there is always a catch! Quoting directly from the paper: The time cost per step for nGPT is approximately 80% higher with a 4k context length, and 60% higher with an 8k context length. This overhead is not only due to nGPT having 6 normalization steps (2 of them are applied for q and k) per layer instead of 2 but also because nGPT’s normalizations are not yet fully optimized, unlike GPT, where normalization layers are fused with other operations.
+<br><br>
+
+
+# Best thing about nGPT?
+In standard GPTs, perplexity tends to increase dramatically when tested on sequences longer than pre-training length. In contrast, nGPT maintains a stable perplexity range even at extrapolated lengths.
+<br><br>
+![effect_on_perplexity](paper_screenshots/nGPT/7.png)
+<br><br>
