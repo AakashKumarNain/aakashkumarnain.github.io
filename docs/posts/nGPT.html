@@ -149,6 +149,10 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#self-attention-blocks" id="toc-self-attention-blocks" class="nav-link" data-scroll-target="#self-attention-blocks">Self-Attention Blocks</a></li>
   <li><a href="#mlp" id="toc-mlp" class="nav-link" data-scroll-target="#mlp">MLP</a></li>
   <li><a href="#summary-of-all-modifications" id="toc-summary-of-all-modifications" class="nav-link" data-scroll-target="#summary-of-all-modifications">Summary of all modifications</a></li>
+  <li><a href="#how-fast-is-ngpt-compared-to-gpt" id="toc-how-fast-is-ngpt-compared-to-gpt" class="nav-link" data-scroll-target="#how-fast-is-ngpt-compared-to-gpt">How fast is nGPT compared to GPT?</a></li>
+  <li><a href="#what-about-the-params-and-hparams" id="toc-what-about-the-params-and-hparams" class="nav-link" data-scroll-target="#what-about-the-params-and-hparams">What about the params and hparams?</a></li>
+  <li><a href="#there-should-be-a-catch-somewhere-right" id="toc-there-should-be-a-catch-somewhere-right" class="nav-link" data-scroll-target="#there-should-be-a-catch-somewhere-right">There should be a catch somewhere, right?</a></li>
+  <li><a href="#best-thing-about-ngpt" id="toc-best-thing-about-ngpt" class="nav-link" data-scroll-target="#best-thing-about-ngpt">Best thing about nGPT?</a></li>
   </ul>
 </nav>
     </div>
@@ -214,7 +218,7 @@ ul.task-list li input[type="checkbox"] {
 <li><p>The qkv values produced by the weight matrics W<sub>q</sub>, W<sub>k</sub>, and W<sub>v</sub> in the original transformer are unconstrained, leading to unbounded values in <em>q</em>.</p></li>
 <li><p>In nGPT the authors normalize W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub> and W<sub>o</sub> along their embedding dimension so that the computed dot products with h can be interpreted as cosine similarity between unit norm vectors bounded in [−1, 1]. Thus, all attention matrices can be viewed as collections of normalized embedding vectors to be compared.</p></li>
 <li><p>Though each element of <em>q</em> and <em>k</em> is now bounded, the norms of these two vectors can still vary. Also, the addition of positional embeddings can further distort <em>q</em> and <em>k</em>. To this end, the authors additionally normalize <em>q</em> and <em>k</em> by introducing a scaling factor s<sub>qk</sub> for each head, ensuring that the dot product of every query and key is under control.</p></li>
-<li><p>In the original Transformer, the query-key dot product is scaled by 1/√d_k before applying softmax to account for the expected variance of d<sub>k</sub> in the dot product of non-normalized query and key vectors. In the normalized Transformer, the expected variance of the dot product between the normalized query and key vectors is 1/dk. The softmax scaling factor should instead be √d_k to restore a variance of 1</p></li>
+<li><p>In the original Transformer, the query-key dot product is scaled by 1/√d<sub>k</sub> before applying softmax to account for the expected variance of d<sub>k</sub> in the dot product of non-normalized query and key vectors. In the normalized Transformer, the expected variance of the dot product between the normalized query and key vectors is 1/dk. The softmax scaling factor should instead be √d<sub>k</sub> to restore a variance of 1</p></li>
 </ol>
 <p><br><br></p>
 </section>
@@ -222,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>MLP</h1>
 <ol type="1">
 <li><p>The input hidden state <em>h</em> of the MLP block of a classical transformer is first normalized using RMSNorm(or LayerNorm) and then passed through two separate linear projections, producing two intermediate vectors <em>u</em> and <em>v</em>, which are then combined using SwiGLU.</p></li>
-<li><p>The weight matrices W<sub>u</sub> and W<sub>v</sub> in nGPT are normalized. The authors introduce scaling factors s<sub>u</sub> and s<sub>ν</sub> to control their impact. They also rescale ν by √d_model to optimize SiLU performance.</p></li>
+<li><p>The weight matrices W<sub>u</sub> and W<sub>v</sub> in nGPT are normalized. The authors introduce scaling factors s<sub>u</sub> and s<sub>ν</sub> to control their impact. They also rescale ν by √d<sub>model</sub> to optimize SiLU performance.</p></li>
 </ol>
 <p><br><br></p>
 </section>
@@ -231,13 +235,32 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li>Remove all normalization layers like RMSNorm or LayerNorm.</li>
 <li>After each training step, normalize all matrices (E<sub>input</sub>, E<sub>output</sub>, W<sub>q</sub>, W<sub>k</sub>, W<sub>v</sub>, W<sub>o</sub>, W<sub>u</sub>, W<sub>ν</sub>, and W<sub>o</sub>) along their embedding dimension.</li>
-<li>Replace the updates as follows where α<sub>A</sub> (and also α<sub>M</sub>) is treated with α<sub>A,init</sub> = 0.05 (in order of 1/n_layers) and α<sub>A,scale</sub> = 1/√d_model.</li>
-<li>Change the softmax scaling factor in attention from 1/√d_k to √d_k.</li>
-<li>Implement the rescaling and normalization of q and k where s<sub>qk</sub> is treated with s<sub>qk,init</sub> = 1 and s<sub>qk,scale</sub> = 1/√d_model.</li>
+<li>Replace the updates as follows where α<sub>A</sub> (and also α<sub>M</sub>) is treated with α<sub>A,init</sub> = 0.05 (in order of 1/n_layers) and α<sub>A,scale</sub> = 1/√d<sub>model</sub>.</li>
+<li>Change the softmax scaling factor in attention from 1/√d<sub>k</sub> to √d<sub>k</sub>.</li>
+<li>Implement the rescaling and normalization of q and k where s<sub>qk</sub> is treated with s<sub>qk,init</sub> = 1 and s<sub>qk,scale</sub> = 1/√d<sub>model</sub>.</li>
 <li>Implement the rescaling of the intermediate state of the MLP block where s<sub>u</sub> (and also s<sub>ν</sub>) is treated with s<sub>u,init</sub> = 1 and s<sub>u,scale</sub> = 1</li>
-<li>Implement the rescaling of logits using equation 3, where sz is treated with s<sub>z,init</sub> = 1, s<sub>z,scale</sub> = 1/√d_model.</li>
+<li>Implement the rescaling of logits using equation 3, where sz is treated with s<sub>z,init</sub> = 1, s<sub>z,scale</sub> = 1/√d<sub>model</sub>.</li>
 <li>Remove weight decay and learning rate warmup.</li>
 </ol>
+<p><br><br> <img src="paper_screenshots/nGPT/4.png" class="img-fluid" alt="Summary of the changes"></p>
+<p><br><br></p>
+</section>
+<section id="how-fast-is-ngpt-compared-to-gpt" class="level1">
+<h1>How fast is nGPT compared to GPT?</h1>
+<p>A lot! Training the 0.5B and 1B nGPT models is approximately 4x, 10x, and 20x faster at context lengths of 1k, 4k, and 8k tokens, respectively.</p>
+<p><img src="paper_screenshots/nGPT/5.png" class="img-fluid" alt="speed_comparison"> <br><br></p>
+</section>
+<section id="what-about-the-params-and-hparams" class="level1">
+<h1>What about the params and hparams?</h1>
+<p><br><br> <img src="paper_screenshots/nGPT/6.png" class="img-fluid" alt="nGPT_hparams"> <br><br></p>
+</section>
+<section id="there-should-be-a-catch-somewhere-right" class="level1">
+<h1>There should be a catch somewhere, right?</h1>
+<p>Of course, there is always a catch! Quoting directly from the paper: The time cost per step for nGPT is approximately 80% higher with a 4k context length, and 60% higher with an 8k context length. This overhead is not only due to nGPT having 6 normalization steps (2 of them are applied for q and k) per layer instead of 2 but also because nGPT’s normalizations are not yet fully optimized, unlike GPT, where normalization layers are fused with other operations. <br><br></p>
+</section>
+<section id="best-thing-about-ngpt" class="level1">
+<h1>Best thing about nGPT?</h1>
+<p>In standard GPTs, perplexity tends to increase dramatically when tested on sequences longer than pre-training length. In contrast, nGPT maintains a stable perplexity range even at extrapolated lengths. <br><br> <img src="paper_screenshots/nGPT/7.png" class="img-fluid" alt="effect_on_perplexity"> <br><br></p>
 
 
 </section>
