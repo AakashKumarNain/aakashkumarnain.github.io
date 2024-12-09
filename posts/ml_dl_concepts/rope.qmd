@@ -74,7 +74,7 @@ position encoding, rotary position encoding, etc. Here, we will discuss the two 
 encodings: sinusoidal position encoding and rotary position encoding. Assuming the reader is familiar with
 concepts like absolute and binary position encodings, we will skip that discussion here. We could have
 skipped sinusoidal position encoding, but it lays the foundation of rotary position encoding. Also,
-we will try to keep the notations in line with the [Roformer](https://arxiv.org/abs/2104.09864) paper
+we will try to keep the notations in line with the [RoFormer](https://arxiv.org/abs/2104.09864) paper
 as much as possible. <br>
 
 
@@ -82,23 +82,21 @@ as much as possible. <br>
 
 A typical choice for equation(1) is to formulate it this way:
 $$
-f_t(x_i, i) = W_t(x_i + p_i) \tag{2} \\
+f_t(x_j, j) = W_t(x_j + p_j) \tag{2} \\
 $$
 
-where $t \in (q, k, v)$, and $p_i$ is represents a $d$ dimensional vector depending of the position of
-token $x_i$. It simply means that we encode the position and add it to the token embedding.
+where $t \in (q, k, v)$, and $p_j$ is represents a $d$ dimensional vector depending of the position of
+token $x_j$. It simply means that we encode the position and add it to the token embedding.
 
-Sinusoidal encoding was proposed in the paper Attention is All You Need. They proposed to generate $p_i$
-in the above equation using the sinusoidal function:
+Sinusoidal encoding was proposed in the paper [Attention is All You Need](https://arxiv.org/abs/1706.03762). They proposed to generate $p_j$ in the above equation using the sinusoidal function:
 $$
 \begin{cases}
-p_{i,2t} &= \sin(k/10000^{2t/d}) \\
-p_{i,2t+1} &= \cos(k/10000^{2t/d}) \\ \tag{3}
+p_{pos,2i} &= \sin(pos/10000^{2i/d}) \\
+p_{pos,2i+1} &= \cos(pos/10000^{2i/d}) \\ \tag{3}
 \end{cases}
 $$
 
-where $p_{i,2_t}$ is the $2t$h element of the d-dimensional vector $p$. The wavelengths form a geometric
-progression from $2π$ to $10000 · 2π$. 
+where where $pos$ is the position and $i$ is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from $2π$ to $10000·2π$. 
 
 Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative
 positions. Yes, relative positions! This is mostly because people do not read papers with "attention".
@@ -106,7 +104,7 @@ Let us take an example with $d=2$ to prove it.
 
 $$
 \begin{align*}
-    d = 2 \rightarrow i={[0, 1]}
+    d = 2 \rightarrow i = {[0, 1]}
 \end{align*}
 $$
 
