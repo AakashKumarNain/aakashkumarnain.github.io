@@ -71,11 +71,7 @@ we encounter something unexpected.
 
 There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative
 position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position
-encodings: sinusoidal position encoding and rotary position encoding. Assuming the reader is familiar with
-concepts like absolute and binary position encodings, we will skip that discussion here. We could have
-skipped sinusoidal position encoding, but it lays the foundation of rotary position encoding. Also,
-we will try to keep the notations in line with the [RoFormer](https://arxiv.org/abs/2104.09864) paper
-as much as possible. <br>
+encodings: sinusoidal position encoding and rotary position encoding. We could have skipped sinusoidal position encoding as well, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the [RoFormer](https://arxiv.org/abs/2104.09864) paper as much as possible. <br>
 
 
 # Sinusoidal Positional Encoding
@@ -249,9 +245,7 @@ We looked only at a 2D case, but we would want to generalize this for $d$ dimens
 
 We are looking for something that can encode relative positions in the attention mechanism, and it
 should not be an additive method like sinusoidal position encoding. Mathematics is the solution to all our
-problems! We will exploit the geometrical properties of vectors, especially the complex
-form/representation of vectors. But why the complex form? We will get an answer to that question once
-we have finished our quest to find the desired transformation for our query and key vectors.
+problems! We will exploit the geometrical properties of vectors, especially the complex form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation for our query and key vectors.
 
 Let us rewrite our query and key transforms presented in equation (1), in complex form:
 
