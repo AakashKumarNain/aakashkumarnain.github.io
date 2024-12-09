@@ -220,25 +220,25 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Extensible:</strong> What if we encounter a lengthier sequence at test time than the length of any sequence encountered during training? Ideally, we want our encoding scheme to be extensible, without much effort and breaking any other assumption. <br><br></li>
 <li><strong>Deterministic:</strong> Determinism is mostly a nice-to-have property. It can help debug a few aspects if we encounter something unexpected.</li>
 </ol>
-<p>There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position encodings: sinusoidal position encoding and rotary position encoding. Assuming the reader is familiar with concepts like absolute and binary position encodings, we will skip that discussion here. We could have skipped sinusoidal position encoding, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the <a href="https://arxiv.org/abs/2104.09864">Roformer</a> paper as much as possible. <br></p>
+<p>There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position encodings: sinusoidal position encoding and rotary position encoding. Assuming the reader is familiar with concepts like absolute and binary position encodings, we will skip that discussion here. We could have skipped sinusoidal position encoding, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> paper as much as possible. <br></p>
 </section>
 <section id="sinusoidal-positional-encoding" class="level1">
 <h1>Sinusoidal Positional Encoding</h1>
 <p>A typical choice for equation(1) is to formulate it this way: <span class="math display">\[
-f_t(x_i, i) = W_t(x_i + p_i) \tag{2} \\
+f_t(x_j, j) = W_t(x_j + p_j) \tag{2} \\
 \]</span></p>
-<p>where <span class="math inline">\(t \in (q, k, v)\)</span>, and <span class="math inline">\(p_i\)</span> is represents a <span class="math inline">\(d\)</span> dimensional vector depending of the position of token <span class="math inline">\(x_i\)</span>. It simply means that we encode the position and add it to the token embedding.</p>
-<p>Sinusoidal encoding was proposed in the paper Attention is All You Need. They proposed to generate <span class="math inline">\(p_i\)</span> in the above equation using the sinusoidal function: <span class="math display">\[
+<p>where <span class="math inline">\(t \in (q, k, v)\)</span>, and <span class="math inline">\(p_j\)</span> is represents a <span class="math inline">\(d\)</span> dimensional vector depending of the position of token <span class="math inline">\(x_j\)</span>. It simply means that we encode the position and add it to the token embedding.</p>
+<p>Sinusoidal encoding was proposed in the paper <a href="https://arxiv.org/abs/1706.03762">Attention is All You Need</a>. They proposed to generate <span class="math inline">\(p_j\)</span> in the above equation using the sinusoidal function: <span class="math display">\[
 \begin{cases}
-p_{i,2t} &amp;= \sin(k/10000^{2t/d}) \\
-p_{i,2t+1} &amp;= \cos(k/10000^{2t/d}) \\ \tag{3}
+p_{pos,2i} &amp;= \sin(pos/10000^{2i/d}) \\
+p_{pos,2i+1} &amp;= \cos(pos/10000^{2i/d}) \\ \tag{3}
 \end{cases}
 \]</span></p>
-<p>where <span class="math inline">\(p_{i,2_t}\)</span> is the <span class="math inline">\(2t\)</span>h element of the d-dimensional vector <span class="math inline">\(p\)</span>. The wavelengths form a geometric progression from <span class="math inline">\(2π\)</span> to <span class="math inline">\(10000 · 2π\)</span>.</p>
+<p>where where <span class="math inline">\(pos\)</span> is the position and <span class="math inline">\(i\)</span> is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from <span class="math inline">\(2π\)</span> to <span class="math inline">\(10000·2π\)</span>.</p>
 <p>Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative positions. Yes, relative positions! This is mostly because people do not read papers with “attention”. Let us take an example with <span class="math inline">\(d=2\)</span> to prove it.</p>
 <p><span class="math display">\[
 \begin{align*}
-    d = 2 \rightarrow i={[0, 1]}
+    d = 2 \rightarrow i = {[0, 1]}
 \end{align*}
 \]</span></p>
 <p>Now calculate the sinusoidal position encodings for <span class="math inline">\(position=pos\)</span> using equation 3:</p>
