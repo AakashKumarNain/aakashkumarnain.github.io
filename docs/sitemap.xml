@@ -2,62 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2024-12-09T11:15:09.667Z</lastmod>
+    <lastmod>2024-12-09T11:24:45.926Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2024-12-09T11:15:07.475Z</lastmod>
+    <lastmod>2024-12-09T11:24:43.672Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/the_super_weight.html</loc>
-    <lastmod>2024-12-09T11:15:05.017Z</lastmod>
+    <lastmod>2024-12-09T11:24:41.158Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/agent_workflow_memory.html</loc>
-    <lastmod>2024-12-09T11:15:03.642Z</lastmod>
+    <lastmod>2024-12-09T11:24:39.707Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/aim_v2.html</loc>
-    <lastmod>2024-12-09T11:15:02.366Z</lastmod>
+    <lastmod>2024-12-09T11:24:38.342Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/scaling_laws_estimation.html</loc>
-    <lastmod>2024-12-09T11:15:00.946Z</lastmod>
+    <lastmod>2024-12-09T11:24:36.916Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/omniparser.html</loc>
-    <lastmod>2024-12-09T11:14:59.528Z</lastmod>
+    <lastmod>2024-12-09T11:24:35.468Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/nGPT.html</loc>
-    <lastmod>2024-12-09T11:14:58.116Z</lastmod>
+    <lastmod>2024-12-09T11:24:34.044Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/depthpro.html</loc>
-    <lastmod>2024-12-09T11:14:58.886Z</lastmod>
+    <lastmod>2024-12-09T11:24:34.826Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/model_merging_at_scale.html</loc>
-    <lastmod>2024-12-09T11:15:00.197Z</lastmod>
+    <lastmod>2024-12-09T11:24:36.155Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/cut_your_losses.html</loc>
-    <lastmod>2024-12-09T11:15:01.660Z</lastmod>
+    <lastmod>2024-12-09T11:24:37.625Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/star_attention.html</loc>
-    <lastmod>2024-12-09T11:15:02.976Z</lastmod>
+    <lastmod>2024-12-09T11:24:39.033Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/janusflow.html</loc>
-    <lastmod>2024-12-09T11:15:04.353Z</lastmod>
+    <lastmod>2024-12-09T11:24:40.465Z</lastmod>
   </url>
   <url>
     <loc>/posts/ml_dl_concepts/rope.html</loc>
-    <lastmod>2024-12-09T11:15:06.004Z</lastmod>
+    <lastmod>2024-12-09T11:24:42.171Z</lastmod>
   </url>
   <url>
     <loc>/index.html</loc>
-    <lastmod>2024-12-09T11:15:08.043Z</lastmod>
+    <lastmod>2024-12-09T11:24:44.258Z</lastmod>
   </url>
 </urlset>

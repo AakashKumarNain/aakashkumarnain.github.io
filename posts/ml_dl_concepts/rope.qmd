@@ -125,7 +125,7 @@ $$
 $$
 \begin{align*}
     \sin(pos+k) &= \sin(pos)\cos(k) + \cos(pos)\sin(k) \\
-                &= PE_{pos, 0} \sin(k) + PE_{pos, 1} \cos(k) \tag{4} \\ \\
+                &= PE_{pos, 0} \cos(k) + PE_{pos, 1} \sin(k) \tag{4} \\ \\
     \cos(pos+k) &= \cos(pos)\cos(k) - \sin(pos)\sin(k) \\
                 &= PE_{pos, 1} \cos(k) - PE_{pos, 0} \sin(k) \tag{5} \\
 \end{align*}
