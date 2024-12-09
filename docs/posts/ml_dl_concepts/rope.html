@@ -236,12 +236,7 @@ p_{pos,2i+1} &amp;= \cos(pos/10000^{2i/d}) \\ \tag{3}
 \]</span></p>
 <p>where where <span class="math inline">\(pos\)</span> is the position and <span class="math inline">\(i\)</span> is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from <span class="math inline">\(2π\)</span> to <span class="math inline">\(10000·2π\)</span>.</p>
 <p>Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative positions. Yes, relative positions! This is mostly because people do not read papers with “attention”. Let us take an example with <span class="math inline">\(d=2\)</span> to prove it.</p>
-<p><span class="math display">\[
-\begin{align*}
-    d = 2 \rightarrow i = {[0, 1]}
-\end{align*}
-\]</span></p>
-<p>Now calculate the sinusoidal position encodings for <span class="math inline">\(position=pos\)</span> using equation 3:</p>
+<p>Calculate the sinusoidal position encodings for <span class="math inline">\(position=pos\)</span> using equation 3:</p>
 <p><span class="math display">\[
 \begin{align*}
     PE_{pos,0} &amp;= \sin(pos/10000^{2*0/d}) = sin(pos) \\
@@ -287,7 +282,7 @@ p_{pos,2i+1} &amp;= \cos(pos/10000^{2i/d}) \\ \tag{3}
 <p><video src="./animations/rope/SinuSoidalEncoding.mp4" class="img-fluid" autoplay="true," loop="true" controls=""><a href="./animations/rope/SinuSoidalEncoding.mp4">Video</a></video></p>
 <p>Though we assume that the model can attend to relative positions easily, the one thing that is a bit bothering, as noted in the above visualization, is the stochasticity. Our pointer is moving almost randomly. The pattern here does not look good. But this doesn’t necessarily mean it is also bad for the model to learn, especially at scale. All we can say is that with so much stochasticity across different dimensions, the model <em>may</em> have a hard time learning to attend to relative positions.</p>
 <p>Another thing to note from equation (2) is that sinusoidal positional encodings are additive. This means indirectly adding the “relatedness” of two tokens to the positional encoding. A side effect of this is that two highly related tokens can get high attention scores irrespective of the distance between them. This is still okay for NLP-related problems but doesn’t hold for other domains like protein sequencing.</p>
-<p>The authors of the <strong>Attention is All You Need</strong> paper also hypothesized that hard-coded sinusoidal positional encodings may help to extrapolate to longer sequences compared to the length of the sequences seen during training. The hypothesis does not hold in practice.</p>
+<p>The authors of the <strong>Attention is All You Need</strong> paper also hypothesized that hard-coded sinusoidal positional encodings may help to extrapolate to longer sequences compared to the length of the sequences seen during training. The hypothesis does not hold in practice (PPL goes crazy!).</p>
 </section>
 <section id="rotary-position-encoding-the-easy-way" class="level1">
 <h1>Rotary Position Encoding: The Easy Way</h1>
