@@ -220,7 +220,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Extensible:</strong> What if we encounter a lengthier sequence at test time than the length of any sequence encountered during training? Ideally, we want our encoding scheme to be extensible, without much effort and breaking any other assumption. <br><br></li>
 <li><strong>Deterministic:</strong> Determinism is mostly a nice-to-have property. It can help debug a few aspects if we encounter something unexpected.</li>
 </ol>
-<p>There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position encodings: sinusoidal position encoding and rotary position encoding. Assuming the reader is familiar with concepts like absolute and binary position encodings, we will skip that discussion here. We could have skipped sinusoidal position encoding, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> paper as much as possible. <br></p>
+<p>There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position encodings: sinusoidal position encoding and rotary position encoding. We could have skipped sinusoidal position encoding as well, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> paper as much as possible. <br></p>
 </section>
 <section id="sinusoidal-positional-encoding" class="level1">
 <h1>Sinusoidal Positional Encoding</h1>
@@ -339,7 +339,7 @@ p_{pos,2i+1} &amp;= \cos(pos/10000^{2i/d}) \\ \tag{3}
 </section>
 <section id="rotary-position-encoding-the-mathematical-view" class="level1">
 <h1>Rotary Position Encoding: The Mathematical View</h1>
-<p>We are looking for something that can encode relative positions in the attention mechanism, and it should not be an additive method like sinusoidal position encoding. Mathematics is the solution to all our problems! We will exploit the geometrical properties of vectors, especially the complex form/representation of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation for our query and key vectors.</p>
+<p>We are looking for something that can encode relative positions in the attention mechanism, and it should not be an additive method like sinusoidal position encoding. Mathematics is the solution to all our problems! We will exploit the geometrical properties of vectors, especially the complex form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation for our query and key vectors.</p>
 <p>Let us rewrite our query and key transforms presented in equation (1), in complex form:</p>
 <p><span class="math display">\[
 \begin{align*}
