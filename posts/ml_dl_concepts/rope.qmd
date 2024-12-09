@@ -3,7 +3,7 @@ title: "Rotary Position Embeddings"
 subtitle: "A figure among cyphers: Part-1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
 date: "2024-12-08"
-# categories: [llms, embeddings, position encoding, advanced]
+# categories: [LLMs, position encoding, advanced]
 image: ""
 format:
   html:
@@ -29,7 +29,7 @@ in our model. This is where position encoding kicks in.
 
 # Preliminary
 
-Let $S_N=\{w_i\}^N_i=1$ be a sequence of $N$ input tokens with $w_i$ being the ith token. Each
+Let $S_N=\{w_i\}^N_{i=1}$ be a sequence of $N$ input tokens with $w_i$ being the ith token. Each
 token(word in this case) in the sequence is defined by a $d$-dimensional vector embedding containing
 no position information. The self-attention layer first incorporates position information into the word
 embeddings and then transforms them into queries, keys, and value representations. We can define these
