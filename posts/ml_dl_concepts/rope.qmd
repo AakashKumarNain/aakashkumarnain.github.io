@@ -100,15 +100,9 @@ where where $pos$ is the position and $i$ is the dimension. That is, each dimens
 
 Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative
 positions. Yes, relative positions! This is mostly because people do not read papers with "attention".
-Let us take an example with $d=2$ to prove it.
+Let us take an example with $d=2$ to prove it. 
 
-$$
-\begin{align*}
-    d = 2 \rightarrow i = {[0, 1]}
-\end{align*}
-$$
-
-Now calculate the sinusoidal position encodings for $position=pos$ using equation 3:
+Calculate the sinusoidal position encodings for $position=pos$ using equation 3:
 
 $$
 \begin{align*}
@@ -174,7 +168,7 @@ is that two highly related tokens can get high attention scores irrespective of 
 
 The authors of the **Attention is All You Need** paper also hypothesized that hard-coded sinusoidal
 positional encodings may help to extrapolate to longer sequences compared to the length of the
-sequences seen during training. The hypothesis does not hold in practice.
+sequences seen during training. The hypothesis does not hold in practice (PPL goes crazy!).
 
 
 # Rotary Position Encoding: The Easy Way
