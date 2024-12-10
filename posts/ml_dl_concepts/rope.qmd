@@ -47,7 +47,8 @@ $$
 |       $m \rightarrow$  represents the $mth$ position
 |       $n \ \rightarrow$  represents the $nth$ positions
 |       $x \ \rightarrow$  represents the token (word) embedding without any position encoding
-|       $f \ \rightarrow$  represents the transformation applied to the token embedding to transform it into query, key or value vector
+|       $f \ \rightarrow$  represents the transformation applied to the token embedding to transform
+|                   it into query, key or value vector  
 
 Unless otherwise stated, we will use the above notations throughout this blog post.
 
