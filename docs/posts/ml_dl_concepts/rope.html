@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aakash Kumar Nain (@A_K_Nain)">
-<meta name="dcterms.date" content="2024-12-08">
+<meta name="dcterms.date" content="2024-12-10">
 
-<title>Aakash Nain - Rotary Position Embeddings</title>
+<title>Aakash Nain - Rotary Position Encoding</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -165,9 +165,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Rotary Position Embeddings</h1>
+<h1 class="title">Rotary Position Encoding</h1>
 <p class="subtitle lead">A figure among cyphers: Part-1</p>
-</div>
+  <div class="quarto-categories">
+    <div class="quarto-category">LLMs</div>
+    <div class="quarto-category">position encoding</div>
+    <div class="quarto-category">advanced</div>
+  </div>
+  </div>
 
 
 
@@ -183,7 +188,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 8, 2024</p>
+      <p class="date">December 10, 2024</p>
     </div>
   </div>
   
@@ -200,7 +205,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="preliminary" class="level1">
 <h1>Preliminary</h1>
-<p>Let <span class="math inline">\(S_N=\{w_j\}^N_{j=1}\)</span> be a sequence of <span class="math inline">\(N\)</span> input tokens with <span class="math inline">\(w_j\)</span> being the jth token. Each token(word in this case) in the sequence is defined by a <span class="math inline">\(d\)</span>-dimensional vector embedding <span class="math inline">\(x_j\)</span> containing no position information. The self-attention layer first incorporates position information into the token embeddings and then transforms them into queries, keys, and value representations. We can define these transforms as shown below:</p>
+<p>Let <span class="math inline">\(S_N=\{w_j\}^N_{j=1}\)</span> be a sequence of <span class="math inline">\(N\)</span> input tokens with <span class="math inline">\(w_j\)</span> being the jth token. Each token (word in this case) in the sequence is defined by a <span class="math inline">\(d\)</span>-dimensional vector embedding <span class="math inline">\(x_j\)</span> containing no position information. The self-attention layer first incorporates position information into the token embeddings and then transforms them into queries, keys, and value representations. We can define these transforms as shown below:</p>
 <p><span class="math display">\[
 \begin{align}
     &amp; q_m = f_q(x_m, m) \\
@@ -214,8 +219,8 @@ ul.task-list li input[type="checkbox"] {
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(v \ \rightarrow\)</span> represents the value vector<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(m \rightarrow\)</span> represents the <span class="math inline">\(mth\)</span> position<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(n \ \rightarrow\)</span> represents the <span class="math inline">\(nth\)</span> positions<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(x \ \rightarrow\)</span> denotes the token (word) embedding without any position encoding<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(f \ \rightarrow\)</span> represents the transformation applied to the token embedding to transform it into query, key or value</p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(x \ \rightarrow\)</span> represents the token (word) embedding without any position encoding<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="math inline">\(f \ \rightarrow\)</span> represents the transformation applied to the token embedding to transform it into query, key or value vector</p>
 <p>Unless otherwise stated, we will use the above notations throughout this blog post.</p>
 </section>
 <section id="desired-properties-of-a-position-encoding" class="level1">
@@ -225,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>A unique value for every position in a sequence:</strong> The encoding scheme should assign a unique value for every position irrespective of the sequence length. <br><br></li>
 <li><strong>Consistent relative distance between two positions:</strong> Irrespective of the length of a sequence, the relative distance between two positions should be consistent across sequences. For example, the relative distance between encodings of the 2nd position and 3rd position should be the same in sequences of different lengths. <br><br></li>
 <li><strong>Long-term decay:</strong> An inductive bias about words is that words far distant from the current word carry less relevant information. That means our position encoding should follow a long-term decay effect for relatively distant positions. <br><br></li>
-<li><strong>Extensible:</strong> What if we encounter a lengthier sequence at test time than the length of any sequence encountered during training? Ideally, we want our encoding scheme to be extensible, without much effort and breaking any other assumption. <br><br></li>
+<li><strong>Extensible:</strong> What if we encounter a lengthier sequence at test time than the length of any sequence encountered during training? Ideally, we want our encoding scheme to be extensible, without much effort and without breaking any other assumption. <br><br></li>
 <li><strong>Deterministic:</strong> Determinism is mostly a nice-to-have property. It can help debug a few aspects if we encounter something unexpected.</li>
 </ol>
 <p>There are different encoding schemes, e.g., absolute position encoding, binary encoding, relative position encoding, rotary position encoding, etc. Here, we will discuss the two most widely used position encodings: sinusoidal position encoding and rotary position encoding. We could have skipped sinusoidal position encoding as well, but it lays the foundation of rotary position encoding. Also, we will try to keep the notations in line with the <a href="https://arxiv.org/abs/2104.09864">RoFormer</a> paper as much as possible. <br></p>
@@ -242,16 +247,17 @@ p_{pos,2i} &amp;= \sin(pos/(10000^{2i/d})) \\
 p_{pos,2i+1} &amp;= \cos(pos/(10000^{2i/d})) \\ \tag{3}
 \end{cases}
 \]</span></p>
-<p>where <span class="math inline">\(pos\)</span> is the position and <span class="math inline">\(i\)</span> is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from <span class="math inline">\(2π\)</span> to <span class="math inline">\(10000·2π\)</span>.</p>
-<p>Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative positions. Yes, relative positions! This is mostly because people do not read papers with “attention”. Let us take an example with <span class="math inline">\(d=2\)</span> to prove it.</p>
-<p>Calculate the sinusoidal position encodings for <span class="math inline">\(position=pos\)</span> using equation 3:</p>
+<p>where <span class="math inline">\(pos\)</span> is the position and <span class="math inline">\(i\)</span> is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from <span class="math inline">\(2π\)</span> to <span class="math inline">\(10000·2π\)</span>. Here is a sample visualization of sinusoidal positional encoding. There are 128 rows representing 128 positions, and each encoded position is a 256-dimensional vector (represented by columns).</p>
+<p><img src="./images/rope/sinusoids.png" class="img-fluid"></p>
+<p>Many people do not know sinusoidal encoding was proposed so the model can learn to attend to relative positions. Yes, relative positions! This is mostly because people do not read papers with “attention”. Let us take an example with <span class="math inline">\(d=2\)</span> to prove it.</p>
+<p>Calculate the sinusoidal positional encodings for <span class="math inline">\(position=pos\)</span> using equation 3:</p>
 <p><span class="math display">\[
 \begin{align*}
     PE_{pos,0} &amp;= \sin(pos/(10000^{2*0/d})) = sin(pos) \\
     PE_{pos,1} &amp;= \cos(pos/(10000^{2*0/d})) = cos(pos) \\
 \end{align*}
 \]</span></p>
-<p>Similarly, let us calculate the sinusoidal position encodings for an offset <span class="math inline">\(k\)</span> i.e., <span class="math inline">\(position=pos+k\)</span>:</p>
+<p>Similarly, let us calculate the sinusoidal positional encodings for an offset <span class="math inline">\(k\)</span> i.e., <span class="math inline">\(position=pos+k\)</span>:</p>
 <p><span class="math display">\[
 \begin{align*}
     PE_{pos+k, 0} &amp;= \sin((pos+k)/(10000^{2*0/d})) = \sin(pos+k) \\
@@ -285,10 +291,10 @@ p_{pos,2i+1} &amp;= \cos(pos/(10000^{2i/d})) \\ \tag{3}
 \end{bmatrix}
 \end{align*}
 \]</span></p>
-<p>That’s a transposed rotation matrix! So, our models <em>might</em> have been learning to attend relative positions since 2017 because for any fixed offset <span class="math inline">\(k, \ PE_{pos+k}\)</span> can be represented as a linear function of <span class="math inline">\(PE_{pos}\)</span>. If that is the case, what is wrong with sinusoidal position encoding? A few things…</p>
-<p>Take a look at the visualization below. We have a two-dimensional vector <span class="math inline">\(x=[1, 1]\)</span>, and we add sinusoidal position encoding for different positions to this vector.</p>
+<p>That’s a transposed rotation matrix! So, our models <em>might</em> have been learning to attend relative positions since 2017 because for any fixed offset <span class="math inline">\(k, \ PE_{pos+k}\)</span> can be represented as a linear function of <span class="math inline">\(PE_{pos}\)</span>. If that is the case, what is wrong with sinusoidal positional encoding? A few things…</p>
+<p>Take a look at the visualization below. We have a two-dimensional vector <span class="math inline">\(x=[1, 1]\)</span>, and we add sinusoidal positional encoding for different positions to this vector.</p>
 <p><video src="./animations/rope/SinuSoidalEncoding_2.mp4" class="img-fluid" autoplay="true," loop="true" controls=""><a href="./animations/rope/SinuSoidalEncoding_2.mp4">Video</a></video></p>
-<p>Though we assume that the model can attend to relative positions easily, the pattern generated here, as noted in the above visualization, is jagged. This doesn’t necessarily mean it is also bad for the model to learn, especially at scale. All we can say is that with so much jaggedness across different dimensions, the model <em>may</em> have a hard time learning to attend to relative positions.</p>
+<p>Though we assume that the model can attend to relative positions easily, the pattern generated here, as noted in the above visualization, is jagged. This doesn’t necessarily mean it is also bad for the model to learn, especially at scale. All we can say is that it is chaotic across different dimensions, the model <em>may</em> have a hard time learning to attend to relative positions.</p>
 <p>Another thing to note from equation (2) is that sinusoidal positional encodings are additive. A side effect of this is that two highly related tokens can get high attention scores irrespective of the distance between them. This is still okay for NLP-related problems but doesn’t hold for other domains like protein sequencing.</p>
 <p>The authors of the <strong>Attention is All You Need</strong> paper also hypothesized that hard-coded sinusoidal positional encodings may help to extrapolate to longer sequences compared to the length of the sequences seen during training. The hypothesis does not hold in practice (PPL goes crazy!).</p>
 </section>
@@ -299,14 +305,14 @@ p_{pos,2i+1} &amp;= \cos(pos/(10000^{2i/d})) \\ \tag{3}
 <li>Encoding relative positions is crucial for attention, but additive methods like sinusoidal encodings are not the best way to do it.</li>
 <li>Incorporating a rotation matrix in some form is a good choice for encoding relative positions.</li>
 </ol>
-<p>RoPE leverages the above findings. It rotates an encoded vector by some angle <span class="math inline">\(\theta\)</span> based on its position in a sequence. Is it any good? Suppose <em>Python</em> is the query token, <em>love</em> is the key token, and we want to compute attention scores between them in two different sequences as given below:</p>
+<p>RoPE leverages the above findings. It rotates an encoded vector by some angle <span class="math inline">\(\theta\)</span> based on its position in a sequence. Suppose <em>Python</em> is the query token, <em>love</em> is the key token, and we want to compute attention scores between them in two different sequences as given below:</p>
 <ul>
 <li>Python is love</li>
 <li>Coding in Python is love</li>
 </ul>
 <p>This is how the tokens will be rotated in each of the two sequences:</p>
 <p><img src="./images/rope/word_rotation.png" class="img-fluid"></p>
-<p>The relative distance between our query token <em>Python</em> and the key token <em>love</em> is <span class="math inline">\(2\theta\)</span> in both sequences. One interesting aspect is that the number of tokens occurring after the query token (<em>Python</em> in this case) does not affect the embedding. The amount of rotation is purely dependent on the token’s position in the sequence. The inner product between the query and the key, <span class="math inline">\(q^Tk\)</span> remains the same in both sequences. For a 2D case, if we generalize the rotation used in RoPE, we can rewrite our rotation matrix as follows:</p>
+<p>Is it any good? The relative distance between our query token <em>Python</em> and the key token <em>love</em> is <span class="math inline">\(2\theta\)</span> in both sequences. One interesting aspect is that the number of tokens occurring after the query token (<em>Python</em> in this case) does not affect the embedding. The amount of rotation is purely dependent on the token’s position in the sequence. The inner product between the query and the key vectors (<span class="math inline">\(q^Tk\)</span>) remains the same in both sequences. For a 2D case, if we generalize the rotation used in RoPE, we can rewrite our rotation matrix as follows:</p>
 <p><span class="math display">\[
 \begin{align*}
     R_\Theta^p =
@@ -324,13 +330,13 @@ p_{pos,2i+1} &amp;= \cos(pos/(10000^{2i/d})) \\ \tag{3}
     &amp; v_n = f_v(x_n, n)
 \end{align*}
 \]</span></p>
-<p>The inner product of query and key vectors <span class="math inline">\(q^T_mk_n\)</span> in the attention mechanism computes the relevance score between tokens at different positions (<span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> in this case). We are interested in finding a transformation <span class="math inline">\(g\)</span> with the hope that the inner product between query and key encodes position information only in the relative form as shown below. Pay attention; function <span class="math inline">\(g\)</span> depends only on the token embeddings and the relative distance (<span class="math inline">\(m-n\)</span>) between them without any information about the absolute value of the positions <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span>.</p>
+<p>The inner product of query and key vectors <span class="math inline">\(q^T_mk_n\)</span> in the attention mechanism computes a relevance score between tokens. We are interested in finding a transformation “<span class="math inline">\(g\)</span>” with the hope that the inner product between query and key encodes position information only in the relative form as shown below. Pay attention; function <span class="math inline">\(g\)</span> depends only on the token embeddings and the relative distance (<span class="math inline">\(m-n\)</span>) between them without any information about the absolute value of the positions <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span>.</p>
 <p><span class="math display">\[
 \begin{align*}
 \langle f_q(\boldsymbol{x}_m, m), f_k(\boldsymbol{x}_n, n)\rangle = g(\boldsymbol{x}_m, \boldsymbol{x}_n, m-n).
 \end{align*}
 \]</span></p>
-<p>Let us check how RoPE fulfills this criteria. Note that <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> represents the <span class="math inline">\(mth\)</span> and <span class="math inline">\(nth\)</span> positions respectively. Also, to clarify <span class="math inline">\(q\)</span> and <span class="math inline">\(k\)</span> represent a single query and a single key. Do not get confused by the notation.</p>
+<p>Let us check how RoPE fulfills this criteria. Note that <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> represents the <span class="math inline">\(mth\)</span> and <span class="math inline">\(nth\)</span> positions respectively. Also, here <span class="math inline">\(q\)</span> and <span class="math inline">\(k\)</span> represent a single query and a single key. Do not get confused by the notation.</p>
 <p><span class="math display">\[
 \begin{align*}
     q_m &amp;= f_q(x_m, m) = R_\Theta^m \ W_q x_m \\
@@ -347,8 +353,8 @@ p_{pos,2i+1} &amp;= \cos(pos/(10000^{2i/d})) \\ \tag{3}
 </section>
 <section id="rotary-position-encoding-the-mathematical-view" class="level1">
 <h1>Rotary Position Encoding: The Mathematical View</h1>
-<p>We are looking for something that can encode relative positions in the attention mechanism, and it should not be an additive method like sinusoidal position encoding. Mathematics is the solution to all our problems! We will exploit the geometrical properties of vectors, especially the complex form and polar form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation <span class="math inline">\(g\)</span>.</p>
-<p>A complex number <span class="math inline">\(c\)</span> can be represented in the form: <span class="math display">\[
+<p>We are looking for something that can encode relative positions in the attention mechanism, and it should not be an additive method like sinusoidal position encoding. Mathematics provides the solution to all our problems! We will exploit the geometrical properties of vectors, especially the complex form and polar form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation <span class="math inline">\(g\)</span>.</p>
+<p>A complex number <span class="math inline">\(z\)</span> can be represented in the form: <span class="math display">\[
 \begin{align*}
 z = a + ib
 \end{align*}
@@ -365,19 +371,19 @@ z = re^{i\theta}
 u = e^{i\theta} = \cos(\theta) + i\sin(\theta)
 \end{align*}
 \]</span></p>
-<p><span class="math inline">\(u\)</span> is a unix complex number. An interesting property of <span class="math inline">\(u\)</span> is that multiplying any complex number <span class="math inline">\(u\)</span> will rotate that number by an angle <span class="math inline">\(\theta\)</span> counterclockwise around the origin i.e.,</p>
+<p><span class="math inline">\(u\)</span> is a unit complex number. An interesting property of <span class="math inline">\(u\)</span> is that multiplying any complex number by <span class="math inline">\(u\)</span> will rotate that number by an angle <span class="math inline">\(\theta\)</span> counterclockwise around the origin i.e.,</p>
 <p><span class="math display">\[
 \begin{align*}
 z' = z \cdot u
 \end{align*}
 \]</span></p>
-<p>More generally, if you want to rotate any vector represented as a complex number <span class="math inline">\(z = re^{i\phi}\)</span> (where <span class="math inline">\(r\)</span> is the magnitude and <span class="math inline">\(\phi\)</span> is the angle), multiplying it by another unit complex number <span class="math inline">\(u = e^{i\theta}\)</span> results in:</p>
+<p>More generally, if we have a complex number in the form as <span class="math inline">\(z = re^{i\phi}\)</span> (where <span class="math inline">\(r\)</span> is the magnitude and <span class="math inline">\(\phi\)</span> is the angle), multiplying it by another unit complex number <span class="math inline">\(u = e^{i\theta}\)</span> results in a rotated complex number as:</p>
 <p><span class="math display">\[
 \begin{align*}
 z' = re^{i(\phi + \theta)}
 \end{align*}
 \]</span></p>
-<p>The multiplication of complex numbers serves as an elegant method for performing rotations. With the above refresher on complex numbers, let us rewrite our query and key vectors presented in equation (1), in complex form:</p>
+<p>The multiplication of complex numbers serves as an elegant method for performing rotations. With the above refresher on complex numbers, let us derive rotary positional encodings for <span class="math inline">\(d=2\)</span>. Suppose we have two word embedding vectors <span class="math inline">\(x_q\)</span> and <span class="math inline">\(x_k\)</span>, corresponding to query and key with their positions represented by <span class="math inline">\(m\)</span> and <span class="math inline">\(n\)</span> respectively. With the help of equation (1), we can write their position-encoded counterparts as:</p>
 <p><span class="math display">\[
 \begin{align*}
 q_m &amp;= f_q(\boldsymbol{x}_q, m) = R_q(\boldsymbol{x}_q, m) \ e^{i\Theta_q(\boldsymbol{x}_q,m)} \\
@@ -467,7 +473,7 @@ g(\boldsymbol{x}_m, \boldsymbol{x}_n, m-n) &amp;= Re[(W_q\boldsymbol{x}_m)(W_k\b
 </section>
 <section id="beyond-2d" class="level1">
 <h1>Beyond 2D</h1>
-<p>Generalizing our 2D results to <span class="math inline">\(d\)</span> dimensions is easy. If our embeddings are d-dimensional (<span class="math inline">\(d&gt;2\)</span>, and d is even), we can split them into <span class="math inline">\(d/2\)</span> blocks, and for each block, we can repeat the same thing we have for the 2D case. That way, we will end up with a diagonal rotation matrix, where the value of theta differs for each dimension. We can then apply the rotation matrix to each block independently and combine the results afterward. The rotation speed varies across the blocks.</p>
+<p>Generalizing our 2D results to <span class="math inline">\(d\)</span> dimensions is easy. If our embeddings are d-dimensional (<span class="math inline">\(d&gt;2\)</span>, and d is even), we can split them into <span class="math inline">\(d/2\)</span> blocks, and for each block, we can repeat the same thing we have for the 2D case. That way, we will end up with a diagonal rotation matrix, where the value of <span class="math inline">\(\theta\)</span> differs for each dimension. We can then apply the rotation matrix to each block independently and combine the results afterward. The rotation speed varies across the blocks.</p>
 <p><span class="math display">\[f_{\{q,k\}}(x_m,m) = \boldsymbol{R}^d_{\Theta,m}\boldsymbol{W}_{\{q,k\}}x_m \tag{14}\]</span></p>
 <p>where</p>
 <p><span class="math display">\[
@@ -493,7 +499,7 @@ g(\boldsymbol{x}_m, \boldsymbol{x}_n, m-n) &amp;= Re[(W_q\boldsymbol{x}_m)(W_k\b
 <p><video src="./animations/rope/Rope2DTwoVectors.mp4" class="img-fluid" autoplay="true," loop="true" controls=""><a href="./animations/rope/Rope2DTwoVectors.mp4">Video</a></video></p>
 <p><br>A recent <a href="https://arxiv.org/abs/2410.06205">paper</a> from DeepMind found some interesting aspects about these frequencies. For example, in the case of Gemma-7B, these high frequencies are responsible for the <em>diagonal head</em> and the <em>previous token head</em> in some layers.</p>
 <p><img src="./images/rope/frquency.png" class="img-fluid" width="750"></p>
-<p><br>On the other hand, the low frequencies are not very sensitive to the relative distance. It helps the transformers to maintain <em>semantic attention</em> over a large context. This is why models with very long context windows tend to use a very high value for the base frequency <span class="math inline">\((\theta)\)</span> in practice. For example, with a context length of 128K, LLama 3 uses a base frequency of 500,000 leading the low frequencies to rotate at roughly <span class="math inline">\(1/500,000\)</span> radians per token.</p>
+<p><br>On the other hand, the low frequencies are not very sensitive to the relative distance. It helps the transformers to maintain <em>semantic attention</em> over a large context. This is why models with very long context windows use a very high value for the base frequency <span class="math inline">\((\theta)\)</span> in practice. For example, with a context length of 128K, LLama 3 uses a base frequency of 500,000 leading the low frequencies to rotate at roughly <span class="math inline">\(1/500,000\)</span> radians per token.</p>
 </section>
 <section id="optimization" class="level1">
 <h1>Optimization</h1>
@@ -528,6 +534,7 @@ g(\boldsymbol{x}_m, \boldsymbol{x}_n, m-n) &amp;= Re[(W_q\boldsymbol{x}_m)(W_k\b
 <li><strong>Does RoPE work well for other modalities?</strong> People like to slap RoPE in every possible situation. Have you ever wondered how RoPE behaves with image tokens? You may find a thing or two in there.</li>
 <li><strong>What about extending the context length?</strong> We will talk about it in the next part</li>
 </ol>
+<p><br><em>Special thanks to my colleague Marc Pickett, and my friends Aritra and Abheesht for their valuable feedback.</em><br></p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
