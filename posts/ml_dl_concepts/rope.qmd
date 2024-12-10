@@ -1,9 +1,9 @@
 ---
-title: "Rotary Position Embeddings"
+title: "Rotary Position Encoding"
 subtitle: "A figure among cyphers: Part-1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
-date: "2024-12-08"
-# categories: [LLMs, position encoding, advanced]
+date: "2024-12-10"
+categories: [LLMs, position encoding, advanced]
 image: ""
 format:
   html:
@@ -30,10 +30,7 @@ in our model. This is where position encoding kicks in.
 # Preliminary
 
 Let $S_N=\{w_j\}^N_{j=1}$ be a sequence of $N$ input tokens with $w_j$ being the jth token. Each
-token(word in this case) in the sequence is defined by a $d$-dimensional vector embedding $x_j$ containing
-no position information. The self-attention layer first incorporates position information into the token
-embeddings and then transforms them into queries, keys, and value representations. We can define these
-transforms as shown below:
+token (word in this case) in the sequence is defined by a $d$-dimensional vector embedding $x_j$ containing no position information. The self-attention layer first incorporates position information into the token embeddings and then transforms them into queries, keys, and value representations. We can define these transforms as shown below:
 
 $$
 \begin{align}
@@ -49,8 +46,8 @@ $$
 |       $v \ \rightarrow$  represents the value vector
 |       $m \rightarrow$  represents the $mth$ position
 |       $n \ \rightarrow$  represents the $nth$ positions
-|       $x \ \rightarrow$  denotes the token (word) embedding without any position encoding
-|       $f \ \rightarrow$  represents the transformation applied to the token embedding to transform it into query, key or value
+|       $x \ \rightarrow$  represents the token (word) embedding without any position encoding
+|       $f \ \rightarrow$  represents the transformation applied to the token embedding to transform it into query, key or value vector
 
 Unless otherwise stated, we will use the above notations throughout this blog post.
 
@@ -73,7 +70,7 @@ carry less relevant information. That means our position encoding should follow 
 for relatively distant positions. <br><br>
 4. **Extensible:** What if we encounter a lengthier sequence at test time than the length of any sequence
 encountered during training? Ideally, we want our encoding scheme to be extensible, without much effort
-and breaking any other assumption. <br><br>
+and without breaking any other assumption. <br><br>
 5. **Deterministic:** Determinism is mostly a nice-to-have property. It can help debug a few aspects if
 we encounter something unexpected.
 
@@ -101,13 +98,17 @@ p_{pos,2i+1} &= \cos(pos/(10000^{2i/d})) \\ \tag{3}
 \end{cases}
 $$
 
-where $pos$ is the position and $i$ is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from $2π$ to $10000·2π$. 
+where $pos$ is the position and $i$ is the dimension. That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from $2π$ to $10000·2π$.
+Here is a sample visualization of sinusoidal positional encoding. There are 128 rows representing 128 positions, and each encoded position is a 256-dimensional vector (represented by columns).
 
-Many people do not know sinusoidal encoding was suggested so the model can learn to attend to relative
+![](./images/rope/sinusoids.png)
+
+
+Many people do not know sinusoidal encoding was proposed so the model can learn to attend to relative
 positions. Yes, relative positions! This is mostly because people do not read papers with "attention".
 Let us take an example with $d=2$ to prove it. 
 
-Calculate the sinusoidal position encodings for $position=pos$ using equation 3:
+Calculate the sinusoidal positional encodings for $position=pos$ using equation 3:
 
 $$
 \begin{align*}
@@ -116,7 +117,7 @@ $$
 \end{align*}
 $$
 
-Similarly, let us calculate the sinusoidal position encodings for an offset $k$ i.e., $position=pos+k$:
+Similarly, let us calculate the sinusoidal positional encodings for an offset $k$ i.e., $position=pos+k$:
 
 $$
 \begin{align*}
@@ -156,15 +157,15 @@ $$
 \end{align*}
 $$
 
-That's a transposed rotation matrix! So, our models *might* have been learning to attend relative positions since 2017 because for any fixed offset $k, \ PE_{pos+k}$ can be represented as a linear function of $PE_{pos}$. If that is the case, what is wrong with sinusoidal position encoding? A few things...
+That's a transposed rotation matrix! So, our models *might* have been learning to attend relative positions since 2017 because for any fixed offset $k, \ PE_{pos+k}$ can be represented as a linear function of $PE_{pos}$. If that is the case, what is wrong with sinusoidal positional encoding? A few things...
 
 Take a look at the visualization below. We have a two-dimensional vector $x=[1, 1]$, and we add
-sinusoidal position encoding for different positions to this vector.
+sinusoidal positional encoding for different positions to this vector.
 
 ![](./animations/rope/SinuSoidalEncoding_2.mp4){autoplay=true, loop=true}
 
 
-Though we assume that the model can attend to relative positions easily, the pattern generated here, as noted in the above visualization, is jagged. This doesn't necessarily mean it is also bad for the model to learn, especially at scale. All we can say is that with so much jaggedness across different dimensions, the model *may* have a hard time learning to attend to relative positions.
+Though we assume that the model can attend to relative positions easily, the pattern generated here, as noted in the above visualization, is jagged. This doesn't necessarily mean it is also bad for the model to learn, especially at scale. All we can say is that it is chaotic across different dimensions, the model *may* have a hard time learning to attend to relative positions.
 
 Another thing to note from equation (2) is that sinusoidal positional encodings are additive. A side effect of this is that two highly related tokens can get high attention scores irrespective of the distance between them. This is still okay for NLP-related problems but doesn't hold for other domains like protein sequencing.
 
@@ -181,7 +182,7 @@ From the above discussion, two things are clear:
 are not the best way to do it.
 2. Incorporating a rotation matrix in some form is a good choice for encoding relative positions.
 
-RoPE leverages the above findings. It rotates an encoded vector by some angle $\theta$ based on its position in a sequence. Is it any good? Suppose *Python* is the query token, *love* is the key token, and we want to compute attention scores between them in two different sequences
+RoPE leverages the above findings. It rotates an encoded vector by some angle $\theta$ based on its position in a sequence. Suppose *Python* is the query token, *love* is the key token, and we want to compute attention scores between them in two different sequences
 as given below:
 
 * Python is love
@@ -191,7 +192,7 @@ This is how the tokens will be rotated in each of the two sequences:
 
 ![](./images/rope/word_rotation.png)
 
-The relative distance between our query token *Python* and the key token *love* is $2\theta$ in both sequences. One interesting aspect is that the number of tokens occurring after the query token (*Python* in this case) does not affect the embedding. The amount of rotation is purely dependent on the token's position in the sequence. The inner product between the query and the key, $q^Tk$ remains the same in both sequences. For a 2D case, if we generalize the rotation used in RoPE, we can rewrite our rotation matrix as follows:
+Is it any good? The relative distance between our query token *Python* and the key token *love* is $2\theta$ in both sequences. One interesting aspect is that the number of tokens occurring after the query token (*Python* in this case) does not affect the embedding. The amount of rotation is purely dependent on the token's position in the sequence. The inner product between the query and the key vectors ($q^Tk$) remains the same in both sequences. For a 2D case, if we generalize the rotation used in RoPE, we can rewrite our rotation matrix as follows:
 
 $$
 \begin{align*}
@@ -213,7 +214,7 @@ $$
 \end{align*}
 $$
 
-The inner product of query and key vectors $q^T_mk_n$ in the attention mechanism computes the relevance score between tokens at different positions ($m$ and $n$ in this case). We are interested in finding a transformation $g$ with the hope that the inner product between query and key encodes position information only in the relative form as shown below. Pay attention; function $g$ depends only on the token embeddings and the relative distance ($m-n$) between them without any information about the absolute value of the positions $m$ and $n$.
+The inner product of query and key vectors $q^T_mk_n$ in the attention mechanism computes a relevance score between tokens. We are interested in finding a transformation "$g$" with the hope that the inner product between query and key encodes position information only in the relative form as shown below. Pay attention; function $g$ depends only on the token embeddings and the relative distance ($m-n$) between them without any information about the absolute value of the positions $m$ and $n$.
 
 $$
 \begin{align*}
@@ -222,7 +223,7 @@ $$
 $$
 
 Let us check how RoPE fulfills this criteria. Note that $m$ and $n$ represents the $mth$ and $nth$
-positions respectively. Also, to clarify $q$ and $k$ represent a single query and a single key. Do not
+positions respectively. Also, here $q$ and $k$ represent a single query and a single key. Do not
 get confused by the notation.
 
 $$
@@ -248,10 +249,9 @@ We looked only at a 2D case, but we would want to generalize this for $d$ dimens
 # Rotary Position Encoding: The Mathematical View
 
 We are looking for something that can encode relative positions in the attention mechanism, and it
-should not be an additive method like sinusoidal position encoding. Mathematics is the solution to all our
-problems! We will exploit the geometrical properties of vectors, especially the complex form and polar form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation $g$.
+should not be an additive method like sinusoidal position encoding. Mathematics provides the solution to all our problems! We will exploit the geometrical properties of vectors, especially the complex form and polar form of vectors. But why the complex form? We will get an answer to that question once we have finished our quest to find the desired transformation $g$.
 
-A complex number $c$ can be represented in the form:
+A complex number $z$ can be represented in the form:
 $$
 \begin{align*}
 z = a + ib
@@ -274,7 +274,7 @@ u = e^{i\theta} = \cos(\theta) + i\sin(\theta)
 \end{align*}
 $$
 
-$u$ is a unix complex number. An interesting property of $u$ is that multiplying any complex number $u$
+$u$ is a unit complex number. An interesting property of $u$ is that multiplying any complex number by $u$
 will rotate that number by an angle $\theta$ counterclockwise around the origin i.e.,
 
 $$
@@ -283,8 +283,8 @@ z' = z \cdot u
 \end{align*}
 $$
 
-More generally, if you want to rotate any vector represented as a complex number $z = re^{i\phi}$ (where 
-$r$ is the magnitude and $\phi$ is the angle), multiplying it by another unit complex number $u = e^{i\theta}$ results in:
+More generally, if we have a complex number in the form as $z = re^{i\phi}$ (where 
+$r$ is the magnitude and $\phi$ is the angle), multiplying it by another unit complex number $u = e^{i\theta}$ results in a rotated complex number as:
 
 $$
 \begin{align*}
@@ -292,7 +292,7 @@ z' = re^{i(\phi + \theta)}
 \end{align*}
 $$
 
-The multiplication of complex numbers serves as an elegant method for performing rotations. With the above refresher on complex numbers, let us rewrite our query and key vectors presented in equation (1), in complex form:
+The multiplication of complex numbers serves as an elegant method for performing rotations. With the above refresher on complex numbers, let us derive rotary positional encodings for $d=2$. Suppose we have two word embedding vectors $x_q$ and $x_k$, corresponding to query and key with their positions represented by $m$ and $n$ respectively. With the help of equation (1), we can write their position-encoded counterparts as:
 
 $$
 \begin{align*}
@@ -418,7 +418,7 @@ Representing the vectors in their complex form helps us formulate the maths of i
 Generalizing our 2D results to $d$ dimensions is easy. If our embeddings are d-dimensional
 ($d>2$, and d is even), we can split them into $d/2$ blocks, and for each block, we can repeat the same
 thing we have for the 2D case. That way, we will end up with a diagonal rotation matrix, where the value
-of theta differs for each dimension. We can then apply the rotation matrix to each block independently
+of $\theta$ differs for each dimension. We can then apply the rotation matrix to each block independently
 and combine the results afterward. The rotation speed varies across the blocks. 
 
 $$f_{\{q,k\}}(x_m,m) = \boldsymbol{R}^d_{\Theta,m}\boldsymbol{W}_{\{q,k\}}x_m \tag{14}$$
@@ -460,7 +460,7 @@ these frequencies. For example, in the case of Gemma-7B, these high frequencies 
 
 <br>On the other hand, the low frequencies are not very sensitive to the relative distance. It helps the
 transformers to maintain *semantic attention* over a large context. This is why models with very long
-context windows tend to use a very high value for the base frequency $(\theta)$ in practice. For example,
+context windows use a very high value for the base frequency $(\theta)$ in practice. For example,
 with a context length of 128K, LLama 3 uses a base frequency of 500,000 leading the low frequencies to
 rotate at roughly $1/500,000$ radians per token.
 
@@ -506,6 +506,9 @@ a solid baseline over others.
 3. **Does RoPE work well for other modalities?** People like to slap RoPE in every possible situation.
 Have you ever wondered how RoPE behaves with image tokens? You may find a thing or two in there.
 4. **What about extending the context length?** We will talk about it in the next part
+
+
+<br>*Special thanks to my colleague Marc Pickett, and my friends Aritra and Abheesht for their valuable feedback.*<br>
 
 
 # References
