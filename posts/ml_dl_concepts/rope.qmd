@@ -338,7 +338,7 @@ When $m=n$, we have:
 
 $$
 \begin{align*}
-    R_q(\boldsymbol{x}_q, m)R_k(\boldsymbol{x}_k, m) &= R_g(\boldsymbol{x}_q, \boldsymbol{x}_k, 0) \quad \text{(using eq. 8)} \\
+    R_q(\boldsymbol{x}_q, m)R_k(\boldsymbol{x}_k, m) &= R_g(\boldsymbol{x}_q, \boldsymbol{x}_k, 0)  \qquad \text{(using eq. 8)} \\
     &= R_q(\boldsymbol{x}_q, 0)R_k(\boldsymbol{x}_k, 0) \\
     & = \|q\|\|k\| \tag{11a} \\
     \Theta_k(\boldsymbol{x}_k, m) - \Theta_q(\boldsymbol{x}_q, m) &= \Theta_g(\boldsymbol{x}_q, \boldsymbol{x}_k, 0) \\
