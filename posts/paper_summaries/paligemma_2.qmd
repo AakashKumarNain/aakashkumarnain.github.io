@@ -31,3 +31,21 @@ Google DeepMind announced PaliGemma 2 last week. It is an upgrade of the PaliGem
 * he visual embeddings are combined with a text prompt and fed to the Gemma 2 language model (prefill). Predictions are then obtained by autoregressively sampling from the language model.
 
 <br> ![](../paper_screenshots/paligemma2/2.png) <br>
+
+
+# Training
+
+Pretraining is done in three stages. Also, unimodal pretraining of individual components (SigLIP and Gemma) is considered stage 0.
+
+* **Stage 1**
+  - Combines the pretrained SigLIPSo400m and Gemma 2 raw checkpoints and trains them jointly on a multimodal task mixture of 1 billion examples.
+  - 224px image resolution
+  - No frozen parameters
+* **Stage 2**
+  - Two stages
+  - Trained on 50 million examples at resolution 448px in the first stage and then 10 million examples at resolution 896px in the second stage.
+  - Tasks benefitting from high resolution, e.g., OCR are up-weighted, and the output sequence length is increased. 
+* **Stage 3:** The checkpoints from stage 1 or 2 (depending on the resolution) are fine-tuned to the target task.
+* If you look closely, you will notice that these stages of training resemble "progressive training" in some way, where the resolution of the images is increased at every stage.
+* Logits soft-capping is applied in Stage 1 and Stage 2, but not in Stage 3. It degrades performance in stage 3. Logits soft-capping is applied to the attention and the output logits in the Gemma 2 component with the same parameters used in Gemma models.
+* Adam optimizer with default hyperparameters. The learning rate 2e-5 (used in Stage 1 and Stage 2 for PaliGemma) is multiplied by 0.5 for PaliGemma 2 3B and by 0.25 for PaliGemma 2 10B and 28B.
