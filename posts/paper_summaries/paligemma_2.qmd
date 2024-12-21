@@ -49,3 +49,21 @@ Pretraining is done in three stages. Also, unimodal pretraining of individual co
 * If you look closely, you will notice that these stages of training resemble "progressive training" in some way, where the resolution of the images is increased at every stage.
 * Logits soft-capping is applied in Stage 1 and Stage 2, but not in Stage 3. It degrades performance in stage 3. Logits soft-capping is applied to the attention and the output logits in the Gemma 2 component with the same parameters used in Gemma models.
 * Adam optimizer with default hyperparameters. The learning rate 2e-5 (used in Stage 1 and Stage 2 for PaliGemma) is multiplied by 0.5 for PaliGemma 2 3B and by 0.25 for PaliGemma 2 10B and 28B.
+
+
+# Data Mixture
+
+* Similar to the mixture used in PaliGemma.
+* The mixture involves captioning, grounded captioning, OCR, different machine-generated visual question answering (VQA) tasks, detection, and instance segmentation.
+
+
+# Effect of Model Size and Image Resolution on Task Performance
+
+* To study this, the authors fine-tuned three model variants (3B, 10B, and 28B) in two resolutions (224px and 448px) on the 30+ academic benchmarks, covering captioning, VQA, segmentation tasks on natural images, documents, infographics, and videos.
+* The optimal hparams found in PaliGemma are reused for both the resolutions (224px and 448px), and only the learning rate is swept for {0.03, 0.06, 0.1, 0.3, 0.6, 1.0, 3.0} · 10−5 values.  
+* Most tasks see performance gains when increasing the model size and the resolution. There is a group of tasks (yellow markers) focused on text, document, and screen-chart understanding, which mainly benefit from a resolution increase. Other tasks that involve multilingual data or require advanced visual reasoning see performance gains when the size of the LM is increased.
+* The authors find that PaliGemma 2 3B generally has a smaller optimal transfer learning rate when compared to PaliGemma. Also, for the same resolution, Gemma 2 performs better than Gemma 1.
+
+<br> ![](../paper_screenshots/paligemma2/3.png) <br>
+<br> ![](../paper_screenshots/paligemma2/4.png) <br>
+
