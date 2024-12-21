@@ -19,3 +19,15 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2412.03555)<br>
+
+Google DeepMind announced PaliGemma 2 last week. It is an upgrade of the PaliGemma open Vision-Language Model (VLM) based on the Gemma 2 family of language models. What does this generation of PaliGemma bring to the table?
+
+<br> ![](../paper_screenshots/paligemma2/1.png) <br>
+
+# Model
+
+* Same modeling, training, and data setup as PaliGemma Pretrained SigLIP-So400m vision encoder.
+* The embeddings from the encoder are mapped to the Gemma 2 input space with a linear projection.
+* he visual embeddings are combined with a text prompt and fed to the Gemma 2 language model (prefill). Predictions are then obtained by autoregressively sampling from the language model.
+
+<br> ![](../paper_screenshots/paligemma2/2.png) <br>
