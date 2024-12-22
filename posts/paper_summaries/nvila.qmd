@@ -65,3 +65,13 @@ SigLIP as the visual encoder that extracts features from visual inputs (e.g., im
 * The motivation is to filter out examples that are either too easy or too hard.
 
 <br> ![](../paper_screenshots/nvila/4.png) <br>
+
+
+# FP8 Training
+
+* Borrows FP8 implementation from COAT.
+* Sequence lengths in VLMs can vastly vary because of different types of tokens (visual tokens, temporal tokens, and LLM tokens) as compared to sequence lengths in LLMs. Workloads with fewer tokens are generally underutilized and can benefit greatly from increasing the batch size.
+* Both weights and activations are kept in FP8 precision resulting in a 2x increment in the batch size and a 2x speedup in training.
+* Uses Liger kernel for CE to reduce peak memory usage due to Qwen’s large vocabulary size.
+
+<br> ![](../paper_screenshots/nvila/5.png) <br>
