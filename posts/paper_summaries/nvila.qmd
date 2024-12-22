@@ -19,3 +19,7 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2412.04468)<br>
+
+Can you pre-train and fine-tune your VLMs in FP8? Can you get more than 2x efficiency with some simple tricks? Nvidia presents NVILA, an efficient frontier VLM that achieves all of the above. I finished reading the paper, and here is a summary in case you are interested:
+
+<br> ![](../paper_screenshots/nvila/1.png) <br>
