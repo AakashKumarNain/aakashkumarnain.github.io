@@ -26,11 +26,11 @@ listing:
 ---
 
 
-## Paper Summaries
-:::{#paper_summaries}
+## ML-DL Concepts 
+:::{#ml_dl}
 :::
 
 
-## ML-DL Concepts 
-:::{#ml_dl}
+## Paper Summaries
+:::{#paper_summaries}
 :::
