@@ -1,0 +1,21 @@
+---
+title: "NVILA"
+subtitle: "Efficient Frontier Visual Language Models"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2024-12-13"
+categories: [papers, summary, research, VLMs]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
+[arXiv](https://arxiv.org/abs/2412.04468)<br>
