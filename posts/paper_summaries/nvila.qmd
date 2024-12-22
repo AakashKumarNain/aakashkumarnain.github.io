@@ -86,5 +86,13 @@ Found some interesting things for fine-tuning/PEFT for VLMs:
 * When using PEFT, lr for ViT should be e 5-50x smaller than that for the LLM.
 * Fine-tuning the vision encoder with Layernorm can achieve comparable performance to LoRA while being more computationally efficient. It can reduce the training time by 25% compared to applying LoRA for the vision encoder.
 
-
 <br> ![](../paper_screenshots/nvila/6.png) <br>
+
+
+# Efficient Deployment
+
+* Two stages: Prefilling and decoding
+* During prefilling, they first apply token compression techniques to reduce the inference workload for the LLM backbone. Then they implement W8A8 quantization for the vision tower to reduce NVILA’s Time-To-First-Token (TTFT) in this compute-bounded stage.
+* For the decoding stage, they follow activation-aware-weight quantization (AWQ) for the W4A16 quantization of the LLM backbone. They also introduce FP16 accumulation to the W4A16 GEMM kernels, resulting in a 1.7x kernel speedup without compromising accuracy
+
+<br> ![](../paper_screenshots/nvila/7.png) <br>
