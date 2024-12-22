@@ -96,3 +96,21 @@ Found some interesting things for fine-tuning/PEFT for VLMs:
 * For the decoding stage, they follow activation-aware-weight quantization (AWQ) for the W4A16 quantization of the LLM backbone. They also introduce FP16 accumulation to the W4A16 GEMM kernels, resulting in a 1.7x kernel speedup without compromising accuracy
 
 <br> ![](../paper_screenshots/nvila/7.png) <br>
+
+
+# Experimental Details
+
+* Five-stage training pipeline
+* Stages 1, 3, and 4 are also included in VILA training. The additional Stage 2 is used to recover the accuracy loss due to spatial token compression, and the additional Stage 5 helps extend the model’s long video understanding capability.
+* FA2, and DeepSpeed.
+* Implements functional-preserving, on-the-fly sequence packing to fuse samples with different lengths leading to an approximate 30% speedup.
+128 NVIDIA H100 GPUs with a global batch size of 2048 across all stages.
+* AdamW with no weight decay
+* Cosine learning schedule with a linear warmup of 3% of the schedule
+
+<br> ![](../paper_screenshots/nvila/8.png) <br>
+
+
+# Results
+
+<br> ![](../paper_screenshots/nvila/9.png) <br>
