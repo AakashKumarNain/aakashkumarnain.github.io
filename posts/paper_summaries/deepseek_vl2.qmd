@@ -39,3 +39,15 @@ Two major advancements:
 - DeepSeek MoE language model featuring Multi-head Latent Attention
 
 <br> ![](../paper_screenshots/deepseek_vl2/2.png) <br>
+
+
+# Dynamic Tiling Strategy
+
+- Split high-resolution images into tiles, processing varying high-resolution images using the same encoder.
+- SigLIP operates at a resolution of 384px. Hence, we need some resizing strategy. The authors define a set of candidate resolutions: $𝐶𝑅 = {(𝑚 · 384, 𝑛 ·384) \quad  𝑚 ∈ N, 𝑛 ∈ N, \text{and}1 ≤ 𝑚, 𝑛, 𝑚𝑛 ≤ 9}$, where $𝑚 :  𝑛$ represents the aspect ratio.
+- Given an input image of size (HxW), the authors first calculate the padding required for each candidate resolution. Then, they select the resolution $(𝑚_i · 384, 𝑛_𝑖 · 384)$ that minimizes the padding area.
+- The resized image is then divided into $𝑚_𝑖 × 𝑛_𝑖$ local tiles of 384 × 384 pixels, plus one global thumbnail tile T.
+- The encoder processes all the (1 + $𝑚_𝑖 × 𝑛_𝑖$) tiles, yielding (27 × 27 = 729) visual embeddings of 1152 dimensions per tile.
+- Dynamic tiling is disabled when processing multiple (> 2) images.
+
+<br> ![](../paper_screenshots/deepseek_vl2/3.png) <br>
