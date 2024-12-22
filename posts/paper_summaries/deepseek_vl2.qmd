@@ -1,0 +1,23 @@
+---
+title: "DeepSeek-VL2"
+subtitle: "Mixture-of-Experts Vision-Language Models for Advanced Multimodal Understanding"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2024-12-17"
+categories: [papers, summary, research, VLMs]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
+[arXiv](https://arxiv.org/abs/2412.10302)<br>
+
+DeepSeek presents DeepSeek-VL2, a MOE VLM. It is mostly an incremental improvement over DeepSeek-VL, with a few better design choices inspired by the latest developments in the multimodal space.
