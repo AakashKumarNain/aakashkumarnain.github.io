@@ -67,3 +67,22 @@ Two major advancements:
 - Based on the DeepSeekMoE model.
 - Multi-head Latent Attention mechanism.
 - Contains a global bias term for each expert to improve load balancing between experts.
+
+
+# Training
+
+* **Stage1: Alignment**
+  - Vision-Language alignment stage
+  - The alignment stage trains the MLP connector to bridge the pretrained visual encoder and the LLM.
+  - ShareGPT4V dataset containing approximately 1.2M caption and conversation samples is used for training in this stage.
+* **Stage2: Pre-training**
+  - All components, including the vision encoder, connector, and language model, are trainable in this stage.
+  - Approximately 800B image-text tokens used in this phase.
+  - 70% VL data to 30% text-only data. The text-only data is sourced from the pretraining corpus of DeepSeek LLM.
+  - The VL dataset consists of the following kinds of datasets: Interleaved image-text datasets, image captioning datasets, OCR datasets, VQA datasets, Visual-grounding datasets containing annotations for object detection, and grounded conversation datasets.
+* **Stage3: Fine-tuning**
+  - All components, including the vision encoder, connector, and language model, are trainable in this stage as well.
+  - Trained on a mix of publicly available datasets, and in-house datasets.
+  - Datasets include general VQA, OCR datasets, tables and chart understanding datasets, reasoning and mathematics-focused datasets, textbooks, visual grounding, etc.
+
+<br> ![](../paper_screenshots/deepseek_vl2/4.png) <br>
