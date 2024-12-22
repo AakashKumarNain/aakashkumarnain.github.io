@@ -75,3 +75,16 @@ SigLIP as the visual encoder that extracts features from visual inputs (e.g., im
 * Uses Liger kernel for CE to reduce peak memory usage due to Qwen’s large vocabulary size.
 
 <br> ![](../paper_screenshots/nvila/5.png) <br>
+
+
+# Efficient Fine-Tuning
+
+Found some interesting things for fine-tuning/PEFT for VLMs:
+
+* Tuning parts should be chosen depending on the downstream task (of course!)
+* lr should be different for ViT and LLM
+* When using PEFT, lr for ViT should be e 5-50x smaller than that for the LLM.
+* Fine-tuning the vision encoder with Layernorm can achieve comparable performance to LoRA while being more computationally efficient. It can reduce the training time by 25% compared to applying LoRA for the vision encoder.
+
+
+<br> ![](../paper_screenshots/nvila/6.png) <br>
