@@ -51,3 +51,19 @@ Two major advancements:
 - Dynamic tiling is disabled when processing multiple (> 2) images.
 
 <br> ![](../paper_screenshots/deepseek_vl2/3.png) <br>
+
+
+# Vision-Language Adaptor
+
+- Applies a (2 × 2) pixel shuffle operation to compress the number of visual tokens for each tile from (27 × 27) to (14 × 14 = 196) tokens.
+- Three special tokens are added to these tiles.
+- For the global thumbnail tile (14 × 14), the authors add another 14 <tile_newline> tokens at the end of each row, resulting in a total number of (14 × 15 = 210) tokens.
+- The (mi x ni) local tiles are arranged in a 2D grid of shape $(𝑚_𝑖·14,\ 𝑛_𝑖·14)$, and $(𝑚_𝑖·14)$ <tile_newline> tokens are appended at the end of the final column to indicate the end of a row of all the local tiles.
+- A <view_separator> token is inserted between the global thumbnail tile and local tiles. The complete visual sequence contains $(210 + 1 + (𝑚_𝑖 · 14 \ × \ (𝑛_𝑖 · 14 \ + 1))$ visual tokens.
+- These tokens are then projected into the language model’s embedding space using a two-layer MLP.
+
+
+# DeepSeekMoE LLM
+- Based on the DeepSeekMoE model.
+- Multi-head Latent Attention mechanism.
+- Contains a global bias term for each expert to improve load balancing between experts.
