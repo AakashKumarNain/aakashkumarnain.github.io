@@ -86,3 +86,11 @@ Two major advancements:
   - Datasets include general VQA, OCR datasets, tables and chart understanding datasets, reasoning and mathematics-focused datasets, textbooks, visual grounding, etc.
 
 <br> ![](../paper_screenshots/deepseek_vl2/4.png) <br>
+
+# Results
+
+Here are some results from the paper:
+<br> ![](../paper_screenshots/deepseek_vl2/5.png) <br>
+<br> ![](../paper_screenshots/deepseek_vl2/6.png) <br>
+
+
