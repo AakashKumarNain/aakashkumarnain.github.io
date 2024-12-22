@@ -67,3 +67,23 @@ Pretraining is done in three stages. Also, unimodal pretraining of individual co
 <br> ![](../paper_screenshots/paligemma2/3.png) <br>
 <br> ![](../paper_screenshots/paligemma2/4.png) <br>
 
+
+# Benchmarks
+
+* **Text detection and recognition:** The authors fine-tuned PaliGemma 2 on a mixture of the train splits of ICDAR’15, Total-Text, MLT17 and MLT19, HierText, TextOCR, IntelOCR datasets and evaluated it on the ICDAR’15 and Total-Text test sets. PaliGemma 2 3B at 896px outperforms the SOTA HTS.
+
+* **Table structure recognition:** The authors fine-tune the model on (the train splits of) two popular data sets, PubTabNet containing 516k images of tabular data, and FinTabNet consisting of 113k financial report tables from annual reports of S&P 500 companies. PaliGemma 2 sets a new state of the art in most of the metrics used to evaluate these, including TEDS and GRITS.
+
+<br> ![](../paper_screenshots/paligemma2/5.png) <br>
+
+* **Molecular structure recognition:** PaliGemma 2 outperforms the SOTA on MolScribe when using 448px2 resolution
+
+<br> ![](../paper_screenshots/paligemma2/6.png) <br>
+
+* **Generating long, fine-grained captions:** The authors fine-tuned the model on the DOCCI data set that contains 15k images with detailed human-annotated English descriptions with an average length of 7.1 sentences. PaliGemma 2 model produces more factually aligned sentences than many popular VLMs, and increasing model size and resolution improves factual alignment.
+
+<br> ![](../paper_screenshots/paligemma2/7.png) <br>
+
+* **Radiography report generation:** The authors fine-tuned PaliGemma 2 on the MIMICCXR dataset containing 377k images. PaliGemma 2 obtained a SOTA RadGraph score.
+
+<br> ![](../paper_screenshots/paligemma2/8.png) <br>
