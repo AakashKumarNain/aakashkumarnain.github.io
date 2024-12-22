@@ -56,3 +56,12 @@ SigLIP as the visual encoder that extracts features from visual inputs (e.g., im
 * The authors found that compressing the temporal tokens by 4x leads to an acceptable drop in performance. This strategy makes NVILA-7B a SOTA model in this benchmark.
 
 <br> ![](../paper_screenshots/nvila/3.png) <br>
+
+
+# Dataset Pruning
+
+* Follows the scale-the-compress philosophy for the dataset itself, where they scale up the  SFT dataset mixture and then compress it.
+* Leverages DeltaLoss to score the training set for pruning the dataset. Here $D_i$ is the 𝑖-th subset of the full fine-tuning datasets and $D'$ is the pruned training set. $𝑝_{large(𝑥)}$ and $𝑝_{small(𝑥)}$ are the output probabilities on the answer tokens.
+* The motivation is to filter out examples that are either too easy or too hard.
+
+<br> ![](../paper_screenshots/nvila/4.png) <br>
