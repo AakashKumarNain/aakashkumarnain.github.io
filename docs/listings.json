@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/paligemma_2.html",
       "/posts/paper_summaries/star_attention.html",
       "/posts/paper_summaries/aim_v2.html",
       "/posts/paper_summaries/janusflow.html",
@@ -20,6 +21,7 @@
     "listing": "/archive.html",
     "items": [
       "/posts/ml_dl_concepts/rope.html",
+      "/posts/paper_summaries/paligemma_2.html",
       "/posts/paper_summaries/star_attention.html",
       "/posts/paper_summaries/aim_v2.html",
       "/posts/paper_summaries/janusflow.html",
