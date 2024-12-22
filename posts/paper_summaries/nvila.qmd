@@ -45,3 +45,14 @@ SigLIP as the visual encoder that extracts features from visual inputs (e.g., im
 * To address this, they propose an additional visual encoder pre-training stage to tune the vision encoder and projectors jointly. This helps recover most of the accuracy loss from spatial token reduction, achieving a 2.4× speedup in training and inference.
 
 <br> ![](../paper_screenshots/nvila/2.png) <br>
+
+
+# Temporal “Scale-Then-Compress”
+
+* Similar to spatial scale-the-compress but for temporal tokens.
+* To scale up, they simply increased the number of frames sampled from a video. Extending the number of frames from 8 to 32 can increase the model’s accuracy on Video-MME by more than 5%
+* An increased number of temporal tokens again means an increased number of visual tokens (4x in case of going from 8->32 frames). So, the authors apply compression to temporal tokens after scaling up.
+* Partition the frames into groups, and then temporally pool visual tokens within each group. This works because consecutive frames are information-redundant.
+* The authors found that compressing the temporal tokens by 4x leads to an acceptable drop in performance. This strategy makes NVILA-7B a SOTA model in this benchmark.
+
+<br> ![](../paper_screenshots/nvila/3.png) <br>
