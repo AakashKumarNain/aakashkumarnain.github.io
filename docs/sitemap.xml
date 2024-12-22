@@ -2,70 +2,74 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2024-12-22T17:41:17.705Z</lastmod>
+    <lastmod>2024-12-22T18:40:14.754Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2024-12-22T17:41:15.259Z</lastmod>
+    <lastmod>2024-12-22T18:40:12.198Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/the_super_weight.html</loc>
-    <lastmod>2024-12-22T17:41:12.672Z</lastmod>
+    <lastmod>2024-12-22T18:40:09.576Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/agent_workflow_memory.html</loc>
-    <lastmod>2024-12-22T17:41:11.255Z</lastmod>
+    <lastmod>2024-12-22T18:40:08.219Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/aim_v2.html</loc>
-    <lastmod>2024-12-22T17:41:09.968Z</lastmod>
+    <lastmod>2024-12-22T18:40:06.966Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/scaling_laws_estimation.html</loc>
-    <lastmod>2024-12-22T17:41:08.556Z</lastmod>
+    <lastmod>2024-12-22T18:40:05.506Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/omniparser.html</loc>
-    <lastmod>2024-12-22T17:41:07.174Z</lastmod>
-  </url>
-  <url>
-    <loc>/posts/paper_summaries/nvila.html</loc>
-    <lastmod>2024-12-22T17:41:05.911Z</lastmod>
-  </url>
-  <url>
-    <loc>/posts/paper_summaries/nGPT.html</loc>
-    <lastmod>2024-12-22T17:41:04.437Z</lastmod>
-  </url>
-  <url>
-    <loc>/posts/paper_summaries/depthpro.html</loc>
-    <lastmod>2024-12-22T17:41:05.194Z</lastmod>
+    <lastmod>2024-12-22T18:40:04.126Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/paligemma_2.html</loc>
-    <lastmod>2024-12-22T17:41:06.560Z</lastmod>
+    <lastmod>2024-12-22T18:40:02.904Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/depthpro.html</loc>
+    <lastmod>2024-12-22T18:40:01.529Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/nGPT.html</loc>
+    <lastmod>2024-12-22T18:40:00.766Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/nvila.html</loc>
+    <lastmod>2024-12-22T18:40:02.258Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/deepseek_vl2.html</loc>
+    <lastmod>2024-12-22T18:40:03.509Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/model_merging_at_scale.html</loc>
-    <lastmod>2024-12-22T17:41:07.819Z</lastmod>
+    <lastmod>2024-12-22T18:40:04.766Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/cut_your_losses.html</loc>
-    <lastmod>2024-12-22T17:41:09.257Z</lastmod>
+    <lastmod>2024-12-22T18:40:06.254Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/star_attention.html</loc>
-    <lastmod>2024-12-22T17:41:10.583Z</lastmod>
+    <lastmod>2024-12-22T18:40:07.573Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/janusflow.html</loc>
-    <lastmod>2024-12-22T17:41:12.012Z</lastmod>
+    <lastmod>2024-12-22T18:40:08.912Z</lastmod>
   </url>
   <url>
     <loc>/posts/ml_dl_concepts/rope.html</loc>
-    <lastmod>2024-12-22T17:41:13.717Z</lastmod>
+    <lastmod>2024-12-22T18:40:10.619Z</lastmod>
   </url>
   <url>
     <loc>/index.html</loc>
-    <lastmod>2024-12-22T17:41:15.823Z</lastmod>
+    <lastmod>2024-12-22T18:40:12.749Z</lastmod>
   </url>
 </urlset>

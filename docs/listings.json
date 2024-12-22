@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/deepseek_vl2.html",
       "/posts/paper_summaries/nvila.html",
       "/posts/paper_summaries/paligemma_2.html",
       "/posts/paper_summaries/star_attention.html",
@@ -21,6 +22,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/paper_summaries/deepseek_vl2.html",
       "/posts/paper_summaries/nvila.html",
       "/posts/ml_dl_concepts/rope.html",
       "/posts/paper_summaries/paligemma_2.html",
