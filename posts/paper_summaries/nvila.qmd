@@ -23,3 +23,13 @@ execute:
 Can you pre-train and fine-tune your VLMs in FP8? Can you get more than 2x efficiency with some simple tricks? Nvidia presents NVILA, an efficient frontier VLM that achieves all of the above. I finished reading the paper, and here is a summary in case you are interested:
 
 <br> ![](../paper_screenshots/nvila/1.png) <br>
+
+
+# Efficient Model Architecture
+
+* NVILA is built on top of VILA (as shown above)
+* Autoregressive VLM consists of three components:
+SigLIP as the visual encoder that extracts features from visual inputs (e.g., images, videos). A two-layer MLP projector that aligns embeddings across visual and language modalities; and Qwen 2 as the token processor that takes visual and language tokens as input, and outputs language tokens.
+* The original VILA has very limited spatial and temporal resolutions. It resizes all images to 448×448, regardless of their original size or aspect ratio, and samples up to 14 frames from videos.
+* Proposes scale and then compress paradigm for both spatial and temporal tokens to improve accuracy and efficiency.
+
