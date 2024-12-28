@@ -22,9 +22,22 @@ execute:
 
 What if I tell you you can train a SOTA Gaze estimation model in an hour on an RTX4090 GPU? Too good to be true? I was also skeptical of that claim made in the Gaze-LLE paper, but it is true. **DINOv2 FTW!**
 
-<br> ![](../paper_screenshots/gazelle/final/1.png) <br>
+<br> ![](../paper_screenshots/gazelle/1.png) <br>
 
 
 # Problem Statement
 
 Given an RGB image and the bounding box for a person's head in the image, predict a heatmap $H ∈ [0, 1]$, where each value represents the probability that the pixel is a gaze target. Optionally, predict $y ∈ [0, 1]$ if the gaze target is inside the frame.
+
+
+# Model Architecture
+
+- Consists of a scene encoder and a gaze decoder module.
+- The scene encoder is frozen, and the decoder is trainable. The gaze decoder performs head prompting to condition outputs on a particular person, updates the feature representation with a small transformer module, predicts a gaze heatmap, and (optionally) if the target is in-frame.
+- Though the Gaze-LLE framework is flexible enough to incorporate any feature extractor, the authors use DINOv2 as the scene encoder for extracting features. The feature map obtained $(d_f \times H \times W)$ is then projected using a linear layer to a smaller dimension d_model resulting in a feature map of size $(d_{model} \times H \times W)$.
+- The head position is incorporated after the scene encoder. It provides the best performance compared to inserting it before the scene encoder. The authors construct a downsampled, binarized mask $M$ of size $(H \times W)$ from the given head bounding box $x_{bbox}$ within the extracted scene feature map. They also add a learned position embedding to the scene tokens containing the head resulting in a final scene feature map as shown below.
+
+<br> ![](../paper_screenshots/gazelle/2.png) <br>
+
+
+
