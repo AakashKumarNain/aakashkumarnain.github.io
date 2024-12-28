@@ -9,11 +9,6 @@ format:
   html:
     theme: default
     fontsize: 2em
-    backgroundcolor: rgb(255, 255, 255);
-    code-fold: true
-    code-summary: "Show the code"
-    highlight-style: oblivion
-    css: styles.css
 execute: 
   echo: false
 ---
@@ -37,7 +32,7 @@ Given an RGB image and the bounding box for a person's head in the image, predic
 - Though the Gaze-LLE framework is flexible enough to incorporate any feature extractor, the authors use DINOv2 as the scene encoder for extracting features. The feature map obtained $(d_f \times H \times W)$ is then projected using a linear layer to a smaller dimension d_model resulting in a feature map of size $(d_{model} \times H \times W)$.
 - The head position is incorporated after the scene encoder. It provides the best performance compared to inserting it before the scene encoder. The authors construct a downsampled, binarized mask $M$ of size $(H \times W)$ from the given head bounding box $x_{bbox}$ within the extracted scene feature map. They also add a learned position embedding to the scene tokens containing the head resulting in a final scene feature map as shown below.
 
-<br> ![](../paper_screenshots/gazelle/2.png) <br>
+<br> ![](../paper_screenshots/gazelle/2.png) <br><br>
 
 - The scene feature maps are then flattened into a list of scene tokens $[s1, s2, ...]$. If the in/out frame prediction is necessary for a person's gaze prediction, a learnable task token $t_{in/out}$, is also prepended to the token list. 2D sinusoidal positional encodings are added to these tokens and are fed into a trainable 3-encoder-layer transformer.
 
@@ -69,10 +64,9 @@ Given an RGB image and the bounding box for a person's head in the image, predic
 - A separate head branch with DINOv2 is unnecessary, though adding it boosts performance.
 - A gaze decoder without transformer layers does not provide optimal performance.
 
-<br> ![](../paper_screenshots/gazelle/4.png) <br>
+<br> ![](../paper_screenshots/gazelle/4.jpeg) <br>
 
 
 # Results
 Here are the results of Gaze-LLE compared to the previous works:
-
-<br> ![](../paper_screenshots/gazelle/3.png) <br>
+<br>![](../paper_screenshots/gazelle/3.png) <br>
