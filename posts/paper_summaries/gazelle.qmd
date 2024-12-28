@@ -39,5 +39,9 @@ Given an RGB image and the bounding box for a person's head in the image, predic
 
 <br> ![](../paper_screenshots/gazelle/2.png) <br>
 
+- The scene feature maps are then flattened into a list of scene tokens $[s1, s2, ...]$. If the in/out frame prediction is necessary for a person's gaze prediction, a learnable task token $t_{in/out}$, is also prepended to the token list. 2D sinusoidal positional encodings are added to these tokens and are fed into a trainable 3-encoder-layer transformer.
+
+- The output feature map S' from the transformer is reconstructed into a feature map of size (d_model x H x W), which is then passed to the gaze heatmap decoder $D_{hm}$. $D_{hm}$ consists of 2 convolutional layers to upsample the feature map to the output size $(H_{out} \times W_{out})$ and produce a classification score for each pixel as being a gaze target or not. A 2-layer MLP $D_{in/out}$ takes $t_{in/out}$ and outputs a classification score for if the person’s gaze target is in or out of frame.
+
 
 
