@@ -44,4 +44,15 @@ Given an RGB image and the bounding box for a person's head in the image, predic
 - The output feature map S' from the transformer is reconstructed into a feature map of size (d_model x H x W), which is then passed to the gaze heatmap decoder $D_{hm}$. $D_{hm}$ consists of 2 convolutional layers to upsample the feature map to the output size $(H_{out} \times W_{out})$ and produce a classification score for each pixel as being a gaze target or not. A 2-layer MLP $D_{in/out}$ takes $t_{in/out}$ and outputs a classification score for if the person’s gaze target is in or out of frame.
 
 
+# Training Objective
+
+- pixel-wise binary cross-entropy for the heatmap
+- If gaze in/out of the frame is also to be detected, then a binary cross-entropy loss for the in/out prediction task weighted by $λ$ is also used.
+
+
+# Results
+Here are the results of Gaze-LLE compared to the previous works:
+
+<br> ![](../paper_screenshots/gazelle/3.png) <br>
+
 
