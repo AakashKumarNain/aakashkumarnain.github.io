@@ -1,0 +1,21 @@
+---
+title: "Gaze-LLE"
+subtitle: "Gaze Target Estimation via Large-Scale Learned Encoders"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2024-12-16"
+categories: [papers, vision]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
+[arXiv](https://arxiv.org/abs/2412.09586)<br>
