@@ -19,3 +19,12 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2412.09586)<br>
+
+What if I tell you you can train a SOTA Gaze estimation model in an hour on an RTX4090 GPU? Too good to be true? I was also skeptical of that claim made in the Gaze-LLE paper, but it is true. **DINOv2 FTW!**
+
+<br> ![](../paper_screenshots/gazelle/final/1.png) <br>
+
+
+# Problem Statement
+
+Given an RGB image and the bounding box for a person's head in the image, predict a heatmap $H ∈ [0, 1]$, where each value represents the probability that the pixel is a gaze target. Optionally, predict $y ∈ [0, 1]$ if the gaze target is inside the frame.
