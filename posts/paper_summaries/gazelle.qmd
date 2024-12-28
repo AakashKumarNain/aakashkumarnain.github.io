@@ -56,3 +56,14 @@ Here are the results of Gaze-LLE compared to the previous works:
 <br> ![](../paper_screenshots/gazelle/3.png) <br>
 
 
+# Experimental Details
+
+- Datasets: GazeFollow, VideoAttentionTarget, ChildPlay, and GOO-Rea
+- AUCROC metric, pixel $L2$ loss
+- DINOv2 with ViT-B and ViTL backbones, patch size=14, $d_{model}=256$, 3 transformer layers with 8 attention heads, and MLP dimension 1024.
+- Adam optimizer with $lr=10^{-3}$ and batch_size=60, and 15 epochs
+- Random crop, flip, and bounding box jitter as data augmentation and drop path regularization with $p=0.1$
+- For VideoAttentionTarget, they fine-tuned it for 8 epochs with lr=1e-2 (in/out params), lr=1e-5 (for other gaze decoder params), and $λ=1$.
+- For ChildPlay, they fine-tuned it for 3 epochs with lr=2e-4 and 1e-4 and $λ = 0.1$.
+- The model achieves SOTA in less than 1.5 hours on a single RTX4090 GPU
+
