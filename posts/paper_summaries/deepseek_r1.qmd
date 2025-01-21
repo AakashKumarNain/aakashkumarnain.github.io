@@ -54,3 +54,15 @@ $$
 ![](../paper_screenshots/deepseek_r1/3.png) <br>
 ![](../paper_screenshots/deepseek_r1/4.png) <br>
 
+
+# DeepSeek-R1
+
+- RL is applied with a cold start.
+- The authors construct and collect a small amount of long CoT data to fine-tune the model as the initial RL actor. These are high-quality datasets.
+- With a cold start, the authors try to address the drawbacks of the R1-Zero model. To improve readability, the authors design a readable pattern that includes a summary at the end of each response and filters out responses that are not reader-friendly when creating cold-start data for DeepSeek-R1.
+- After fine-tuning DeepSeek-V3-Base on the cold start data, they apply the same large-scale RL training process of DeepSeek-R1-Zero.
+- The authors observed language mixing problems during training and proposed a language consistency reward during RL training, calculated as the proportion of target language words in the CoT. The final reward is the sum of the accuracy of the reasoning tasks and the reward for language consistency.
+- Once the RL training converged, they utilized the resulting checkpoint to collect SFT data for the subsequent round to improve other capabilities than reasoning.
+- For reasoning data, they curate reasoning prompts and generate reasoning trajectories by performing rejection sampling from the checkpoint from the RL training, totaling around 600k reasoning-related training samples.
+- For non-reasoning data, such as writing, factual QA, self-cognition, and translation, they adopt the DeepSeek-V3 pipeline and reuse portions of the SFT dataset of DeepSeek-V3.
+- Once the SFT is finished, they do another round of RL training aimed at improving the model’s helpfulness and harmlessness while simultaneously refining its reasoning capabilities.
