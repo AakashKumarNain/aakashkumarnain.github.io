@@ -1,0 +1,20 @@
+---
+title: "DeepSeek-R1"
+subtitle: "Incentivizing Reasoning Capability in LLMs via Reinforcement Learning"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2025-01-21"
+categories: [papers, summary, research, LLMs]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
