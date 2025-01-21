@@ -18,3 +18,12 @@ execute:
   echo: false
 ---
 
+# Approach
+
+- Emphasize that RL can improve reasoning without using supervised fine-tuning as a cold start.
+- Cold start can provide a performance boost but is optional.
+- Applies RL directly to the base model without adding any SFT, resulting in the DeepSeek-R1-Zero model.
+- Applies RL starting from a checkpoint fine-tuned with thousands of long CoT examples producing DeepSeek-R1.
+- Distill reasoning capabilities from R1 to smaller dense models.
+
+
