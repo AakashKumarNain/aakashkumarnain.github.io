@@ -66,3 +66,16 @@ $$
 - For reasoning data, they curate reasoning prompts and generate reasoning trajectories by performing rejection sampling from the checkpoint from the RL training, totaling around 600k reasoning-related training samples.
 - For non-reasoning data, such as writing, factual QA, self-cognition, and translation, they adopt the DeepSeek-V3 pipeline and reuse portions of the SFT dataset of DeepSeek-V3.
 - Once the SFT is finished, they do another round of RL training aimed at improving the model’s helpfulness and harmlessness while simultaneously refining its reasoning capabilities.
+
+
+# Distillation to smaller models
+- Fine-tuned  Qwen and Llama using the 800k samples curated with DeepSeek-R1.
+- For distilled models, they only apply SFT and not RL
+- Found that distilling more powerful models into smaller ones yields excellent results, whereas smaller models relying on the large-scale RL require enormous computational power and may not even achieve the performance of distillation.
+
+
+# Additional Points
+- No PRM or MCTS because too complex to implement during training.
+- A model-based PRM leads to reward hacking and retraining the reward model needs additional training resources, and it complicates the whole training pipeline.
+- For MCTS, the search is exponentially huge and poses problems when scaling models.
+- DeepSeek-R1 is prompt sensitive, and Few-shot prompting consistently degrades its performance.
