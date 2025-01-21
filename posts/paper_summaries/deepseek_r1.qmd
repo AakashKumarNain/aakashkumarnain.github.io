@@ -75,6 +75,7 @@ $$
 - Fine-tuned  Qwen and Llama using the 800k samples curated with DeepSeek-R1.
 - For distilled models, they only apply SFT and not RL
 - Found that distilling more powerful models into smaller ones yields excellent results, whereas smaller models relying on the large-scale RL require enormous computational power and may not even achieve the performance of distillation.
+<br> ![](../paper_screenshots/deepseek_r1/5.png) <br>
 
 
 # Additional Points
@@ -94,4 +95,4 @@ Here is how R1 performed on the benchmarks compared to other models:
 # Distillation vs RL
 
 I have been saying this for years, but I will say it again today: If there is one thing that should be on your list for developing efficient yet performant models, it should be distillation. Distillation done well is all you need.
-<br> ![](../paper_screenshots/deepseek_r1/5.png) <br>
+<br> ![](../paper_screenshots/deepseek_r1/6.png) <br>
