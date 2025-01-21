@@ -27,3 +27,30 @@ execute:
 - Distill reasoning capabilities from R1 to smaller dense models.
 
 
+
+# DeepSeek-R1-Zero
+- RL is applied to the base model without any supervised data.
+- Uses Group Relative Policy Optimization(GRPO) instead of a critic model. For each question 𝑞, GRPO samples a group of outputs {𝑜1, 𝑜2,..., 𝑜𝐺} from the old policy 𝜋(𝜃)_𝑜𝑙𝑑 and then optimizes the policy model 𝜋(𝜃) by maximizing the following objective:
+$$
+\begin{align}
+    \mathcal{J}_{GRPO}(\theta) &= \mathbb{E}\Big[q \sim P(Q), \{o_i\}_{i=1}^G \sim \pi_{\theta_{old}}(O|q)\Big] \\
+    &\frac{1}{G}\sum_{i=1}^{G} \Big( \min\Big(\frac{\pi_\theta(o_i|q)}{\pi_{\theta_{old}}(o_i|q)}A_i, \text{clip}\Big(\frac{\pi_\theta(o_i|q)}{\pi_{\theta_{old}}(o_i|q)}, 1-\varepsilon, 1+\varepsilon\Big)A_i\Big) - \beta \mathbb{D}_{KL}(\pi_\theta || \pi_{ref}) \Big),  \\
+    \mathbb{D}_{KL}(\pi_\theta || \pi_{ref}) &= \frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)} - \log\frac{\pi_{ref}(o_i|q)}{\pi_\theta(o_i|q)} - 1
+\end{align}
+$$
+where $\varepsilon$ and $\beta$ are hyper-parameters, and $A_i$ is the advantage, computed using a group of rewards $\{r_1, r_2, \dots, r_G\}$ corresponding to the outputs within each group:
+$$
+\begin{equation}
+    A_i = \frac{r_i - \text{mean}(\{r_1, r_2, \dots, r_G\})}{\text{std}(\{r_1, r_2, \dots, r_G\})}.
+\end{equation}
+$$
+- Two kinds of reward signals used in training: Accuracy rewards and format rewards. The accuracy reward model evaluates whether the response is correct, while the format reward forces the model to put its thinking process between <think> and </think> tags.
+- To make the model adhere to instructions, the authors designed the following template that requires the model to produce a reasoning process first, followed by the final answer.
+- The authors noticed an emergent behavior in the self-evolution process of the model with the increase in test-time computation because of the RL-first policy used in training. Behaviors such as reflection, where the model revisits and reevaluates its previous steps, and the exploration of alternative approaches to problem-solving arise spontaneously.
+- The authors noticed an "aha moment" during the training occurs in an intermediate version of the model. During this phase, the model learns to allocate more thinking time to a problem by reevaluating its initial approach.
+- Though DeepSeek-R1-Zero is a powerful reasoning model, it has a few drawbacks like poor readability and language mixing.
+
+<br> ![](../paper_screenshots/deepseek_r1/2.png) <br>
+![](../paper_screenshots/deepseek_r1/3.png) <br>
+![](../paper_screenshots/deepseek_r1/4.png) <br>
+
