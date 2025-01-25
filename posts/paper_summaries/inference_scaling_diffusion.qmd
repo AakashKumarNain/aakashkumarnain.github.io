@@ -47,3 +47,13 @@ Everyone has heard enough about the scaling inference-time compute for LLMs in t
 - The inference-compute budget is the total number of function evaluations (NFEs) used with denoising steps and search cost. The denoising steps are fixed to the optimal setting of 250 NFEs, and the scaling behavior is observed with respect to the NFEs devoted to the search.
 - CFG with a weight value of 1.0.
 - FID and IS as the evaluation metrics
+
+
+# Supervised Verifiers
+
+- These evaluate the candidates based on the quality of the samples and their alignment with the specified conditioning inputs.
+- Pretrained CLIP and DINO models are used to evaluate the effectiveness of scaling NFEs.
+- While searching, the authors run samples through the classifiers and select the ones with the highest logits corresponding to the class labels used in the generation.
+- This setup provided a better IS score compared to scaling denoising steps alone.
+- A key problem with this setup is the 'Random Search', a Best-of-N strategy applied once on all noise candidates combined with these pretrained verifiers. The logits produced by DINO and CLIP in this setup only focus on the quality of a single sample without considering population diversity. It leads to a significant reduction in sample variance and eventually mode collapse as the compute increases. Random search accelerates the converging of search towards the bias of verifiers.
+
