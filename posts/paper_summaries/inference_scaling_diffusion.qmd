@@ -19,3 +19,14 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2501.09732)<br>
+
+Everyone has heard enough about the scaling inference-time compute for LLMs in the past month. Diffusion models, on the other hand, have an innate flexibility for allocating varied compute at inference time. Here is a summary of how researchers at GDM exploit this property:
+
+<br> ![](../paper_screenshots/inference_diffusion/1.png) <br>
+
+# Motivation
+
+- It has already been proven that different kinds of noise injection lead to various types of sample quality in diffusion models, and the generation quality of these models significantly depends on the noise inversion stability. Hence, searching for better noises during sampling should help.
+- More denoising steps produce better sample quality, but only up to a point. Simply scaling inference-time compute for denoising steps is not enough.
+-When in doubt, search!
+
