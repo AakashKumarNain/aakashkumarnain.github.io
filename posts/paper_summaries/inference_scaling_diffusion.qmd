@@ -91,3 +91,17 @@ It leverages verifiers’ feedback to refine candidates iteratively, only slight
 
 The number of iterations N is the primary scaling axis here. When 𝑁 gets larger, the algorithm will locate a more precise local “optimum”, and when 𝜆 increases, the algorithm will have a larger stride traversing the noise space more quickly. The value of 𝜆  is kept fixed.
 
+
+# Search Over Paths
+
+Search along the sampling trajectories over the noises injected. Mimics hierarchical search in some sense. Here is the algo:
+
+- Sample 𝑁 initial i.i.d. noises and run the ODE solver until some noise level 𝜎. The noisy samples 𝒙(𝜎) serve as the search starting point.
+- Sample 𝑀 i.i.d noises for each noisy sample, and simulate the forward noising process from $𝜎$ to $𝜎 + Δ𝑓$ to produce $𝒙(𝜎+Δ 𝑓)$ with size 𝑀.
+- Run ODE solver on each 𝒙(𝜎+Δ 𝑓) to noise level $(𝜎 + Δ 𝑓 − Δ𝑏)$, and obtain $𝒙(𝜎+Δ 𝑓 −Δ𝑏)$. Run verifiers on these samples and keep the top 𝑁 candidates. Repeat steps 2-3 until the ODE solver reaches 𝜎=0.
+- Run the remaining 𝑁 samples through the random search and keep the best one.
+
+Termination is guaranteed by keeping Δ𝑏 > Δf. An additional denoising step is done in step 3 before running the sample through the verifier so that the verifier gets a clean image. The primary scaling axis is the number of noises 𝑀 added in step 2. Different values of 𝑁 lead to different scaling behavior. Small 𝑁 is compute efficient in small generation budget, while large 𝑁 have an advantage when scaling up compute more.
+
+<br> ![](../paper_screenshots/inference_diffusion/4.png) <br>
+
