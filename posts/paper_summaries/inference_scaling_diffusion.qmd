@@ -105,3 +105,22 @@ Termination is guaranteed by keeping Δ𝑏 > Δf. An additional denoising step 
 
 <br> ![](../paper_screenshots/inference_diffusion/4.png) <br>
 
+
+# Inference-Time Scaling in Text-to-Image
+
+- Datasets: DrawBench and T2I-CompBench. The authors generate two images per prompt and use the 1800 prompts from the validation set for evaluation.
+- Models: FLUX.1-dev model
+- Verifiers: Four kinds of verifiers were used- Aesthetic Score predictor, CLIPScore, ImageReward, and an ensemble of the three.
+- Metrics: Verifiers not included in the search process, and evaluation using Gemini 1.5 Flash from five different perspectives: Accuracy to Prompt, Originality, Visual Quality, Internal Consistency, and Emotional Resonance.
+
+<br> ![](../paper_screenshots/inference_diffusion/5.png) <br>
+
+
+# Additional points
+
+- Search can be applied to both pretrained models and fine-tuned models.
+- Adjusting NFEs/iter can reveal distinct compute-optimal regions. When NFEs/iter >=50, yield minimal gains despite the additional computational investment.
+- With a fixed inference compute budget, performing a search on small models can outperform larger models without search.
+- I do not like the use of AestheticsScore in its current state. Why? Aesthetics is a nuanced area. Unless you remove all kinds of biases, all aesthetic scores are meaningless except for sharpness/picture quality.
+
+<br> ![](../paper_screenshots/inference_diffusion/6.png) <br>
