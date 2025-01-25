@@ -66,4 +66,16 @@ Everyone has heard enough about the scaling inference-time compute for LLMs in t
 <br> ![](../paper_screenshots/inference_diffusion/2.png) <br>
 
 
+# Search Algorithms
+
+The authors use three different search algorithms: Random Search, Zero-Order Search, and Search Over Paths.
+
+<br> ![](../paper_screenshots/inference_diffusion/3.png) <br>
+
+
+# Random Search
+
+- The best-of-N strategy was applied once to all noise candidates.
+- Randomly sample Gaussian noises, generate samples from them with ODE, and select those corresponding to the best verifier score.
+- Since it operates on the entire Gaussian space, it can quickly overfit to the bias of verifiers and lead to failure.
 
