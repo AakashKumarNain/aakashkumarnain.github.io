@@ -30,3 +30,20 @@ Everyone has heard enough about the scaling inference-time compute for LLMs in t
 - More denoising steps produce better sample quality, but only up to a point. Simply scaling inference-time compute for denoising steps is not enough.
 -When in doubt, search!
 
+
+# How to Scale at Inference Time
+
+- The authors treat this as a search problem over the sampling noises and propose two design axes:
+  - **Verifiers**: pretrained models used to evaluate the goodness of the candidate. A verifier takes in the generated samples, optionally the corresponding conditions, and outputs a scalar value as the score for each generated sample.
+
+  - **Algorithms**: Used to find better candidates based on the verifier's scores. These functions take the verifier, the diffusion model, and 𝑁 pairs of generated samples with corresponding conditions as inputs and output the best initial noises according to the deterministic mapping between noises and samples.
+
+
+# Task and design walkthrough
+
+- Class-conditional ImageNet generation.
+- SiT-XL model pre-trained on ImageNet with a resolution of 256 × 256.
+- Sampling is performed using the second-order Heun sampler.
+- The inference-compute budget is the total number of function evaluations (NFEs) used with denoising steps and search cost. The denoising steps are fixed to the optimal setting of 250 NFEs, and the scaling behavior is observed with respect to the NFEs devoted to the search.
+- CFG with a weight value of 1.0.
+- FID and IS as the evaluation metrics
