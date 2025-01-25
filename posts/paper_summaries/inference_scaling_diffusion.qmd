@@ -1,0 +1,21 @@
+---
+title: "Inference-Time Scaling for Diffusion Models beyond Scaling Denoising Steps"
+subtitle: ""
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2025-01-20"
+categories: [papers, summary, research, diffusion]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
+[arXiv](https://arxiv.org/abs/2501.09732)<br>
