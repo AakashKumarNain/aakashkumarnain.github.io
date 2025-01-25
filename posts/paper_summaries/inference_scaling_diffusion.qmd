@@ -57,3 +57,13 @@ Everyone has heard enough about the scaling inference-time compute for LLMs in t
 - This setup provided a better IS score compared to scaling denoising steps alone.
 - A key problem with this setup is the 'Random Search', a Best-of-N strategy applied once on all noise candidates combined with these pretrained verifiers. The logits produced by DINO and CLIP in this setup only focus on the quality of a single sample without considering population diversity. It leads to a significant reduction in sample variance and eventually mode collapse as the compute increases. Random search accelerates the converging of search towards the bias of verifiers.
 
+
+# Self-supervised Verifiers
+- The authors found a strong correlation between the logits output by the DINO / CLIP classifiers and the feature space cosine similarity of the model prediction at a low noise level (𝜎 = 0.4) and the final generated clean sample (𝜎 = 0).
+- They use this similarity score as a surrogate for classification logits.
+- Verifiers that use this similarity score and do not require additional conditioning information are known as self-supervised verifiers. This is useful for use cases where conditioning information is not available or hard to obtain.
+
+<br> ![](../paper_screenshots/inference_diffusion/2.png) <br>
+
+
+
