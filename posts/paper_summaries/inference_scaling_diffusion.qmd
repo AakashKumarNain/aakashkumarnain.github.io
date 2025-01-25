@@ -79,3 +79,15 @@ The authors use three different search algorithms: Random Search, Zero-Order Sea
 - Randomly sample Gaussian noises, generate samples from them with ODE, and select those corresponding to the best verifier score.
 - Since it operates on the entire Gaussian space, it can quickly overfit to the bias of verifiers and lead to failure.
 
+
+# Zero-Order Search
+
+It leverages verifiers’ feedback to refine candidates iteratively, only slightly each time, thus mitigating the overfitting risks. Here is the algo:
+
+- Start with a random Gaussian noise 𝒏 as a pivot.
+- Find 𝑁 candidates in the pivot neighborhood. Formally, the neighborhood is defined as $𝑆^𝜆_𝒏 = { 𝒚:𝑑 (𝒚, 𝒏) = 𝜆}$, where $𝑑 (·, ·)$ is some distance metric.
+- Run candidates through an ODE solver to obtain samples and their corresponding verifier scores.
+- Find the best candidates, update it to be the pivot, and repeat steps 1-3.
+
+The number of iterations N is the primary scaling axis here. When 𝑁 gets larger, the algorithm will locate a more precise local “optimum”, and when 𝜆 increases, the algorithm will have a larger stride traversing the noise space more quickly. The value of 𝜆  is kept fixed.
+
