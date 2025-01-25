@@ -3,6 +3,7 @@
     "listing": "/blog.html",
     "items": [
       "/posts/paper_summaries/deepseek_r1.html",
+      "/posts/paper_summaries/inference_scaling_diffusion.html",
       "/posts/paper_summaries/deepseek_vl2.html",
       "/posts/paper_summaries/gazelle.html",
       "/posts/paper_summaries/nvila.html",
@@ -25,6 +26,7 @@
     "listing": "/archive.html",
     "items": [
       "/posts/paper_summaries/deepseek_r1.html",
+      "/posts/paper_summaries/inference_scaling_diffusion.html",
       "/posts/paper_summaries/deepseek_vl2.html",
       "/posts/paper_summaries/gazelle.html",
       "/posts/paper_summaries/nvila.html",

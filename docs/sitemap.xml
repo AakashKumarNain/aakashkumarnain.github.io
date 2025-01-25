@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2025-01-21T18:24:24.068Z</lastmod>
+    <lastmod>2025-01-25T09:09:55.868Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2025-01-21T18:24:21.912Z</lastmod>
+    <lastmod>2025-01-25T09:09:53.438Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/the_super_weight.html</loc>
@@ -79,5 +79,9 @@
   <url>
     <loc>/posts/paper_summaries/deepseek_r1.html</loc>
     <lastmod>2025-01-21T18:24:20.159Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/inference_scaling_diffusion.html</loc>
+    <lastmod>2025-01-25T09:09:51.415Z</lastmod>
   </url>
 </urlset>

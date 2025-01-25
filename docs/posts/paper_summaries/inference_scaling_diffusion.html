@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aakash Kumar Nain (@A_K_Nain)">
+<meta name="dcterms.date" content="2025-01-20">
+
+<title>Aakash Nain - Inference-Time Scaling for Diffusion Models beyond Scaling Denoising Steps</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Aakash Nain</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/AakashKumarNain" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/A_K_Nain" rel="" target=""><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/aakash-kumar-nain" rel="" target=""><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html" rel="" target="">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../archive.html" rel="" target="">
+ <span class="menu-text">Archive</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/annotated_research_papers" rel="" target="">
+ <span class="dropdown-text">Annotated Research Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.kaggle.com/aakashnain/code?userId=536977" rel="" target="">
+ <span class="dropdown-text">Kaggle Notebooks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/TF_JAX_tutorials" rel="" target="">
+ <span class="dropdown-text">TF-JAX Tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/diffusion_models" rel="" target="">
+ <span class="dropdown-text">Diffusion Models Tutorials</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#how-to-scale-at-inference-time" id="toc-how-to-scale-at-inference-time" class="nav-link" data-scroll-target="#how-to-scale-at-inference-time">How to Scale at Inference Time</a></li>
+  <li><a href="#task-and-design-walkthrough" id="toc-task-and-design-walkthrough" class="nav-link" data-scroll-target="#task-and-design-walkthrough">Task and design walkthrough</a></li>
+  <li><a href="#supervised-verifiers" id="toc-supervised-verifiers" class="nav-link" data-scroll-target="#supervised-verifiers">Supervised Verifiers</a></li>
+  <li><a href="#self-supervised-verifiers" id="toc-self-supervised-verifiers" class="nav-link" data-scroll-target="#self-supervised-verifiers">Self-supervised Verifiers</a></li>
+  <li><a href="#search-algorithms" id="toc-search-algorithms" class="nav-link" data-scroll-target="#search-algorithms">Search Algorithms</a></li>
+  <li><a href="#random-search" id="toc-random-search" class="nav-link" data-scroll-target="#random-search">Random Search</a></li>
+  <li><a href="#zero-order-search" id="toc-zero-order-search" class="nav-link" data-scroll-target="#zero-order-search">Zero-Order Search</a></li>
+  <li><a href="#search-over-paths" id="toc-search-over-paths" class="nav-link" data-scroll-target="#search-over-paths">Search Over Paths</a></li>
+  <li><a href="#inference-time-scaling-in-text-to-image" id="toc-inference-time-scaling-in-text-to-image" class="nav-link" data-scroll-target="#inference-time-scaling-in-text-to-image">Inference-Time Scaling in Text-to-Image</a></li>
+  <li><a href="#additional-points" id="toc-additional-points" class="nav-link" data-scroll-target="#additional-points">Additional points</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Inference-Time Scaling for Diffusion Models beyond Scaling Denoising Steps</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">papers</div>
+    <div class="quarto-category">summary</div>
+    <div class="quarto-category">research</div>
+    <div class="quarto-category">diffusion</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aakash Kumar Nain (<a href="https://x.com/A_K_Nain"><span class="citation" data-cites="A_K_Nain">@A_K_Nain</span></a>) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 20, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://arxiv.org/abs/2501.09732">arXiv</a><br></p>
+<p>Everyone has heard enough about the scaling inference-time compute for LLMs in the past month. Diffusion models, on the other hand, have an innate flexibility for allocating varied compute at inference time. Here is a summary of how researchers at GDM exploit this property:</p>
+<p><br> <img src="../paper_screenshots/inference_diffusion/1.png" class="img-fluid"> <br></p>
+<section id="motivation" class="level1">
+<h1>Motivation</h1>
+<ul>
+<li>It has already been proven that different kinds of noise injection lead to various types of sample quality in diffusion models, and the generation quality of these models significantly depends on the noise inversion stability. Hence, searching for better noises during sampling should help.</li>
+<li>More denoising steps produce better sample quality, but only up to a point. Simply scaling inference-time compute for denoising steps is not enough. -When in doubt, search!</li>
+</ul>
+</section>
+<section id="how-to-scale-at-inference-time" class="level1">
+<h1>How to Scale at Inference Time</h1>
+<ul>
+<li>The authors treat this as a search problem over the sampling noises and propose two design axes:
+<ul>
+<li><p><strong>Verifiers</strong>: pretrained models used to evaluate the goodness of the candidate. A verifier takes in the generated samples, optionally the corresponding conditions, and outputs a scalar value as the score for each generated sample.</p></li>
+<li><p><strong>Algorithms</strong>: Used to find better candidates based on the verifier’s scores. These functions take the verifier, the diffusion model, and 𝑁 pairs of generated samples with corresponding conditions as inputs and output the best initial noises according to the deterministic mapping between noises and samples.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="task-and-design-walkthrough" class="level1">
+<h1>Task and design walkthrough</h1>
+<ul>
+<li>Class-conditional ImageNet generation.</li>
+<li>SiT-XL model pre-trained on ImageNet with a resolution of 256 × 256.</li>
+<li>Sampling is performed using the second-order Heun sampler.</li>
+<li>The inference-compute budget is the total number of function evaluations (NFEs) used with denoising steps and search cost. The denoising steps are fixed to the optimal setting of 250 NFEs, and the scaling behavior is observed with respect to the NFEs devoted to the search.</li>
+<li>CFG with a weight value of 1.0.</li>
+<li>FID and IS as the evaluation metrics</li>
+</ul>
+</section>
+<section id="supervised-verifiers" class="level1">
+<h1>Supervised Verifiers</h1>
+<ul>
+<li>These evaluate the candidates based on the quality of the samples and their alignment with the specified conditioning inputs.</li>
+<li>Pretrained CLIP and DINO models are used to evaluate the effectiveness of scaling NFEs.</li>
+<li>While searching, the authors run samples through the classifiers and select the ones with the highest logits corresponding to the class labels used in the generation.</li>
+<li>This setup provided a better IS score compared to scaling denoising steps alone.</li>
+<li>A key problem with this setup is the ‘Random Search’, a Best-of-N strategy applied once on all noise candidates combined with these pretrained verifiers. The logits produced by DINO and CLIP in this setup only focus on the quality of a single sample without considering population diversity. It leads to a significant reduction in sample variance and eventually mode collapse as the compute increases. Random search accelerates the converging of search towards the bias of verifiers.</li>
+</ul>
+</section>
+<section id="self-supervised-verifiers" class="level1">
+<h1>Self-supervised Verifiers</h1>
+<ul>
+<li>The authors found a strong correlation between the logits output by the DINO / CLIP classifiers and the feature space cosine similarity of the model prediction at a low noise level (𝜎 = 0.4) and the final generated clean sample (𝜎 = 0).</li>
+<li>They use this similarity score as a surrogate for classification logits.</li>
+<li>Verifiers that use this similarity score and do not require additional conditioning information are known as self-supervised verifiers. This is useful for use cases where conditioning information is not available or hard to obtain.</li>
+</ul>
+<p><br> <img src="../paper_screenshots/inference_diffusion/2.png" class="img-fluid"> <br></p>
+</section>
+<section id="search-algorithms" class="level1">
+<h1>Search Algorithms</h1>
+<p>The authors use three different search algorithms: Random Search, Zero-Order Search, and Search Over Paths.</p>
+<p><br> <img src="../paper_screenshots/inference_diffusion/3.png" class="img-fluid"> <br></p>
+</section>
+<section id="random-search" class="level1">
+<h1>Random Search</h1>
+<ul>
+<li>The best-of-N strategy was applied once to all noise candidates.</li>
+<li>Randomly sample Gaussian noises, generate samples from them with ODE, and select those corresponding to the best verifier score.</li>
+<li>Since it operates on the entire Gaussian space, it can quickly overfit to the bias of verifiers and lead to failure.</li>
+</ul>
+</section>
+<section id="zero-order-search" class="level1">
+<h1>Zero-Order Search</h1>
+<p>It leverages verifiers’ feedback to refine candidates iteratively, only slightly each time, thus mitigating the overfitting risks. Here is the algo:</p>
+<ul>
+<li>Start with a random Gaussian noise 𝒏 as a pivot.</li>
+<li>Find 𝑁 candidates in the pivot neighborhood. Formally, the neighborhood is defined as <span class="math inline">\(𝑆^𝜆_𝒏 = { 𝒚:𝑑 (𝒚, 𝒏) = 𝜆}\)</span>, where <span class="math inline">\(𝑑 (·, ·)\)</span> is some distance metric.</li>
+<li>Run candidates through an ODE solver to obtain samples and their corresponding verifier scores.</li>
+<li>Find the best candidates, update it to be the pivot, and repeat steps 1-3.</li>
+</ul>
+<p>The number of iterations N is the primary scaling axis here. When 𝑁 gets larger, the algorithm will locate a more precise local “optimum”, and when 𝜆 increases, the algorithm will have a larger stride traversing the noise space more quickly. The value of 𝜆 is kept fixed.</p>
+</section>
+<section id="search-over-paths" class="level1">
+<h1>Search Over Paths</h1>
+<p>Search along the sampling trajectories over the noises injected. Mimics hierarchical search in some sense. Here is the algo:</p>
+<ul>
+<li>Sample 𝑁 initial i.i.d. noises and run the ODE solver until some noise level 𝜎. The noisy samples 𝒙(𝜎) serve as the search starting point.</li>
+<li>Sample 𝑀 i.i.d noises for each noisy sample, and simulate the forward noising process from <span class="math inline">\(𝜎\)</span> to <span class="math inline">\(𝜎 + Δ𝑓\)</span> to produce <span class="math inline">\(𝒙(𝜎+Δ 𝑓)\)</span> with size 𝑀.</li>
+<li>Run ODE solver on each 𝒙(𝜎+Δ 𝑓) to noise level <span class="math inline">\((𝜎 + Δ 𝑓 − Δ𝑏)\)</span>, and obtain <span class="math inline">\(𝒙(𝜎+Δ 𝑓 −Δ𝑏)\)</span>. Run verifiers on these samples and keep the top 𝑁 candidates. Repeat steps 2-3 until the ODE solver reaches 𝜎=0.</li>
+<li>Run the remaining 𝑁 samples through the random search and keep the best one.</li>
+</ul>
+<p>Termination is guaranteed by keeping Δ𝑏 &gt; Δf. An additional denoising step is done in step 3 before running the sample through the verifier so that the verifier gets a clean image. The primary scaling axis is the number of noises 𝑀 added in step 2. Different values of 𝑁 lead to different scaling behavior. Small 𝑁 is compute efficient in small generation budget, while large 𝑁 have an advantage when scaling up compute more.</p>
+<p><br> <img src="../paper_screenshots/inference_diffusion/4.png" class="img-fluid"> <br></p>
+</section>
+<section id="inference-time-scaling-in-text-to-image" class="level1">
+<h1>Inference-Time Scaling in Text-to-Image</h1>
+<ul>
+<li>Datasets: DrawBench and T2I-CompBench. The authors generate two images per prompt and use the 1800 prompts from the validation set for evaluation.</li>
+<li>Models: FLUX.1-dev model</li>
+<li>Verifiers: Four kinds of verifiers were used- Aesthetic Score predictor, CLIPScore, ImageReward, and an ensemble of the three.</li>
+<li>Metrics: Verifiers not included in the search process, and evaluation using Gemini 1.5 Flash from five different perspectives: Accuracy to Prompt, Originality, Visual Quality, Internal Consistency, and Emotional Resonance.</li>
+</ul>
+<p><br> <img src="../paper_screenshots/inference_diffusion/5.png" class="img-fluid"> <br></p>
+</section>
+<section id="additional-points" class="level1">
+<h1>Additional points</h1>
+<ul>
+<li>Search can be applied to both pretrained models and fine-tuned models.</li>
+<li>Adjusting NFEs/iter can reveal distinct compute-optimal regions. When NFEs/iter &gt;=50, yield minimal gains despite the additional computational investment.</li>
+<li>With a fixed inference compute budget, performing a search on small models can outperform larger models without search.</li>
+<li>I do not like the use of AestheticsScore in its current state. Why? Aesthetics is a nuanced area. Unless you remove all kinds of biases, all aesthetic scores are meaningless except for sharpness/picture quality.</li>
+</ul>
+<p><br> <img src="../paper_screenshots/inference_diffusion/6.png" class="img-fluid"> <br></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
