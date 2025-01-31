@@ -34,3 +34,12 @@ JanusPro is here, the next generation of the Janus model, with a few surprises (
 - All these feature sequences are then concatenated and fed into an autoregressive model with two prediction heads: one for text generation and the other for visual generation.
 
 <br> ![](../paper_screenshots/januspro/2.png) <br>
+
+
+# Training Strategy Optimization
+
+- Similar to the previous version of Janus, there are three stages of training here, but with some optimizations and subtle differences.
+- The length of the training run in stage I, focusing on training the adaptors and the image head, is increased, allowing sufficient training on the ImageNet dataset.
+- In stage II, the authors drop the ImageNet data and directly utilize regular text-to-image data to train the model to generate images based on dense descriptions. This resulted in better efficiency and improved performance.
+- The data ratio of multimodal data, text data, and text-to-image data in SFT of stage III is also changed from 7:3:10 to 5:1:4.
+
