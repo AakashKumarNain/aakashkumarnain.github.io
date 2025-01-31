@@ -43,3 +43,15 @@ JanusPro is here, the next generation of the Janus model, with a few surprises (
 - In stage II, the authors drop the ImageNet data and directly utilize regular text-to-image data to train the model to generate images based on dense descriptions. This resulted in better efficiency and improved performance.
 - The data ratio of multimodal data, text data, and text-to-image data in SFT of stage III is also changed from 7:3:10 to 5:1:4.
 
+
+# Data Scaling for Multimodal Understanding
+
+- 90 million samples in pretraining, including captions data, data for tables, charts, and document understanding.
+- For SFT, the authors incorporate additional datasets from DeepSeek-VL2, such as MEME understanding, Chinese conversational data, and datasets to enhance dialogue experiences.
+
+
+# Data Scaling for Visual Generation
+
+- Noise in real-world datasets leads to instabilities in training text-to-image generation and aesthetically poor outputs.
+- To overcome the above, the authors add 72 million samples of synthetic aesthetic data, bringing the ratio of real to synthetic data to 1:1 during the unified pretraining stage.
+- Synthetic data helps models converge faster with significantly improved aesthetic quality in the outputs.
