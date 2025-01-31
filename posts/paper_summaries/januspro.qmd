@@ -73,3 +73,12 @@ As expected, when the LLM is scaled up, the convergence speed of losses for both
 - A resolution of 384x384 is used for all the images. For understanding tasks, the longer side is resized, and the shorter side is padded. For generation tasks, the longer side is cropped and the shorter side is resized.
 - Sequence packing is used.
 - Trained on HAI-LLM (a distributed framework on top of PyTorch), the whole training process took about 7/14 days on a cluster of 16/32 nodes for 1.5B/7B model, each equipped with 8 A100 (40GB) GPUs.
+
+<br> ![](../paper_screenshots/januspro/4.png) <br>
+
+
+# Results and Comparison to Other Unified Models
+
+How do these two models perform on the benchmarks? Remember Transfusion and Chameleon from Meta? How does JanusPro perform when compared to it?
+
+<br> ![](../paper_screenshots/januspro/5.png) <br>
