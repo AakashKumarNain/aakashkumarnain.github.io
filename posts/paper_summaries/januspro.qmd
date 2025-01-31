@@ -55,3 +55,10 @@ JanusPro is here, the next generation of the Janus model, with a few surprises (
 - Noise in real-world datasets leads to instabilities in training text-to-image generation and aesthetically poor outputs.
 - To overcome the above, the authors add 72 million samples of synthetic aesthetic data, bringing the ratio of real to synthetic data to 1:1 during the unified pretraining stage.
 - Synthetic data helps models converge faster with significantly improved aesthetic quality in the outputs.
+
+
+# Model Scaling
+
+As expected, when the LLM is scaled up, the convergence speed of losses for both multimodal understanding and visual generation improved significantly compared to the smaller model.
+
+<br> ![](../paper_screenshots/januspro/3.png) <br>
