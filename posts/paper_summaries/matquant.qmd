@@ -60,7 +60,7 @@ $Q(𝑤, 𝑐)$ is the 𝑐-bit quantized version of $𝑤$, $𝛼$ is the scali
 - The idea is to develop a single model that works well at different precisions.
 - Leverages the inherent Matryoshka nature of the integer data type, meaning if you want to extract a $𝑟$-bit model from a $𝑐$-bit model $(0 < 𝑟 < 𝑐)$, you can slice out the $𝑟 $most significant bits using a right shift, followed by a left shift of the same order.
 - Let $𝑅 = {\{𝑟_1, 𝑟_2, ..., 𝑟_𝐾\}}$ be the bit-widths you want to optimize for, $𝑄(·, )$ represent the quantization function of the base algorithm (i.e., any learning-based quantization scheme), $L (·)$ represent the loss function, $𝐹 (·)$ represent the forward pass, $𝜃$ represent the set of model/auxiliary parameters and let $𝑊_𝐹$ represent the model parameters. The slicing operation and the objective function can mathematically be formulated as shown below
-- $𝜆(𝑟)$ is a loss reweighing factor for bit-width. For this paper, three values of $R={\{8, 4, 2\}}$ are used, and a grid search is performed over $𝜆(𝑟)$.
+- $𝜆_𝑟$ is a loss reweighing factor for bit-width. For this paper, three values of $R={\{8, 4, 2\}}$ are used, and a grid search is performed over $𝜆_𝑟$.
 
 <br> ![](../paper_screenshots/matquant/4.png) <br>
 
@@ -87,3 +87,15 @@ $Q(𝑤, 𝑐)$ is the 𝑐-bit quantized version of $𝑤$, $𝛼$ is the scali
 So, how does MatQuant perform compared to the other quantization methods for different precisions? Here are some results:
 
 <br> ![](../paper_screenshots/matquant/5.png) <br>
+
+
+# Weightings $𝜆_𝑟$ for MatQuant
+
+- Found using grid search for different precisions.
+- Equal weighting for all precisions works well.
+- Higher weights for a specific precision result in increased accuracy for that bit-width. This re-weighting to improve int8 and int4 models often results in a minor accuracy drop for the int2 models.
+
+
+# Limitations
+
+Extending MatQuant to floating-point representations, such as FP8 and FP4, presents significant challenges. Slicing, in this case, results in buckets whose sizes increase exponentially, unlike the integer case, where bucket sizes are constant.
