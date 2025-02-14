@@ -71,3 +71,19 @@ $Q(𝑤, 𝑐)$ is the 𝑐-bit quantized version of $𝑤$, $𝛼$ is the scali
 - Weights quantized with MatQuant tend to use higher-valued weights more. This is beneficial for int2 precision models. (check topmost figure)
 - Although MatQuant was trained for three precisions (int8, int4, int2), the resulting model, when quantized to interpolated bit-widths like int6 & int3 by slicing the int8 model, performs on par with a baseline trained explicitly for that precision.
 - We can use different precisions at different layers through layer-wise Mix’n’Match for MatQuant models. The authors found that having a higher precision (int8) in the middle layers and a lower precision (int2) at the start and end is Pareto-optimal.
+
+
+# Experimental Setup
+
+- Comparison with QAT and OmniQuant
+- FFN block is the target for quantization
+- Three precisions: int8, int4, int2
+- Models: Gemma and Mistral
+- Data: Differently sampled for different strategies, but mostly from C4
+
+
+# Results
+
+So, how does MatQuant perform compared to the other quantization methods for different precisions? Here are some results:
+
+<br> ![](../paper_screenshots/matquant/5.png) <br>
