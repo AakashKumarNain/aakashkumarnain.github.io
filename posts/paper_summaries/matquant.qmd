@@ -33,3 +33,14 @@ Another fantastic paper from GDM! MatQuant came out last week. It was a very ref
 - MatQuant allows training and maintaining just one model that can be served at different precision levels.
 - int2 precision models extracted by MatQuant can be up to 10% more accurate than standard int2 quantization.
 - It works seamlessly with other quantization techniques like Quantization Aware Training (QAT)and OmniQuant.
+
+
+# Preliminaries
+
+### 1. Quantized Aware Training
+
+- QAT learns a 𝑐-bit quantized model by optimizing for the end-to-end cross-entropy loss using gradient descent.
+- The MinMax quantization of a real-valued vector $𝑤$ in $𝑐$ bits can be formulated as shown below.
+$Q(𝑤, 𝑐)$ is the 𝑐-bit quantized version of $𝑤$, $𝛼$ is the scaling factor, and $𝑧$ is the zero point. If W represents weights of a Transformer LLM,  $D = {(𝑥1, 𝑦1), ...., (𝑥𝑁, 𝑦𝑁)}$ a labeled dataset, F the forward pass, $L_{CE}$ the cross-entropy loss, then QAT can be optimized as:
+
+<br> ![](../paper_screenshots/matquant/2.png) <br>
