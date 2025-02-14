@@ -63,3 +63,11 @@ $Q(𝑤, 𝑐)$ is the 𝑐-bit quantized version of $𝑤$, $𝛼$ is the scali
 - $𝜆(𝑟)$ is a loss reweighing factor for bit-width. For this paper, three values of $R={\{8, 4, 2\}}$ are used, and a grid search is performed over $𝜆(𝑟)$.
 
 <br> ![](../paper_screenshots/matquant/4.png) <br>
+
+
+# Some observations
+
+- MatQuant alters the quantized weight distributions across precision levels compared to the base quantization algorithm (OmniQuant or QAT).
+- Weights quantized with MatQuant tend to use higher-valued weights more. This is beneficial for int2 precision models. (check topmost figure)
+- Although MatQuant was trained for three precisions (int8, int4, int2), the resulting model, when quantized to interpolated bit-widths like int6 & int3 by slicing the int8 model, performs on par with a baseline trained explicitly for that precision.
+- We can use different precisions at different layers through layer-wise Mix’n’Match for MatQuant models. The authors found that having a higher precision (int8) in the middle layers and a lower precision (int2) at the start and end is Pareto-optimal.
