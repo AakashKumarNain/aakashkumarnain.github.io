@@ -19,3 +19,17 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2502.06786)<br>
+
+Another fantastic paper from GDM! MatQuant came out last week. It was a very refreshing read. 
+
+<br> ![](../paper_screenshots/matquant/1.png) <br>
+
+
+# Introduction
+
+- Quantizing model weights is critical for reducing the communication and inference costs of LLMs.
+- Extreme low precisions like int4 or int2 result in severe degradation in the quality of outputs of these models.
+- The authors propose Matryoshka Quantization (MatQuant), a novel multi-scale quantization technique that addresses the need for multiple quantized models.
+- MatQuant allows training and maintaining just one model that can be served at different precision levels.
+- int2 precision models extracted by MatQuant can be up to 10% more accurate than standard int2 quantization.
+- It works seamlessly with other quantization techniques like Quantization Aware Training (QAT)and OmniQuant.
