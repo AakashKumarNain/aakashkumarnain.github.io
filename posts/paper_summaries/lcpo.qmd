@@ -42,3 +42,14 @@ The authors propose an RL-based algorithm LCPO that gives reasoning language mod
 - Correctness of the final output, and
 - Generating reasoning sequences that meet a length constraint specified in the prompt.
 
+
+# L1-Exact
+
+- Fixed length reasoning trace generation.
+- Given an input prompt x and a target length $n_{gold}$, the model is expected to generate a response
+$y$ whose length $n_y$ minimizes the absolute difference $|n_{gold} − n_y|$ while simultaneously producing the correct answer
+- They start with a Dataset $D = \{(x_i, y_gold, i)\}$ consisting of N samples, and a pretrained reasoning model. Each instance in the dataset contains only the input prompt and the final answer with no reasoning traces.
+- Each prompt $x_i$ is augmented by appending a target length instruction as shown below:
+
+$x_i^{new} = \text{Concat}\Bigl(x_i, \text{''Think for } n_{gold,i} \text{ tokens.''}\Bigr),$
+
