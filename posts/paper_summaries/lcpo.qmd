@@ -26,3 +26,10 @@ the length of their chain-of-thought reasoning is not controllable, making it im
 What if you want to control the length of CoT sequences? Can you put a budget constraint at test time for the reasoner models while maintaining performance? This latest paper from CMU addresses these two questions via RL. 
 
 <br> ![](../paper_screenshots/lcpo/1.png) <br>
+
+
+# Why does it matter?
+
+- Reasoning models improve performance at test time by thinking longer when solving complex problems. Longer thinking means generating an extended chain of thought sequences.
+- The inability to control the length of these generated thoughts makes it hard to put a budget constraint to achieve a target-level performance.
+- A practical implication of this is on the deployment side. If you have a model tailored to your use case but is not budget-friendly because of high compute, this algorithm gives you a chance to achieve that.
