@@ -33,3 +33,12 @@ What if you want to control the length of CoT sequences? Can you put a budget co
 - Reasoning models improve performance at test time by thinking longer when solving complex problems. Longer thinking means generating an extended chain of thought sequences.
 - The inability to control the length of these generated thoughts makes it hard to put a budget constraint to achieve a target-level performance.
 - A practical implication of this is on the deployment side. If you have a model tailored to your use case but is not budget-friendly because of high compute, this algorithm gives you a chance to achieve that.
+
+
+# Length Controlled Policy Optimization (LCPO)
+
+The authors propose an RL-based algorithm LCPO that gives reasoning language models precise and adaptive length control. LCPO trains models to satisfy two objectives. They condition the model on a target token length provided in the prompt.
+
+- Correctness of the final output, and
+- Generating reasoning sequences that meet a length constraint specified in the prompt.
+
