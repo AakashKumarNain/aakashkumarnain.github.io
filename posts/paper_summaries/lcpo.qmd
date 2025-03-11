@@ -1,0 +1,28 @@
+---
+title: "L1"
+subtitle: "Controlling How Long A Reasoning Model Thinks With Reinforcement Learning"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2025-03-10"
+categories: [papers, summary, research, lrm]
+image: ""
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    highlight-style: oblivion
+    css: styles.css
+execute: 
+  echo: false
+---
+
+[arXiv](https://arxiv.org/abs/2503.04697)<br>
+
+Reasoning language models have shown an uncanny ability to improve performance at test-time by “thinking longer”—that is, by generating longer chain-of-thought sequences and hence using more compute. However,
+the length of their chain-of-thought reasoning is not controllable, making it impossible to allocate test-time compute to achieve a desired level of performance
+
+What if you want to control the length of CoT sequences? Can you put a budget constraint at test time for the reasoner models while maintaining performance? This latest paper from CMU addresses these two questions via RL. 
+
+<br> ![](../paper_screenshots/lcpo/1.png) <br>
