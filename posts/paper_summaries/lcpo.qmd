@@ -57,3 +57,14 @@ $r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) - \alpha \cdot |n_{gold} - 
 - Here $\mathbb{I}(·)$ is the indicator function, $n_y$ is the generated output length, and α is a scalar responsible for regulating the trade-off between generating the correct answer and meeting the target length. A lower value of α prioritizes correctness, and a higher value of α enforces stricter adherence to the length constraint.
 - This objective function not only encourages the model to produce the correct answers with concise reasoning traces when shorter outputs are requested, but also encourages the model to match the prescribed target length even when a correct answer could be generated with fewer tokens.
 - At inference, the output length is controlled by selecting a fixed target length $n_{gold}$ (or a set of lengths) that is appended uniformly to every test prompt.
+
+
+# L1-Max
+
+- Useful when the budget constraint takes more priority than a fixed-generated length of CoT.
+- Generates flexible outputs of varying lengths while respecting a maximum length constraint.
+- The authors fine-tune the L1-Exact model using the same RL framework but with a modified reward function as shown below:<br>
+$r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) \cdot \text{clip}\left(\alpha \cdot (n_{gold} - n_y) + \delta, 0, 1\right)$
+- Here, α controls the penalty for length violations.
+- This formulation applies a soft constraint that gradually penalizes outputs exceeding the target length rather than imposing a hard cutoff and also incentivizes the model to use fewer tokens when possible without sacrificing correctness.
+- The δ = 0.5 term ensures that correct answers with minor budget violations are preferred over incorrect answers.
