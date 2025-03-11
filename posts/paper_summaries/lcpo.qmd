@@ -48,8 +48,12 @@ The authors propose an RL-based algorithm LCPO that gives reasoning language mod
 - Fixed length reasoning trace generation.
 - Given an input prompt x and a target length $n_{gold}$, the model is expected to generate a response
 $y$ whose length $n_y$ minimizes the absolute difference $|n_{gold} − n_y|$ while simultaneously producing the correct answer
-- They start with a Dataset $D = \{(x_i, y_gold, i)\}$ consisting of N samples, and a pretrained reasoning model. Each instance in the dataset contains only the input prompt and the final answer with no reasoning traces.
-- Each prompt $x_i$ is augmented by appending a target length instruction as shown below:
-
+- They start with a Dataset $D = \{(x_i, y_{gold}, i)\}$ consisting of N samples, and a pretrained reasoning model. Each instance in the dataset contains only the input prompt and the final answer with no reasoning traces.
+- Each prompt $x_i$ is augmented by appending a target length instruction as shown below:<br>
 $x_i^{new} = \text{Concat}\Bigl(x_i, \text{''Think for } n_{gold,i} \text{ tokens.''}\Bigr),$
-
+- Here $n_{gold, i}$ is sampled uniformly from $Z(n_min, n_max )$. This augmentation yields a new augmented dataset $D_new = \{(x_{new,i}, \ y_{gold}, \ i)\}$
+- Then they use GRPO to update the parameters of the model. The reward function combines two terms: a correctness reward r_c and a length penalty r_length. It is defined as:<br>
+$r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) - \alpha \cdot |n_{gold} - n_y|$
+- Here $\mathbb{I}(·)$ is the indicator function, $n_y$ is the generated output length, and α is a scalar responsible for regulating the trade-off between generating the correct answer and meeting the target length. A lower value of α prioritizes correctness, and a higher value of α enforces stricter adherence to the length constraint.
+- This objective function not only encourages the model to produce the correct answers with concise reasoning traces when shorter outputs are requested, but also encourages the model to match the prescribed target length even when a correct answer could be generated with fewer tokens.
+- At inference, the output length is controlled by selecting a fixed target length $n_{gold}$ (or a set of lengths) that is appended uniformly to every test prompt.
