@@ -98,3 +98,10 @@ Evaluated against the following baselines:
 - S1:  another budget-forcing method
 
 <br> ![](../paper_screenshots/lcpo/5.png) <br>
+
+
+# L1 generalizes effectively to OOD tasks
+
+L1 generalizes robustly to new domains: performance consistently scales positively with token budget for OOD general reasoning datasets, approaching or matching Agentica-4K benchmarks despite explicit length control constraints.
+
+<br> ![](../paper_screenshots/lcpo/6.png) <br>
