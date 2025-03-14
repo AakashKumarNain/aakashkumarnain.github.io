@@ -75,13 +75,26 @@ $r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) \cdot \text{clip}\left(\alp
 **Training Dataset:** DeepScaleR-Preview-Dataset <br>
 **Evaluation Datasets:** AIME 2025, MATH, AMC, Olympiad-Bench, GPQA, LSAT, and MMLU <br>
 **Base model:** DeepScaleR-1.5B-Preview <br>
-**Evaluation Protocol:**
+**Evaluation Protocol:** <br>
 1. Mean deviation between the generated token length and the target
 2. Overall performance at different lengths.
 
 **Hparams:**
+
 - lr=1e-6
 - bs=128
 - ctx_len=4K during training, extended to 8K during evaluation
 - $n_{min}$=100, $n_{max}$=400
 - $α$=0.0003 for L1-exact
+
+
+# Results
+
+Evaluated against the following baselines:
+
+- DeepSeek-R1-Distill-Qwen-1.5B
+- DeepScaleR-1.5B-Preview
+- DeepScaleR-1.5B-Preview-4K
+- S1:  another budget-forcing method
+
+<br> ![](../paper_screenshots/lcpo/5.png) <br>
