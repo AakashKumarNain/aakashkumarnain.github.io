@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2025-02-14T16:37:20.543Z</lastmod>
+    <lastmod>2025-03-14T08:52:02.752Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2025-02-14T16:37:18.100Z</lastmod>
+    <lastmod>2025-03-14T08:52:00.121Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/the_super_weight.html</loc>
@@ -91,5 +91,9 @@
   <url>
     <loc>/posts/paper_summaries/matquant.html</loc>
     <lastmod>2025-02-14T16:37:16.107Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/lcpo.html</loc>
+    <lastmod>2025-03-14T08:51:58.147Z</lastmod>
   </url>
 </urlset>

@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/lcpo.html",
       "/posts/paper_summaries/matquant.html",
       "/posts/paper_summaries/januspro.html",
       "/posts/paper_summaries/deepseek_r1.html",
@@ -27,6 +28,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/paper_summaries/lcpo.html",
       "/posts/paper_summaries/matquant.html",
       "/posts/paper_summaries/januspro.html",
       "/posts/paper_summaries/deepseek_r1.html",
