@@ -105,3 +105,17 @@ Evaluated against the following baselines:
 L1 generalizes robustly to new domains: performance consistently scales positively with token budget for OOD general reasoning datasets, approaching or matching Agentica-4K benchmarks despite explicit length control constraints.
 
 <br> ![](../paper_screenshots/lcpo/6.png) <br>
+
+
+# L1 follows length constraints with high precision
+
+<br> ![](../paper_screenshots/lcpo/7.png) <br>
+
+
+
+# Long CoT Models are secretly Strong Short CoT Models
+
+- L1 consistently outperforms or matches all models across all datasets despite using equivalent token budgets.
+- On average, L1 is 5% better than its non-reasoning counterpart and even outperforms GPT-4o by 2%.
+
+<br> ![](../paper_screenshots/lcpo/8.png) <br>
