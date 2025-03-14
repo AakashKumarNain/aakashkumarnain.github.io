@@ -224,9 +224,9 @@ ul.task-list li input[type="checkbox"] {
 <li>Fixed length reasoning trace generation.</li>
 <li>Given an input prompt x and a target length <span class="math inline">\(n_{gold}\)</span>, the model is expected to generate a response <span class="math inline">\(y\)</span> whose length <span class="math inline">\(n_y\)</span> minimizes the absolute difference <span class="math inline">\(|n_{gold} − n_y|\)</span> while simultaneously producing the correct answer</li>
 <li>They start with a Dataset <span class="math inline">\(D = \{(x_i, y_{gold}, i)\}\)</span> consisting of N samples, and a pretrained reasoning model. Each instance in the dataset contains only the input prompt and the final answer with no reasoning traces.</li>
-<li>Each prompt <span class="math inline">\(x_i\)</span> is augmented by appending a target length instruction as shown below:<br> <span class="math inline">\(x_i^{new} = \text{Concat}\Bigl(x_i, \text{''Think for } n_{gold,i} \text{ tokens.''}\Bigr),\)</span></li>
-<li>Here <span class="math inline">\(n_{gold, i}\)</span> is sampled uniformly from <span class="math inline">\(Z(n_min, n_max )\)</span>. This augmentation yields a new augmented dataset <span class="math inline">\(D_new = \{(x_{new,i}, \ y_{gold}, \ i)\}\)</span></li>
-<li>Then they use GRPO to update the parameters of the model. The reward function combines two terms: a correctness reward r_c and a length penalty r_length. It is defined as:<br> <span class="math inline">\(r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) - \alpha \cdot |n_{gold} - n_y|\)</span></li>
+<li>Each prompt <span class="math inline">\(x_i\)</span> is augmented by appending a target length instruction as shown below:<br> <span class="math inline">\(x_i^{new} = \text{Concat}\Bigl(x_i, \text{''Think for } n_{gold,i} \text{ tokens.''}\Bigr)\)</span> <br></li>
+<li>Here <span class="math inline">\(n_{gold, i}\)</span> is sampled uniformly from <span class="math inline">\(Z(n_{min}, n_{max})\)</span>. This augmentation yields a new augmented dataset <span class="math inline">\(D_new = \{(x_{new,i}, \ y_{gold},i)\}\)</span> <br></li>
+<li>Then they use GRPO to update the parameters of the model. The reward function combines two terms: a correctness reward r_c and a length penalty r_length. It is defined as:<br> <span class="math inline">\(r(y, \ y_{gold}, \ n_{gold}) = \mathbb{I}(y = y_{gold}) - \alpha \cdot |n_{gold} - n_y|\)</span> <br></li>
 <li>Here <span class="math inline">\(\mathbb{I}(·)\)</span> is the indicator function, <span class="math inline">\(n_y\)</span> is the generated output length, and α is a scalar responsible for regulating the trade-off between generating the correct answer and meeting the target length. A lower value of α prioritizes correctness, and a higher value of α enforces stricter adherence to the length constraint.</li>
 <li>This objective function not only encourages the model to produce the correct answers with concise reasoning traces when shorter outputs are requested, but also encourages the model to match the prescribed target length even when a correct answer could be generated with fewer tokens.</li>
 <li>At inference, the output length is controlled by selecting a fixed target length <span class="math inline">\(n_{gold}\)</span> (or a set of lengths) that is appended uniformly to every test prompt.</li>
@@ -237,7 +237,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Useful when the budget constraint takes more priority than a fixed-generated length of CoT.</li>
 <li>Generates flexible outputs of varying lengths while respecting a maximum length constraint.</li>
-<li>The authors fine-tune the L1-Exact model using the same RL framework but with a modified reward function as shown below:<br> <span class="math inline">\(r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) \cdot \text{clip}\left(\alpha \cdot (n_{gold} - n_y) + \delta, 0, 1\right)\)</span></li>
+<li>The authors fine-tune the L1-Exact model using the same RL framework but with a modified reward function as shown below:<br> <span class="math inline">\(r(y, y_{gold}, n_{gold}) = \mathbb{I}(y = y_{gold}) \cdot \text{clip}\left(\alpha \cdot (n_{gold} - n_y) + \delta, 0, 1\right)\)</span> <br></li>
 <li>Here, α controls the penalty for length violations.</li>
 <li>This formulation applies a soft constraint that gradually penalizes outputs exceeding the target length rather than imposing a hard cutoff and also incentivizes the model to use fewer tokens when possible without sacrificing correctness.</li>
 <li>The δ = 0.5 term ensures that correct answers with minor budget violations are preferred over incorrect answers.</li>
@@ -245,7 +245,11 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="experimental-setup" class="level1">
 <h1>Experimental Setup</h1>
-<p><strong>Training Dataset:</strong> DeepScaleR-Preview-Dataset <br> <strong>Evaluation Datasets:</strong> AIME 2025, MATH, AMC, Olympiad-Bench, GPQA, LSAT, and MMLU <br> <strong>Base model:</strong> DeepScaleR-1.5B-Preview <br> <strong>Evaluation Protocol:</strong> <br> 1. Mean deviation between the generated token length and the target 2. Overall performance at different lengths.</p>
+<p><strong>Training Dataset:</strong> DeepScaleR-Preview-Dataset <br> <strong>Evaluation Datasets:</strong> AIME 2025, MATH, AMC, Olympiad-Bench, GPQA, LSAT, and MMLU <br> <strong>Base model:</strong> DeepScaleR-1.5B-Preview <br> <strong>Evaluation Protocol:</strong></p>
+<ul>
+<li>Mean deviation between the generated token length and the target</li>
+<li>Overall performance at different lengths.</li>
+</ul>
 <p><strong>Hparams:</strong></p>
 <ul>
 <li>lr=1e-6</li>
