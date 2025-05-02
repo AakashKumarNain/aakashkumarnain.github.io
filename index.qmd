@@ -12,23 +12,18 @@ page-layout: full
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-8}
-Hello, I am **Aakash Kumar Nain**.
 
-I am a Machine Learning Engineer with 8 years of experience in the industry. Currently,
-I am working as a Senior ML Engineer at Merlyn Mind. I am also a Google Developers Expert
-in Machine Learning and JAX. I actively contribute to Keras, TensorFlow, and the JAX ecosystem.
-I am one of the core collaborators for the [Keras core](https://keras.io/keras_core/) project,
-and I am also one of the maintainers of the TensorFlow-addons package.
+I am **Aakash Kumar Nain**, a Senior Machine Learning Engineer (Research) at Emergence AI, bringing over 8 years of experience in building and deploying advanced deep neural networks. A strong advocate for open-source development, I actively contribute to the machine learning ecosystem: I am a core collaborator on Keras 3.0, contribute within the JAX ecosystem, and maintain the TensorFlow-addons package. My expertise and contributions across the TensorFlow, Keras, and JAX frameworks led to my recognition as a Google Developers Expert (GDE).
 
-In terms of work, my knowledge Machine Learning and Deep Learning spans in T-shape. I have worked
-in multiple domains, but Computer Vision with Deep Learning is my favorite field. I love simplifying
-Data Science and Machine Learning concepts, especially the maths behind them. Love and support OSS
-because, without OSS, we wouldn't have witnessed so many breakthroughs in Machine Learning and 
-Deep Learning. Python is my favorite language to work with, and I absolutely love coding in it.
-Always up for a discussion involving anything related to Machine Learning, Deep Learning, MLOps,
-and API design. Simply put: *Python in breakfast, Machine Learning in lunch, and Deep Learning in dinner!*
+My current work focuses on developing Large Language Models (LLMs) and Multimodal Large Language Models(MLLMs). Building these models has led me to focus my research on:
 
-Follow me on [Twitter](https://twitter.com/A_K_Nain) to get the latest updates related to Machine Learning.
+* Investigating the reasoning capabilities and limitations of large language models.
+* Self-play and self-improvement in Large Language Models
+* Identifying and mitigating bottlenecks in multimodal architectures.
+* Exploring the broad applicability and advancement of diffusion models.
+
+
+Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Machine Learning and Artificial Intelligence.
 :::
 :::
 
