@@ -32,57 +32,43 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 
 ::: {.grid}
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
-## Transformer Layers as Painters (AAAI 2025)
+### [Transformer Layers as Painters (AAAI 2025)](https://arxiv.org/abs/2407.09298)
+
 This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
 
-## The Ungrounded Alignment (CogSci 2025)
+### [The Ungrounded Alignment (CogSci 2025)]((https://arxiv.org/abs/2408.04242))
 Though the current ML systems have advanced a lot, a key question remains unanswered: *How can we build in predefined knowledge in a system where we don't know how a given stimulus will be grounded?* We investigate this as the **Ungrounded Alignment Problem**. This work examines a specific instance: an unsupervised learner processes image sequences representing characters from a text corpus (using an unknown font or permutation). The learner receives no labels but is evaluated on recognizing key sequential patterns, forcing it to deduce the mapping between the variable visual inputs and the correct underlying character classes.
 :::
 :::
 
-# Portfolio
 
 ::: {.grid}
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
-## Popular Projects
+## Projects
 
-[Annotated Research Papers](https://github.com/AakashKumarNain/annotated_research_papers) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/annotated_research_papers?color=blue&logo=github">
+[Mistral-7B in JAX](https://github.com/AakashKumarNain/mistral_jax) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/mistral_jax?color=blue&logo=github">
 
-Most researchers and Machine Learning engineers want to remain up-to-date with the latest research
-work, but the field of machine learning moves crazy fast. The number of papers uploaded on
-[arXiv](https://arxiv.org/) is witnessing exponential growth. Reading all these published papers is
-an impossible task. To help with this, I maintain this repository where I annotate and upload the
-papers that I find exceptionally good. Annotations make it easier to understand and grasp the main
-concepts explained in the paper. <br> 
-
-
-[TF-JAX Tutorials](https://github.com/AakashKumarNain/TF_JAX_tutorials) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/TF_JAX_tutorials?color=blue&logo=github">
-
-It is a series of tutorials built to teach the fundamental concepts and the underlying working of
-two famous libraries: TensorFlow and JAX. These tutorials aren't typical documentation-type tutorials.
-It doesn't matter whether you are a beginner or an advanced user, these tutorials will give you a fresh
-perspective on building things using TensorFlow or JAX. <br>
+This project provides a JAX/Equinox port of the Mistral-7B model. It features two distinct implementations: the first is a direct, 1:1 mapping from PyTorch designed primarily to demonstrate the porting process clearly for educational purposes, while the second is a fully JAX-optimized version targeting advanced users seeking performance and efficiency. <br>
 
 
 [Diffusion Models](https://github.com/AakashKumarNain/diffusion_models) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/diffusion_models?color=blue&logo=github">
 
-Diffusion models are a class of likelihood-based generative models that recently have been used
-to produce very high-quality images compared to other existing generative models like GANs. It's
-hard to find quality resources to learn about diffusion models. The mathematics behind the diffusion
-models is also a bit harder to understand. The material presented in this repo is enough to make you
-understand the working of diffusion models and the underlying math. <br>
+Known for generating exceptionally high-quality images compared to predecessors like GANs, diffusion models have become increasingly prominent. Yet, learners often face challenges due to the scarcity of quality learning materials and the perceived complexity of the underlying mathematics. The resources compiled in this repository are specifically structured to provide a clear and comprehensive understanding of how diffusion models work and the essential math principles they rely on. <br>
 
 
-[Mistral-7B in JAX](https://github.com/AakashKumarNain/mistral_jax) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/mistral_jax?color=blue&logo=github">
+[Annotated Research Papers](https://github.com/AakashKumarNain/annotated_research_papers) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/annotated_research_papers?color=blue&logo=github">
 
-This is a direct port of Mitral-7B model in JAX and Equinox. This port comes with two implementations:
-The first one shows how to port models from PyTorch to Equinox and JAX. This is a 1:1 mapping, and not
-fully optimized. The second implementation is fully optimized for JAX, targeted for more advanced users.
+Keeping pace with the accelerating volume of machine learning research on [arXiv](https://arxiv.org/) is a common challenge. This repository serves as a curated collection of significant papers I've personally annotated to highlight key concepts and insights. The annotations are intended to aid comprehension and make understanding important research more efficient for fellow practitioners and researchers. <br> 
 
+
+[TF-JAX Tutorials](https://github.com/AakashKumarNain/TF_JAX_tutorials) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/TF_JAX_tutorials?color=blue&logo=github">
+
+Learn the foundational concepts and inner workings of TensorFlow and JAX with this tutorial series. It offers a unique perspective distinct from typical documentation, providing valuable insights and a deeper understanding for both beginners and advanced users aiming to build effectively with these libraries.<br>
 :::
 
+
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## [Keras Core Contributions](https://keras.io/keras_core/announcement/)
+#### [Keras Core Contributions](https://keras.io/keras_core/announcement/)
 
 1. JAX NN ops
 2. Merging layers
@@ -94,7 +80,7 @@ fully optimized. The second implementation is fully optimized for JAX, targeted 
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## Keras Contributions
+#### Keras Contributions
 
 1. [Denoising Diffusion Models](https://keras.io/examples/generative/ddpm/)
 2. [OCR model for reading captchas](https://keras.io/examples/vision/captcha_ocr/)
@@ -106,7 +92,7 @@ fully optimized. The second implementation is fully optimized for JAX, targeted 
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## Equinox Contributions
+#### Equinox Contributions
 
 1. [Mistral-7B implementation](https://docs.kidger.site/equinox/examples/mistral_7b/)
 2. [Bug fix in RMSNorm Layer](https://github.com/patrick-kidger/equinox/pull/723)
@@ -114,7 +100,7 @@ fully optimized. The second implementation is fully optimized for JAX, targeted 
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-## TensorFlow Contributions
+#### TensorFlow Contributions
 
 1. [Kappa](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/metrics/cohens_kappa.py)
 2. [Gelu activation](https://github.com/tensorflow/addons/blob/master/tensorflow_addons/layers/gelu.py)
