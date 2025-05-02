@@ -35,8 +35,8 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 ## Transformer Layers as Painters (AAAI 2025)
 This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
 
-## Transformer Layers as Painters (AAAI 2025)
-
+## The Ungrounded Alignment (CogSci 2025)
+Though the current ML systems have advanced a lot, a key question remains unanswered: *How can we build in predefined knowledge in a system where we don't know how a given stimulus will be grounded?* We investigate this as the **Ungrounded Alignment Problem**. This work examines a specific instance: an unsupervised learner processes image sequences representing characters from a text corpus (using an unknown font or permutation). The learner receives no labels but is evaluated on recognizing key sequential patterns, forcing it to deduce the mapping between the variable visual inputs and the correct underlying character classes.
 :::
 :::
 
