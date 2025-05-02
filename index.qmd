@@ -17,10 +17,10 @@ I am **Aakash Kumar Nain**, a Senior Machine Learning Engineer (Research) at Eme
 
 My current work focuses on developing Large Language Models (LLMs) and Multimodal Large Language Models(MLLMs). Building these models has led me to focus my research on:
 
+* Identifying and mitigating bottlenecks in multimodal architectures.
 * Investigating the reasoning capabilities and limitations of large language models.
 * Self-play and self-improvement in Large Language Models
-* Identifying and mitigating bottlenecks in multimodal architectures.
-* Exploring the broad applicability and advancement of diffusion models.
+* Diffusion models but for everything including discrete data (text).
 
 
 Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Machine Learning and Artificial Intelligence.
@@ -34,6 +34,8 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
 ## Transformer Layers as Painters (AAAI 2025)
 This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
+
+## Transformer Layers as Painters (AAAI 2025)
 
 :::
 :::
