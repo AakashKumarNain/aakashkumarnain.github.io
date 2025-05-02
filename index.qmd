@@ -17,10 +17,10 @@ I am **Aakash Kumar Nain**, a Senior Machine Learning Engineer (Research) at Eme
 
 My current work focuses on developing Large Language Models (LLMs) and Multimodal Large Language Models(MLLMs). Building these models has led me to focus my research on:
 
-* Identifying and mitigating bottlenecks in multimodal architectures.
-* Investigating the reasoning capabilities and limitations of large language models.
+* Identifying and mitigating bottlenecks in multimodal models.
+* Investigating the reasoning capabilities and limitations of Large Language Models.
 * Self-play and self-improvement in Large Language Models
-* Diffusion models but for everything including discrete data (text).
+* Diffusion models but for everything, including discrete data (text).
 
 
 Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Machine Learning and Artificial Intelligence.
