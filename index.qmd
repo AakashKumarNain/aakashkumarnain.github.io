@@ -28,6 +28,16 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 :::
 
 
+# Publications
+
+::: {.grid}
+::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
+## Transformer Layers as Painters (AAAI 2025)
+This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
+
+:::
+:::
+
 # Portfolio
 
 ::: {.grid}
