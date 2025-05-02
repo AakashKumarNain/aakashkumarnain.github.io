@@ -28,7 +28,7 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 :::
 
 
-# Publications
+## Publications
 
 ::: {.grid}
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
@@ -65,7 +65,12 @@ Keeping pace with the accelerating volume of machine learning research on [arXiv
 
 Learn the foundational concepts and inner workings of TensorFlow and JAX with this tutorial series. It offers a unique perspective distinct from typical documentation, providing valuable insights and a deeper understanding for both beginners and advanced users aiming to build effectively with these libraries.<br>
 :::
+:::
 
+## OSS Contributions
+<hr>
+
+::: {.grid style="align-items: start;"}
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
 #### [Keras Core Contributions](https://keras.io/keras_core/announcement/)
