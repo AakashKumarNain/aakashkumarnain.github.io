@@ -36,7 +36,7 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 
 This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
 
-### [The Ungrounded Alignment (CogSci 2025)]((https://arxiv.org/abs/2408.04242))
+### [The Ungrounded Alignment Problem (CogSci 2025)]((https://arxiv.org/abs/2408.04242))
 Though the current ML systems have advanced a lot, a key question remains unanswered: *How can we build in predefined knowledge in a system where we don't know how a given stimulus will be grounded?* We investigate this as the **Ungrounded Alignment Problem**. This work examines a specific instance: an unsupervised learner processes image sequences representing characters from a text corpus (using an unknown font or permutation). The learner receives no labels but is evaluated on recognizing key sequential patterns, forcing it to deduce the mapping between the variable visual inputs and the correct underlying character classes.
 :::
 :::
@@ -73,7 +73,7 @@ Learn the foundational concepts and inner workings of TensorFlow and JAX with th
 ::: {.grid style="align-items: start;"}
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-#### [Keras Core Contributions](https://keras.io/keras_core/announcement/)
+#### [Keras 3.0 Contributions](https://keras.io/keras_core/announcement/)
 
 1. JAX NN ops
 2. Merging layers
@@ -93,7 +93,7 @@ Learn the foundational concepts and inner workings of TensorFlow and JAX with th
 4. [Image captioning](https://keras.io/examples/vision/image_captioning/)
 5. [WGAN-GP](https://keras.io/examples/generative/wgan_gp/)
 6. [CycleGAN](https://keras.io/examples/generative/cyclegan/)
-7. [Model interpretability with Integrated Gradients](https://keras.io/examples/vision/integrated_gradients/)
+7. [Model Interpretability with Integrated Gradients](https://keras.io/examples/vision/integrated_gradients/)
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
