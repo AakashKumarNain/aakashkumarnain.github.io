@@ -36,7 +36,7 @@ Follow me on [X](https://x.com/A_K_Nain) to get latest updates on trends in Mach
 
 This work investigates the flow of information within frozen, pretrained transformer models (both decoder-only and encoder-only architectures). Using a series of ablation experiments, we examined the functional roles and dependencies of individual layers, specifically probing whether all layers are necessary, if they exhibit redundancy (particularly middle layers), the impact of execution order on inference and task performance, and the potential for parallel execution (with and without looping).
 
-### [The Ungrounded Alignment Problem (CogSci 2025)]((https://arxiv.org/abs/2408.04242))
+### [The Ungrounded Alignment Problem (CogSci 2025, ICDL 2025)](https://arxiv.org/abs/2408.04242)
 Though the current ML systems have advanced a lot, a key question remains unanswered: *How can we build in predefined knowledge in a system where we don't know how a given stimulus will be grounded?* We investigate this as the **Ungrounded Alignment Problem**. This work examines a specific instance: an unsupervised learner processes image sequences representing characters from a text corpus (using an unknown font or permutation). The learner receives no labels but is evaluated on recognizing key sequential patterns, forcing it to deduce the mapping between the variable visual inputs and the correct underlying character classes.
 :::
 :::
@@ -51,7 +51,7 @@ Though the current ML systems have advanced a lot, a key question remains unansw
 This project provides a JAX/Equinox port of the Mistral-7B model. It features two distinct implementations: the first is a direct, 1:1 mapping from PyTorch designed primarily to demonstrate the porting process clearly for educational purposes, while the second is a fully JAX-optimized version targeting advanced users seeking performance and efficiency. <br>
 
 
-[Diffusion Models](https://github.com/AakashKumarNain/diffusion_models) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/diffusion_models?color=blue&logo=github">
+[Diffusion Models](https://magic-with-latents.github.io/latent/ddpms-series.html) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/diffusion_models?color=blue&logo=github">
 
 Known for generating exceptionally high-quality images compared to predecessors like GANs, diffusion models have become increasingly prominent. Yet, learners often face challenges due to the scarcity of quality learning materials and the perceived complexity of the underlying mathematics. The resources compiled in this repository are specifically structured to provide a clear and comprehensive understanding of how diffusion models work and the essential math principles they rely on. <br>
 
@@ -73,7 +73,7 @@ Learn the foundational concepts and inner workings of TensorFlow and JAX with th
 ::: {.grid style="align-items: start;"}
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
-#### [Keras 3.0 Contributions](https://keras.io/keras_core/announcement/)
+#### [Keras 3.0 Contributions](https://keras.io/keras_3/)
 
 1. JAX NN ops
 2. Merging layers
@@ -101,7 +101,7 @@ Learn the foundational concepts and inner workings of TensorFlow and JAX with th
 
 1. [Mistral-7B implementation](https://docs.kidger.site/equinox/examples/mistral_7b/)
 2. [Bug fix in RMSNorm Layer](https://github.com/patrick-kidger/equinox/pull/723)
-3. [AMP in Normalization Layers](https://github.com/patrick-kidger/equinox/pull/876y)
+3. [Mixed Precision Bug Fix in Normalization Layers](https://github.com/patrick-kidger/equinox/pull/876)
 :::
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-6}
