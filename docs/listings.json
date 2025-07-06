@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
       "/posts/paper_summaries/lcpo.html",
       "/posts/paper_summaries/matquant.html",
       "/posts/paper_summaries/januspro.html",
@@ -28,6 +29,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
       "/posts/paper_summaries/lcpo.html",
       "/posts/paper_summaries/matquant.html",
       "/posts/paper_summaries/januspro.html",
