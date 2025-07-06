@@ -18,6 +18,7 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2507.00885)<br>
+[annotated_paper](https://github.com/AakashKumarNain/annotated_research_papers/blob/master/NLP/scaling_laws_for_downstream_tasks.pdf)<br>
 
 
 Does a better pretraining loss result in better performance on downstream tasks? Do downstream scaling laws exist? What kind of relationship exists between pretraining loss and performance on downstream tasks? This latest paper from NYU studies the reliability of downstream scaling laws.
@@ -56,3 +57,27 @@ Does a better pretraining loss result in better performance on downstream tasks?
 <br><br>
 ![](../paper_screenshots/scaling_laws_downstream_tasks/2.png)
 <br><br>
+
+# Irregular Scaling Is Common
+
+- Linear relationships do not capture irregular scaling behaviors like inverse scaling or structural breaks that occur with emergent behaviors.
+- How often does linearity hold? To find this out, the authors re-examine scaling behavior on the 46 tasks, classifying them into six categories. 
+- They find that linear scaling occurs in a minority of cases in their setting: 39% of the time. For some experimental setups, non-linear scaling is the norm.
+
+<br><br>
+![](../paper_screenshots/scaling_laws_downstream_tasks/3.png)
+<br><br>
+
+# Scaling Behavior Is Not Always Robust
+
+- Scaling laws may not generalize across settings. Setups with the same validation data and downstream tasks may observe entirely different scaling trends.
+- Differences in scaling law behavior may be both quantitative and qualitative. Here is an example showcasing the same:
+- There are cases where scaling laws hold and cases where they do not. To some extent, scaling laws are investigator-specific, and so each investigator must verify the scaling law’s presence with visualizations and regression diagnostics.
+
+<br><br>
+![](../paper_screenshots/scaling_laws_downstream_tasks/4.png)
+<br><br>
+
+# Conclusion
+
+For better downstream task performance, perplexity is not all you need!
