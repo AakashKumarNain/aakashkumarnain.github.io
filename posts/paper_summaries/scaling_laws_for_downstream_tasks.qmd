@@ -45,3 +45,14 @@ Does a better pretraining loss result in better performance on downstream tasks?
 - Cases where we witness emergent behaviors show a structural break, and hence, extrapolation does not work. 
 
 
+# Scaling Laws Are Specific to the Data  
+
+- Downstream scaling laws are dependent on three factors: 1) pretraining data, 2) validation data, and 3) the downstream task. 
+- What validation to choose is use-case dependent, but a necessary evil to compare two models, especially when they are pretrained on different data distributions.
+- For the HellaSwag task with C4 as the validation corpus, pretraining on either C4 or RedPajama produces the same scaling law. However, when using 100 Programming Languages as the validation set, pretraining on C4 appears to achieve much better performance, even with a worse validation loss.
+- For other tasks like CoQA, RedPajama achieves better performance. Also, changing the validation set from C4 to 100 PLs reverses this relationship. 
+- Hence, better perplexity during pretraining may not translate to better downstream task performance, and is dependent on the downstream task, the pretraining corpus, and the validation loss.
+
+<br><br>
+![](../paper_screenshots/scaling_laws_downstream_tasks/2.png)
+<br><br>
