@@ -36,3 +36,12 @@ Does a better pretraining loss result in better performance on downstream tasks?
     - The downstream task, and
     - The experimental setup.
 - The authors discovered that changes to any of these factors change the downstream scaling performance, and in some cases, the change can be so drastic that the scaling may no longer be functional.
+
+
+# Background and Past Works
+
+- Many works have found that downstream scaling laws are more stable when stated in terms of pretraining loss. In particular, two models with different numbers of parameters but the same pretraining loss tend to achieve the same downstream performance.
+- In the best-case scenario, downstream task performance is roughly linear in some monotonic transformation of validation loss. For example, y = a exp(c • x) + b, where y is the task performance metric and x is the validation perplexity.
+- Cases where we witness emergent behaviors show a structural break, and hence, extrapolation does not work. 
+
+
