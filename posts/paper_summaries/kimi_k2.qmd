@@ -34,3 +34,17 @@ execute:
 ![](../paper_screenshots/kimi_k2/1.png)
 <br><br>
 
+
+# Pre-training
+
+- Focuses on maximizing per-token efficiency
+- The authors find that training instability due to exploding attention logits is more frequent with Muon compared to AdamW
+- Since they leverage MLA, QK-Norm cannot be applied
+- To address this, they propose Muon with QK-Clip which works by rescaling the query and key projection weights post-update to
+bound the growth of attention logits.
+- The authors define define a per-head scalar Sh(max), the max logit, as the maximum input to softmax in a given batch. The core idea of QK-Clip is to rescale Wk,Wq whenever Sh(max) exceeds a target threshold τ (=100 in their experiments) <br>![](../paper_screenshots/kimi_k2/2.png)<br>
+- Then they integrate Muon with weight decay, consistent RMS matching, and QK-Clip into a single optimizer, MuonClip
+
+<br>
+![](../paper_screenshots/kimi_k2/3.png)
+<br><br>
