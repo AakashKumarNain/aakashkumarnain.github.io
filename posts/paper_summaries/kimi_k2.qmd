@@ -75,3 +75,29 @@ of high-quality tokens without inducing significant overfitting.
 <br>
 ![](../paper_screenshots/kimi_k2/4.png)
 <br><br>
+
+
+# Training 
+
+- 4096 context window at the start
+- The training on the first 10T tokens was done with a constant learning rate of 2e-4 after a 500-step warm-up, followed by 5.5T tokens with a cosine decay from 2e-4 to 2e-5
+- Weight decay of 0.1, and a global batch size of 67M tokens
+- Long-context activation towards the end of the training. YaRN was used for context extension, and the model was trained on 400 billion tokens with a $4K$ sequence length, followed by an additional 60 billion tokens with a $32K$ sequence length.
+
+
+# SFT
+
+- Uses simple Muon Optimizer for SFT, and recommends to do the same for any kind of fine-tuning over K2
+- Agentic capabilities, especially tool usage at scale is the focus
+- Developed a pipeline that simulates real-world tool-use scenarios at scale.
+- Three stages in the data synthesis pipeline:
+  - Tool spec generation: utilizes both real-word tools, and synthetic tools. 3000 MCP based tools, 20,000 synthetic tools
+  - Agent and task generation: For any sampled agentic tool, generate an agent to use the toolset and some corresponding tasks
+  - Trajectory generation:For each agent and task generate trajectories where the agent finishes the task by invoking these tools
+- Every task completion is rewarded with a rubric that specifies success criteria, expected tool-use patterns, and
+evaluation checkpoints
+- Hybrid pipeline (LLM based judges + real-execution sandboxes) for filtering and judging completions.
+
+<br>
+![](../paper_screenshots/kimi_k2/5.png)
+<br><br>
