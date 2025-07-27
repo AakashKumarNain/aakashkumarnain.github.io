@@ -2,11 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>/blog.html</loc>
-    <lastmod>2025-07-06T16:31:14.773Z</lastmod>
+    <lastmod>2025-07-27T09:31:50.977Z</lastmod>
   </url>
   <url>
     <loc>/archive.html</loc>
-    <lastmod>2025-07-06T16:31:12.026Z</lastmod>
+    <lastmod>2025-07-27T09:31:48.098Z</lastmod>
   </url>
   <url>
     <loc>/posts/paper_summaries/lcpo.html</loc>
@@ -99,5 +99,9 @@
   <url>
     <loc>/posts/paper_summaries/scaling_laws_for_downstream_tasks.html</loc>
     <lastmod>2025-07-06T16:31:10.015Z</lastmod>
+  </url>
+  <url>
+    <loc>/posts/paper_summaries/kimi_k2.html</loc>
+    <lastmod>2025-07-27T09:31:46.014Z</lastmod>
   </url>
 </urlset>
