@@ -101,3 +101,28 @@ evaluation checkpoints
 <br>
 ![](../paper_screenshots/kimi_k2/5.png)
 <br><br>
+
+# RL
+
+- Scale RL in both task diversity and training FLOPs in K2
+- The authors develop a Gym-like extensible framework that facilitates RL across a wide range of scenarios
+- Combines tasks with verifiable rewards, and other tasks like creative writing with self-critic rewards
+
+# Verifiable Rewards Gym
+
+- Math, STEM and Logical Tasks
+- Diverse Coverage: For math and stem tasks, they collect high-quality QA pairs using a combination of expert annotations,
+internal QA extraction pipelines, and open datasets. For logical tasks, structured data tasks like tabular reasoning,
+and puzzles like Sudoku
+- Moderate difficulty: Assuming that RL prompt should neither be too easy nor too difficult. The authors assess the difficulty of each problem using the SFT model’s $pass@k$ accuracy and select only problems with moderate difficulty. 
+- Hybrid Rule Verification:
+  - Deterministic evaluation via code interpreters for instructions with verifiable outputs
+  - LLM-as-judge evaluation for instructions requiring nuanced understanding of constraints.
+- Multi-Source Instruction Generation: Three distinct generation strategies
+  - expert-crafted complex conditional prompts and rubrics developed by in-house data team
+  - agentic instruction augmentation inspired by AutoIF
+  - a fine-tuned model specialized for generating additional instructions that probe specific failure modes or edge cases
+- For faithfulness evaluation, they train a sentence-level faithfulness judge model to perform automated verification.
+- For coding problems, they collect pull requests and issues from GitHub to build software development environment that consists of user prompts/issues and executable unit tests
+- For safety they focus on they employ an automated prompt evolution pipeline with three key components: Attack model, target model, and judge model. Each interaction is assessed using a task-specific rubric, enabling the judge model to provide a binary success/failure
+label.
