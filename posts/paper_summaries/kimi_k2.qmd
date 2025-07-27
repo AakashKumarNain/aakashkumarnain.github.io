@@ -126,3 +126,16 @@ and puzzles like Sudoku
 - For coding problems, they collect pull requests and issues from GitHub to build software development environment that consists of user prompts/issues and executable unit tests
 - For safety they focus on they employ an automated prompt evolution pipeline with three key components: Attack model, target model, and judge model. Each interaction is assessed using a task-specific rubric, enabling the judge model to provide a binary success/failure
 label.
+
+
+# Self-Critique Rubric Reward
+
+- Model evaluates its own outputs to generate preference signals.
+- The authors curated a mixture of open-source and in-house preference datasets and initialized K2 critic capability via SFT 
+- First the K2 actor generates responses for general prompts that cover a wide range of use cases. The K2 critic then ranks all results by performing pairwise evaluations against a combination of rubrics, including core rubrics, perspective rubrics, and human-annotated rubrics
+with the flexibility of letting K2 to provide weightage as suitable
+- During RL training, the critic model is refined using verifiable signals, where On-policy rollouts generated from verifiable-reward prompts are used to continuously update the critic
+- Same policy optimization as in Kimi-1.5. For each problem $x$, sample $K$ responses from the previous policy $π_{old}$, and optimize the model $π_θ$ with respect to the following objective:<br>![](../paper_screenshots/kimi_k2/6.png)
+- To encourage the model to properly distribute inference budget, they enforce a per-sample maximum token budget throughout RL training, where the budget is determined based on the type of task
+- To prevent the potential forgetting of valuable, high-quality data during joint RL training, they curate a dataset comprising hand-selected, high-quality samples and integrate it into the RL objective through an auxiliary PTX loss
+- During the exploration phase, the temperature is kept high for generation, but they also employ a temperature decay schedule, to shift from exploration to exploitation throughout the training.
