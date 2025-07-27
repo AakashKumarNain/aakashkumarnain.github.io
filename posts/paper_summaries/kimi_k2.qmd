@@ -42,12 +42,8 @@ execute:
 - Since they leverage MLA, QK-Norm cannot be applied
 - To address this, they propose Muon with QK-Clip which works by rescaling the query and key projection weights post-update to
 bound the growth of attention logits.
-- The authors define define a per-head scalar Sh(max), the max logit, as the maximum input to softmax in a given batch. The core idea of QK-Clip is to rescale Wk,Wq whenever Sh(max) exceeds a target threshold τ (=100 in their experiments) <br>![](../paper_screenshots/kimi_k2/2.png)<br>
-- Then they integrate Muon with weight decay, consistent RMS matching, and QK-Clip into a single optimizer, MuonClip
-
-<br>
-![](../paper_screenshots/kimi_k2/3.png)
-<br><br>
+- The authors define define a per-head scalar Sh(max), the max logit, as the maximum input to softmax in a given batch. The core idea of QK-Clip is to rescale Wk,Wq whenever Sh(max) exceeds a target threshold τ (=100 in their experiments) <br><br>![](../paper_screenshots/kimi_k2/2.png)<br><br>
+- Then they integrate Muon with weight decay, consistent RMS matching, and QK-Clip into a single optimizer, MuonClip<br><br>![](../paper_screenshots/kimi_k2/3.png)<br><br>
 
 
 # Pre-training Data: Improving Token Utility with Rephrasing
@@ -135,7 +131,7 @@ label.
 - First the K2 actor generates responses for general prompts that cover a wide range of use cases. The K2 critic then ranks all results by performing pairwise evaluations against a combination of rubrics, including core rubrics, perspective rubrics, and human-annotated rubrics
 with the flexibility of letting K2 to provide weightage as suitable
 - During RL training, the critic model is refined using verifiable signals, where On-policy rollouts generated from verifiable-reward prompts are used to continuously update the critic
-- Same policy optimization as in Kimi-1.5. For each problem $x$, sample $K$ responses from the previous policy $π_{old}$, and optimize the model $π_θ$ with respect to the following objective:<br>![](../paper_screenshots/kimi_k2/6.png)
+- Same policy optimization as in Kimi-1.5. For each problem $x$, sample $K$ responses from the previous policy $π_{old}$, and optimize the model $π_θ$ with respect to the following objective:<br><br>![](../paper_screenshots/kimi_k2/6.png)<br><br>
 - To encourage the model to properly distribute inference budget, they enforce a per-sample maximum token budget throughout RL training, where the budget is determined based on the type of task
 - To prevent the potential forgetting of valuable, high-quality data during joint RL training, they curate a dataset comprising hand-selected, high-quality samples and integrate it into the RL objective through an auxiliary PTX loss
 - During the exploration phase, the temperature is kept high for generation, but they also employ a temperature decay schedule, to shift from exploration to exploitation throughout the training.
