@@ -48,3 +48,30 @@ bound the growth of attention logits.
 <br>
 ![](../paper_screenshots/kimi_k2/3.png)
 <br><br>
+
+
+# Pre-training Data: Improving Token Utility with Rephrasing
+
+- Acknowledges the lack of supply of high-quality tokens
+- Introduces a synthetic data pipeline to increase token utility. Deployed a rephrasing pipeline is employed to amplify the volume
+of high-quality tokens without inducing significant overfitting.
+- The rephrasing pipeline consists of three components
+  - Style- and perspective-diverse prompting
+  - Chunk-wise autoregressive generation
+  - Fidelity verification
+- The data is rephrased multiple times, and a single epoch training is performed
+
+
+# Model Architecture
+
+- Similar to DeepSeek-V3
+- MoE with 32B activated, and 1.04T total parameters
+- They develop a sparsity scaling law tailored for the MoE model family using Muon
+- The authors find that increasing sparsity consistently improve model performance
+- To balance model performance with cost, they adopt a sparsity of 48, activating 8 out of 384 experts per forward pass.
+- They also found that doubling the number of attention heads provides only modest improvement. Hence they keep only 64 attention heads
+- 16-way PP, 16-way EP, and Zero-1 were used for parallelism# Model Architecture
+
+<br>
+![](../paper_screenshots/kimi_k2/4.png)
+<br><br>
