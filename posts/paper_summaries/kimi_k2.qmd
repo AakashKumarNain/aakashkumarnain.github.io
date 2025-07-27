@@ -18,3 +18,19 @@ execute:
 ---
 
 [tech_report](https://github.com/MoonshotAI/Kimi-K2/blob/main/tech_report.pdf)<br>
+
+
+# Introduction
+
+- MoE with 32B activate parameters, and 1T total parameters
+- Ultra-sparse MoE employed with MLA
+- Proposes MuonClip optimizer, an optimizer built on top of Muon leveraging QK clipping
+- Pretrained with 15.5T tokens with zero loss spikes
+- Multi-stage post-training 
+- Introduces a large-scale agentic data synthesis pipeline 
+- Proposes a general reinforcement learning framework that combines RLVR with a self- critique rubric reward mechanism. 
+
+<br><br>
+![](../paper_screenshots/kimi_k2/1.png)
+<br><br>
+
