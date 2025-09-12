@@ -1,0 +1,26 @@
+---
+title: "On the Theoretical Limitations of Embedding-Based Retrieval"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2025-09-12"
+categories: [papers, summary, research, retrieval]
+image: ""
+---
+
+[arXiv](https://arxiv.org/abs/2509.06160)<br>
+
+
+# 1. What is it about?
+
+- Reasoning is one of the hottest, if not the hottest, topics in LLMs nowadays. Almost all models are LRMs now.
+- RL has predominantly helped unlock these capabilities in the current gen models. There is distillation as well,
+but RL has been the primary driver.
+- Though it works, but is severely limited by the verifiability. Some domains are easy to verify, example includes
+programming, maths (not everything but many things). But there are domains where the reward signal and verifiability are not
+straightforward. A typical example of this is creative writing. It is subjective, graded on many aspects like originality, emotional resonance, coherence, etc.
+- As a result, implementing deep reasoning for open-ended generation in the absence of task verifiability is an extremely challenging problem to solve. This paper tries to bridge this gap with a simple yet powerful approach
+
+And before you say, "Yeah, but we can still crowd-source it?" Subjective things are extremely nuanced. A good example of this lies in computer vision where capturing aesthetics of a photo is an equivalent problem. Aesthetics of a photo depends on factors like audience, age-groups, demographic opinion, the objects, the background, etc. 
+
+<br><br>
+![](../paper_screenshots/reer/1.png)
+<br><br>
