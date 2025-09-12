@@ -24,3 +24,42 @@ And before you say, "Yeah, but we can still crowd-source it?" Subjective things 
 <br><br>
 ![](../paper_screenshots/reer/1.png)
 <br><br>
+
+
+# 2. Proposal
+
+- Proposes REER to instill deep reasoning capabilities for open-ended generation that shifts the objective from generating a solution to discovering the latent reasoning process.
+- Three stage process: Preparing a (synthetic )data of query-solution pairs for open-ended generation, reverse-engineering deep reasoning trajectories without the use of RL or distillation, and fine-tuning a base language model, teaching it to reason and plan deeply before generating a final solution.
+- The recovery of high-quality thinking trajectories is done via gradient-free iterative search process
+- Based on above, the authors created DeepWriting-20K, a comprehensive dataset of 20,000 thinking trajectories, and
+fine-tuned a Qwen3-8B base model
+
+Let us now discuss each of these steps in detail.
+
+
+## 3.1 REverse-Engineered Reasoning as a Search Problem.
+
+- For an input query x, and y being a high-quality corresponding reference solution, the objective is to find a deep reasoning trajectory, denoted by z, which represents a structured, step-by-step thinking process that guides the generation of $y$ from $x$. 
+- Use perplexity of the reference solution y conditioned both on $x$ and $z$ as a proxy for the quality of a given reasoning trajectory $z$.
+Lower the perplexity for a given trajectory, better the latent reasoning.
+- The reasoning trajectory is then modelled as a discrete sequence of reasoning steps, $z = [z_1, z_2, . . . , z_n]$. The problem is then
+formulated as a search problem over all the possible trajectories to find the optimal trajectory.
+- This entire optimization is performed via a gradient-free local search algorithm
+
+
+## 3.2 Iterative Refinement via Local Search
+
+- *Initialization*: For a given pair (x, y), initialize the first trajectory $z_0 = [z_1, z_2, . . . , z_n]$, by prompting an LLM with a thought-provoking instruction to produce a plausible plan.
+- *Segment-wise Refinement*: Refine the segments of the initial trajectory in a loop. At every iteration, pick one segment and prompt the LLM to generate candidate refinements with more thinking-based details, elaborations and reflections. The context to the LLM includes the original query $(x)$, the reference solution $(y)$, refined segments $(z_j)$ \text{where} $j < i$, and unrefined segments $(z_k, \text{where} \ k > i)$. It is ensured that the model does not copy the segments from the reference solution
+- *Node evaluation and selection*: For each generated candidate $c$, the authors construct a temporary trajectory $z^`_{cand}$ by substituting $z_i$ with $c$. They then evaluate each candidate by computing its quality score, $S(c) = PPL(y|x, z^′_{cand})$. The candidate with the lowest perplexity score is chosen as the updated segment for the next iteration.
+
+
+## 3.3 Data Curation
+
+- Need high quality triplets (x, y, z) i.e. (query, response, trajectory)
+- Diversity is data is important to avoid overfitting. Data segregated into 25 manually nominated
+categories to ensure broad topic coverage. 
+- To ensure the generator model performs a true segment-wise edit without including edits for the subsequent parts of the trajectory, tha authors enforce a meta-structure for the reasoning process within the prompt
+- Human-alike thinking based tokens like "Hmm, wait..,maybe.." etc. are injected for self-reflection
+- Samples where thinking patterns persisted in the final 10% of the sequence were discarded.
+- Samples exhibiting high n-gram repetition, a sign of degenerative looping expressions, were filtered out.
