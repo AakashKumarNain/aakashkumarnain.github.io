@@ -46,6 +46,10 @@ Lower the perplexity for a given trajectory, better the latent reasoning.
 formulated as a search problem over all the possible trajectories to find the optimal trajectory.
 - This entire optimization is performed via a gradient-free local search algorithm
 
+<br><br>
+![](../paper_screenshots/reer/2.png)
+<br><br>
+
 
 ## 3.2 Iterative Refinement via Local Search
 
@@ -63,3 +67,31 @@ categories to ensure broad topic coverage.
 - Human-alike thinking based tokens like "Hmm, wait..,maybe.." etc. are injected for self-reflection
 - Samples where thinking patterns persisted in the final 10% of the sequence were discarded.
 - Samples exhibiting high n-gram repetition, a sign of degenerative looping expressions, were filtered out.
+
+
+# 4. Experimental Setup
+
+- The mixed dataset containing 37,000 samples
+- Qwen-3 8B for fine-tuning, and Qwen2.5-32B for trajectory synthesis. Interestingly, all other open models performs worse than Qwen(Go Qwen!)
+- Fine-tune for 3 epochs, constant lr=2e-5, and a global batch size of 96. Apparently, no mention of the optimizer used
+
+
+# 5. Results
+
+<br><br>
+![](../paper_screenshots/reer/3.png)
+<br><br>
+
+
+# 6. Interesting findings
+
+- Removing synthetic dataset caused highest degradation in performance
+- Removing iterative search also degrades the performance but much lesser than removing the synthetic dataset
+- Removing reflection tokens is much more nuanced. Some benchmarks aren't affected that much, while others see significant drop
+- Performance degradation after shortening trajectory length is entirely task dependent, much necessary for creative writing though
+- Removing literature and arts data degrades performance across all benchmarks
+- The fine-tuned model while performing on par with models like GPT-4, and Claude 3.5 beats them in depth of analysis and factual grounding
+
+<br><br>
+![](../paper_screenshots/reer/4.png)
+<br><br>
