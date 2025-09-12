@@ -69,9 +69,44 @@ matrix 𝐴, we need at least $rank±(2𝐴 − 1_{m \times n})$ − 1 dimension
 
 
 # Empirical Connection: Best Case Optimization
+
 - Free embedding optimization as the vectors can be optimized with gradient descent
 - Premise: If the free embedding optimization cannot solve the problem, real retrieval models will not be able to either.
 - The authors created create a random document matrix (size 𝑛) and a random query matrix of size m with top-𝑘 sets, both with unit vectors
 - Adam optimizer, InfoNCE loss function. The number of documents and the queries are increases gradually till they hit the point where no
 further improvement is observed. They call this `critical-n` point.
 - They use $𝑘= 2$ and increase 𝑛by one for each 𝑑 value until it breaks, and then fit a polynomial regression line to the data
+
+<br><br>
+![](../paper_screenshots/limitations_of_embedding_models/3.png)
+<br><br>
+
+
+
+# Empirical Connection: Real-World Datasets
+
+- Argue that in the existing datasets like QUEST, BrowseComp, etc., the space of queries used for evaluation is a very small sample of the number of potential queries. For example, the number of unique top-20 document sets that could be returned with the QUEST corpus would be 325kC20 which is equal to $7.1e+91$. Thus, the 3k queries in QUEST can only cover an infinitesimally small part of the $qrel$ combination space.
+- Proposes the LIMIT Dataset for evaluation. 50K documents, 1000 queries. For each query, they choose to use 𝑘=2 relevant documents both for simplicity in instantiating and to mirror past works
+- Though it is hard to find out the hardest $qrel$ matrix using sign rank, they the $qrel$ matrix with the highest number of documents (46 in this case) for which all combinations would be just above 1000 queries for a top-𝑘 of 2. There are two versions: one where each query has 46 relevant documents, and 49.95K non-relevant docs, and the second version with only the 46 documents that are relevant to one of the 1000 queries.
+- All sorts of embedding models including Qwen-3, Gemini, Mistral, MRL based, etc.
+
+
+# Results
+
+- Models struggle even on the small (46 documents in total) version, struggle to reach even 20% $recall@100$ and in the 46 document version models cannot solve the task even with $recall@20$.
+- Models trained with diverse instructions do a bit better, but the performance mainly depends on the embedding dimensionality (higher the better).
+- The poor performance is not due to domain shift. 
+
+
+<br><br>
+![](../paper_screenshots/limitations_of_embedding_models/4.png)
+<br><br>
+
+
+# What about other kinds of models? Lexical, cross-encoder?
+
+- Sparse models can be thought of as single vector models but with very high dimensionality. This dimensionality helps models like BM25 avoid the problems of the
+neural embedding models 
+- Multi-vector models are better then other neural models, but they are not widely used on instruction-following or reasoning-based tasks
+- Cross-Encoders are expensive but are much better. For example, Gemini reranker can solve all 1000 queries in a single pass. The problem is these kinds of models
+can't be used be used for first stage retrieval when there are large numbers of documents.
