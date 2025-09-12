@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Aakash Kumar Nain (@A_K_Nain)">
+<meta name="dcterms.date" content="2025-09-09">
 
-<title>Archive – Aakash Kumar Nain</title>
+<title>On the Theoretical Limitations of Embedding-Based Retrieval – Aakash Kumar Nain</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-c390f7ba564b1432f55ee404e584a23b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6b8fe39ddfbd52a82c144c7f1445abb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-c390f7ba564b1432f55ee404e584a23b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6b8fe39ddfbd52a82c144c7f1445abb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -139,9 +110,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Aakash Kumar Nain</span>
     </a>
   </div>
@@ -167,15 +138,15 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./assets/resume_aakash_kumar_nain.pdf"> 
+    <a class="nav-link" href="../../assets/resume_aakash_kumar_nain.pdf"> 
 <span class="menu-text">CV</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./archive.html" aria-current="page"> 
+    <a class="nav-link" href="../../archive.html"> 
 <span class="menu-text">Archive</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -209,23 +180,58 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#neural-embedding-models" id="toc-neural-embedding-models" class="nav-link active" data-scroll-target="#neural-embedding-models">Neural Embedding Models</a></li>
+  <li><a href="#representational-capacity-of-vector-embeddings" id="toc-representational-capacity-of-vector-embeddings" class="nav-link" data-scroll-target="#representational-capacity-of-vector-embeddings">Representational Capacity of Vector Embeddings</a>
+  <ul class="collapse">
+  <li><a href="#formalization" id="toc-formalization" class="nav-link" data-scroll-target="#formalization">Formalization</a></li>
+  <li><a href="#propositions" id="toc-propositions" class="nav-link" data-scroll-target="#propositions">Propositions</a></li>
+  </ul></li>
+  <li><a href="#empirical-connection-best-case-optimization" id="toc-empirical-connection-best-case-optimization" class="nav-link" data-scroll-target="#empirical-connection-best-case-optimization">Empirical Connection: Best Case Optimization</a></li>
+  <li><a href="#empirical-connection-real-world-datasets" id="toc-empirical-connection-real-world-datasets" class="nav-link" data-scroll-target="#empirical-connection-real-world-datasets">Empirical Connection: Real-World Datasets</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#what-about-other-kinds-of-models-lexical-cross-encoder" id="toc-what-about-other-kinds-of-models-lexical-cross-encoder" class="nav-link" data-scroll-target="#what-about-other-kinds-of-models-lexical-cross-encoder">What about other kinds of models? Lexical, cross-encoder?</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Archive</h1>
-</div>
+<h1 class="title">On the Theoretical Limitations of Embedding-Based Retrieval</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">papers</div>
+    <div class="quarto-category">summary</div>
+    <div class="quarto-category">research</div>
+    <div class="quarto-category">retrieval</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aakash Kumar Nain (<a href="https://x.com/A_K_Nain"><span class="citation" data-cites="A_K_Nain">@A_K_Nain</span></a>) </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 9, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -235,351 +241,85 @@ window.Quarto = {
 </header>
 
 
+<p><a href="https://arxiv.org/abs/2508.21038">arXiv</a><br></p>
+<section id="neural-embedding-models" class="level1">
+<h1>Neural Embedding Models</h1>
+<ul>
+<li>Dense retrieval has gained a lot of traction in the past few years.</li>
+<li>In the era of LLMs, dense retrieval is used for more complicated queries involving conditioning or reasoning.</li>
+<li>The authors focus on finding the limitations of embedding based retrieval by providing a theoretical connection between the embedding dimension and the sign-rank of the query relevance <span class="math inline">\((qrel)\)</span> matrix.</li>
+</ul>
+<p><br> <img src="../paper_screenshots/limitations_of_embedding_models/1.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="representational-capacity-of-vector-embeddings" class="level1">
+<h1>Representational Capacity of Vector Embeddings</h1>
+<section id="formalization" class="level2">
+<h2 class="anchored" data-anchor-id="formalization">Formalization</h2>
+<ul>
+<li><span class="math inline">\(m\)</span> queries, <span class="math inline">\(n\)</span> documents with a ground-truth relevance matrix <span class="math inline">\(𝐴 ∈{\{0,1\}}_{𝑚×𝑛}\)</span> where <span class="math inline">\(𝐴_{𝑖𝑗} = 1\)</span> if and only if document <span class="math inline">\(𝑗\)</span> is relevant to query <span class="math inline">\(𝑖\)</span>.</li>
+<li>Vector embedding models map each query(i) to a d-dimensional vector <span class="math inline">\(u_i\)</span> and each document to a d-dimensional vector <span class="math inline">\(v_j\)</span>.</li>
+<li>Relevance is modeled by the dot product <span class="math inline">\(𝑢^Tv\)</span>, with the goal that relevant documents should score higher than irrelevant ones. We represent the scores all queries corresponding to all documents in a score matrix <span class="math inline">\(B=U^TV\)</span></li>
+<li>The smallest embedding dimension 𝑑 that can realize a given score matrix is the rank of 𝐵. Therefore, finding the minimum rank of a score matrix 𝐵 that correctly orders documents according to the relevance specified in matrix 𝐴</li>
+</ul>
+<p>If we consider the relevance matrix A to be a binary matrix for simplicity, then based on the above, we can define the following for finding the theoretical bounds. Bounds for what? Let us see..</p>
+<ul>
+<li><strong>row-wise order-preserving rank (rop)</strong>: Given a matrix <span class="math inline">\(𝐴 ∈ ℝ_{𝑚×𝑛}\)</span>, the row-wise order-preserving rank of 𝐴 is the smallest integer 𝑑 such that there exists a rank-𝑑 matrix 𝐵 that preserves the relative order of entries in each row of 𝐴.</li>
+<li><strong>row-wise thresholdable rank (rt)</strong>: minimum rank of a matrix 𝐵 for which there exist row-specific thresholds 𝜏𝑖 such that for all 𝑖, 𝑗, <span class="math inline">\(𝐵_{𝑖𝑗} &gt; 𝜏_𝑖\)</span> if <span class="math inline">\(𝐴_{𝑖𝑗} = 1\)</span> and <span class="math inline">\(𝐵_{𝑖𝑗} &lt; 𝜏_𝑖\)</span> if <span class="math inline">\(𝐴_{𝑖𝑗}\)</span> = 0.</li>
+<li><strong>globally thresholdable rank (gt)</strong>: the minimum rank of a matrix 𝐵 for which there exists a single threshold 𝜏 above which all entries in A equals to 1 otherwise 0</li>
+</ul>
+</section>
+<section id="propositions" class="level2">
+<h2 class="anchored" data-anchor-id="propositions">Propositions</h2>
+<p>Based on these definitions, the authors make two propositions.</p>
+<ul>
+<li>Proposition 1: For a binary matrix 𝐴 of size (mxn), <span class="math inline">\(rank_{rop} 𝐴 = rank_{rt} 𝐴\)</span>.</li>
+<li>Proposition 2: If A is a binary matrix, and say <span class="math inline">\(1_{m \times n}\)</span> is a “ones” matrix, then the sandwich inequality shown below holds, where rank ± is sign rank. A sign rank of a matrix <span class="math inline">\(𝑀 ∈\{−1,1\}_{𝑚×𝑛}\)</span> is the smallest integer 𝑑 such that there exists a rank <span class="math inline">\(𝑑\)</span> matrix <span class="math inline">\(𝐵 ∈ℝ_{𝑚×𝑛}\)</span> whose entries have the same sign as those of 𝑀.</li>
+</ul>
+<p><br> <img src="../paper_screenshots/limitations_of_embedding_models/2.png" class="img-fluid"> <br><br></p>
+<p>You can prove these literally using pen-paper. But why do we care about these? Well, the authors find a number of consequences: - It provides a lower and upper bound on the dimension of vectors required to exactly capture a given set of retrieval objectives. Given some binary relevance matrix 𝐴, we need at least <span class="math inline">\(rank±(2𝐴 − 1_{m \times n})\)</span> − 1 dimensions to capture the relationships in 𝐴 exactly, and can always accomplish this in at most <span class="math inline">\(rank±(2𝐴 − 1_{m \times n})\)</span> dimensions. - There exists a binary relevance matrix which cannot be captured via 𝑑-dimensional embeddings, meaning no matter how large (but finite) you make your embedding dimension, there are always retrieval tasks too complex to be represented exactly.</p>
+</section>
+</section>
+<section id="empirical-connection-best-case-optimization" class="level1">
+<h1>Empirical Connection: Best Case Optimization</h1>
+<ul>
+<li>Free embedding optimization as the vectors can be optimized with gradient descent</li>
+<li>Premise: If the free embedding optimization cannot solve the problem, real retrieval models will not be able to either.</li>
+<li>The authors created create a random document matrix (size 𝑛) and a random query matrix of size m with top-𝑘 sets, both with unit vectors</li>
+<li>Adam optimizer, InfoNCE loss function. The number of documents and the queries are increases gradually till they hit the point where no further improvement is observed. They call this <code>critical-n</code> point.</li>
+<li>They use <span class="math inline">\(𝑘= 2\)</span> and increase 𝑛by one for each 𝑑 value until it breaks, and then fit a polynomial regression line to the data</li>
+</ul>
+<p><br><br> <img src="../paper_screenshots/limitations_of_embedding_models/3.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="empirical-connection-real-world-datasets" class="level1">
+<h1>Empirical Connection: Real-World Datasets</h1>
+<ul>
+<li>Argue that in the existing datasets like QUEST, BrowseComp, etc., the space of queries used for evaluation is a very small sample of the number of potential queries. For example, the number of unique top-20 document sets that could be returned with the QUEST corpus would be 325kC20 which is equal to <span class="math inline">\(7.1e+91\)</span>. Thus, the 3k queries in QUEST can only cover an infinitesimally small part of the <span class="math inline">\(qrel\)</span> combination space.</li>
+<li>Proposes the LIMIT Dataset for evaluation. 50K documents, 1000 queries. For each query, they choose to use 𝑘=2 relevant documents both for simplicity in instantiating and to mirror past works</li>
+<li>Though it is hard to find out the hardest <span class="math inline">\(qrel\)</span> matrix using sign rank, they the <span class="math inline">\(qrel\)</span> matrix with the highest number of documents (46 in this case) for which all combinations would be just above 1000 queries for a top-𝑘 of 2. There are two versions: one where each query has 46 relevant documents, and 49.95K non-relevant docs, and the second version with only the 46 documents that are relevant to one of the 1000 queries.</li>
+<li>All sorts of embedding models including Qwen-3, Gemini, Mistral, MRL based, etc.</li>
+</ul>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<ul>
+<li>Models struggle even on the small (46 documents in total) version, struggle to reach even 20% <span class="math inline">\(recall@100\)</span> and in the 46 document version models cannot solve the task even with <span class="math inline">\(recall@20\)</span>.</li>
+<li>Models trained with diverse instructions do a bit better, but the performance mainly depends on the embedding dimensionality (higher the better).</li>
+<li>The poor performance is not due to domain shift.</li>
+</ul>
+<p><br><br> <img src="../paper_screenshots/limitations_of_embedding_models/4.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="what-about-other-kinds-of-models-lexical-cross-encoder" class="level1">
+<h1>What about other kinds of models? Lexical, cross-encoder?</h1>
+<ul>
+<li>Sparse models can be thought of as single vector models but with very high dimensionality. This dimensionality helps models like BM25 avoid the problems of the neural embedding models</li>
+<li>Multi-vector models are better then other neural models, but they are not widely used on instruction-following or reasoning-based tasks</li>
+<li>Cross-Encoders are expensive but are much better. For example, Gemini reranker can solve all 1000 queries in a single pass. The problem is these kinds of models can’t be used be used for first stage retrieval when there are large numbers of documents.</li>
+</ul>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDcmV0cmlldmFs" data-listing-date-sort="1757356200000" data-listing-file-modified-sort="1757673378428" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1002">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/theoretical_limitations_of_emb.html" class="no-external">On the Theoretical Limitations of Embedding-Based Retrieval</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/theoretical_limitations_of_emb.html" class="no-external">
-<div class="listing-date">
-Sep 9, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbGxtJTJDYWdlbnRz" data-listing-date-sort="1753381800000" data-listing-file-modified-sort="1753608700000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1077">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/kimi_k2.html" class="no-external">Kimi K2: Open Agentic Intelligence</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/kimi_k2.html" class="no-external">
-<div class="listing-date">
-Jul 25, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbGxtJTJDc2NhbGluZw==" data-listing-date-sort="1751826600000" data-listing-file-modified-sort="1751819418000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="610">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/scaling_laws_for_downstream_tasks.html" class="no-external">Scaling Laws Are Unreliable for Downstream Tasks: A Reality Check</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/scaling_laws_for_downstream_tasks.html" class="no-external">
-<div class="listing-date">
-Jul 7, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbHJt" data-listing-date-sort="1741545000000" data-listing-file-modified-sort="1741942627000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="798">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/lcpo.html" class="no-external">L1</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/lcpo.html" class="no-external">
-<div class="listing-date">
-Mar 10, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDcXVhbnRpemF0aW9uJTIwbGxtcw==" data-listing-date-sort="1739471400000" data-listing-file-modified-sort="1739550937000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="704">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/matquant.html" class="no-external">Matryoshka Quantization</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/matquant.html" class="no-external">
-<div class="listing-date">
-Feb 14, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDZGlmZnVzaW9u" data-listing-date-sort="1738002600000" data-listing-file-modified-sort="1738304416000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="559">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/januspro.html" class="no-external">Janus-Pro</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/januspro.html" class="no-external">
-<div class="listing-date">
-Jan 28, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1737397800000" data-listing-file-modified-sort="1737483817000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="805">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/deepseek_r1.html" class="no-external">DeepSeek-R1</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/deepseek_r1.html" class="no-external">
-<div class="listing-date">
-Jan 21, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDZGlmZnVzaW9u" data-listing-date-sort="1737311400000" data-listing-file-modified-sort="1737796146000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1124">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/inference_scaling_diffusion.html" class="no-external">Inference-Time Scaling for Diffusion Models beyond Scaling Denoising Steps</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/inference_scaling_diffusion.html" class="no-external">
-<div class="listing-date">
-Jan 20, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1734373800000" data-listing-file-modified-sort="1734892551000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="616">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/deepseek_vl2.html" class="no-external">DeepSeek-VL2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/deepseek_vl2.html" class="no-external">
-<div class="listing-date">
-Dec 17, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-categories="cGFwZXJzJTJDdmlzaW9u" data-listing-date-sort="1734287400000" data-listing-file-modified-sort="1735403826000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="669">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/gazelle.html" class="no-external">Gaze-LLE</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/gazelle.html" class="no-external">
-<div class="listing-date">
-Dec 16, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="10" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1734028200000" data-listing-file-modified-sort="1734887965000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="939">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/nvila.html" class="no-external">NVILA</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/nvila.html" class="no-external">
-<div class="listing-date">
-Dec 13, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="11" data-categories="TExNcyUyQ3Bvc2l0aW9uJTIwZW5jb2RpbmclMkNhZHZhbmNlZA==" data-listing-date-sort="1733769000000" data-listing-file-modified-sort="1734369520000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3487">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/ml_dl_concepts/rope.html" class="no-external">Rotary Position Encoding</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/ml_dl_concepts/rope.html" class="no-external">
-<div class="listing-date">
-Dec 10, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="12" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1733682600000" data-listing-file-modified-sort="1734885013000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="735">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/paligemma_2.html" class="no-external">PaliGemma 2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/paligemma_2.html" class="no-external">
-<div class="listing-date">
-Dec 9, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1733077800000" data-listing-file-modified-sort="1733678336000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="740">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/star_attention.html" class="no-external">Star Attention</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/star_attention.html" class="no-external">
-<div class="listing-date">
-Dec 2, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="14" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTUxMTXM=" data-listing-date-sort="1732645800000" data-listing-file-modified-sort="1733120590000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="970">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/aim_v2.html" class="no-external">AIMv2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/aim_v2.html" class="no-external">
-<div class="listing-date">
-Nov 27, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="15" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTUxMTXMlMkNnZW5lcmF0aW9u" data-listing-date-sort="1732473000000" data-listing-file-modified-sort="1732820040000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="972">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/janusflow.html" class="no-external">JanusFlow</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/janusflow.html" class="no-external">
-<div class="listing-date">
-Nov 25, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="16" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1732041000000" data-listing-file-modified-sort="1732119780000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1014">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/cut_your_losses.html" class="no-external">Cut Your Losses in Large-Vocabulary Language Models</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/cut_your_losses.html" class="no-external">
-<div class="listing-date">
-Nov 20, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1731436200000" data-listing-file-modified-sort="1731597273000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="770">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/the_super_weight.html" class="no-external">The Super Weight in Large Language Models</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/the_super_weight.html" class="no-external">
-<div class="listing-date">
-Nov 13, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="18" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDdmlzaW9u" data-listing-date-sort="1731004200000" data-listing-file-modified-sort="1731333908000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1061">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/depthpro.html" class="no-external">Depth Pro</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/depthpro.html" class="no-external">
-<div class="listing-date">
-Nov 8, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="19" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDdHJhbnNmb3JtZXJzJTJDc2NhbGluZw==" data-listing-date-sort="1730658600000" data-listing-file-modified-sort="1730887529000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1073">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/scaling_laws_estimation.html" class="no-external">A Hitchhiker’s Guide to Scaling Law Estimation</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/scaling_laws_estimation.html" class="no-external">
-<div class="listing-date">
-Nov 4, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="20" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcyUyQ01MTE1z" data-listing-date-sort="1730053800000" data-listing-file-modified-sort="1730445816000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="671">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/omniparser.html" class="no-external">OmniParser for Pure Vision Based GUI Agent</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/omniparser.html" class="no-external">
-<div class="listing-date">
-Oct 28, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="21" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3RyYW5zZm9ybWVycyUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1729621800000" data-listing-file-modified-sort="1730141776000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="827">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/nGPT.html" class="no-external">Normalized Transformer</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/nGPT.html" class="no-external">
-<div class="listing-date">
-Oct 23, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="22" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3RyYW5zZm9ybWVycyUyQ3Jlc2VhcmNoJTJDTExNcyUyQ21vZGVsX21lcmdpbmc=" data-listing-date-sort="1728930600000" data-listing-file-modified-sort="1730141963000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="779">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/model_merging_at_scale.html" class="no-external">What Matters for Model Merging at Scale?</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/model_merging_at_scale.html" class="no-external">
-<div class="listing-date">
-Oct 15, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="23" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDYWdlbnRz" data-listing-date-sort="1727116200000" data-listing-file-modified-sort="1730991567000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="762">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/agent_workflow_memory.html" class="no-external">Agent WorkFlow Memory</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/agent_workflow_memory.html" class="no-external">
-<div class="listing-date">
-Sep 24, 2024
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
