@@ -18,3 +18,33 @@ execute:
 ---
 
 [arXiv](https://arxiv.org/abs/2508.21038)<br>
+
+
+# Neural Embedding Models
+
+- Dense retrieval has gained a lot of traction in the past few years. 
+- In the era of LLMs, dense retrieval is used for more complicated queries involving conditioning or reasoning.
+- The authors focus on finding the limitations of embedding based retrieval by providing a theoretical connection between the embedding dimension
+and the sign-rank of the query relevance $(qrel)$ matrix.
+
+<br>
+![](../paper_screenshots/limitations_of_embedding_models/1.png)
+<br><br>
+
+
+
+# Representational Capacity of Vector Embeddings
+
+## Formalization
+- $m$ queries, $n$ documents with a ground-truth relevance matrix $𝐴 ∈{\{0,1\}}_{𝑚×𝑛}$  where $𝐴_{𝑖𝑗} = 1$ if and only if document $𝑗$ is relevant to query $𝑖$.
+- Vector embedding models map each query(i) to a d-dimensional vector $u_i$ and each document to a d-dimensional vector $v_j$.
+- Relevance is modeled by the dot product $𝑢^Tv$, with the goal that relevant documents should score higher than irrelevant ones. We represent
+the scores all queries corresponding to all documents in a score matrix $B=U^TV$
+- The smallest embedding dimension 𝑑 that can realize a given score matrix is the rank of 𝐵. Therefore, finding the minimum rank of a score matrix 𝐵 that correctly orders documents according to the relevance specified in matrix 𝐴
+
+If we consider the relevance matrix A to be a binary matrix for simplicity, then based on the above, we can define the following for finding the theoretical
+bounds. Bounds for what? Let us see..
+
+- **row-wise order-preserving rank (rop)**: Given a matrix $𝐴 ∈ ℝ_{𝑚×𝑛}$, the row-wise order-preserving rank of 𝐴 is the smallest integer 𝑑 such that there exists a rank-𝑑 matrix 𝐵 that preserves the relative order of entries in each row of 𝐴.
+- **row-wise thresholdable rank (rt)**: minimum rank of a matrix 𝐵 for which there exist row-specific thresholds 𝜏𝑖 such that for all 𝑖, 𝑗, $𝐵_{𝑖𝑗} > 𝜏_𝑖$ if $𝐴_{𝑖𝑗} = 1$ and $𝐵_{𝑖𝑗} < 𝜏_𝑖$ if $𝐴_{𝑖𝑗}$ = 0.
+- **globally thresholdable rank (gt)**: the minimum rank of a matrix 𝐵 for which there exists a single threshold 𝜏 above which all entries in A equals to 1 otherwise 0
