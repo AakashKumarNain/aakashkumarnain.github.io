@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Aakash Kumar Nain (@A_K_Nain)">
+<meta name="dcterms.date" content="2025-09-12">
 
-<title>Archive – Aakash Kumar Nain</title>
+<title>Reverse-Engineered Reasoning for Open-Ended Generation – Aakash Kumar Nain</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +25,24 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-c390f7ba564b1432f55ee404e584a23b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6b8fe39ddfbd52a82c144c7f1445abb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-c390f7ba564b1432f55ee404e584a23b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6b8fe39ddfbd52a82c144c7f1445abb7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,35 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -139,9 +110,9 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Aakash Kumar Nain</span>
     </a>
   </div>
@@ -167,15 +138,15 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./assets/resume_aakash_kumar_nain.pdf"> 
+    <a class="nav-link" href="../../assets/resume_aakash_kumar_nain.pdf"> 
 <span class="menu-text">CV</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">Blog</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./archive.html" aria-current="page"> 
+    <a class="nav-link" href="../../archive.html"> 
 <span class="menu-text">Archive</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -209,23 +180,58 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-is-it-about" id="toc-what-is-it-about" class="nav-link active" data-scroll-target="#what-is-it-about">1. What is it about?</a></li>
+  <li><a href="#proposal" id="toc-proposal" class="nav-link" data-scroll-target="#proposal">2. Proposal</a>
+  <ul class="collapse">
+  <li><a href="#reverse-engineered-reasoning-as-a-search-problem." id="toc-reverse-engineered-reasoning-as-a-search-problem." class="nav-link" data-scroll-target="#reverse-engineered-reasoning-as-a-search-problem.">3.1 REverse-Engineered Reasoning as a Search Problem.</a></li>
+  <li><a href="#iterative-refinement-via-local-search" id="toc-iterative-refinement-via-local-search" class="nav-link" data-scroll-target="#iterative-refinement-via-local-search">3.2 Iterative Refinement via Local Search</a></li>
+  <li><a href="#data-curation" id="toc-data-curation" class="nav-link" data-scroll-target="#data-curation">3.3 Data Curation</a></li>
+  </ul></li>
+  <li><a href="#experimental-setup" id="toc-experimental-setup" class="nav-link" data-scroll-target="#experimental-setup">4. Experimental Setup</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">5. Results</a></li>
+  <li><a href="#interesting-findings" id="toc-interesting-findings" class="nav-link" data-scroll-target="#interesting-findings">6. Interesting findings</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Archive</h1>
-</div>
+<h1 class="title">Reverse-Engineered Reasoning for Open-Ended Generation</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">papers</div>
+    <div class="quarto-category">summary</div>
+    <div class="quarto-category">research</div>
+    <div class="quarto-category">retrieval</div>
+  </div>
+  </div>
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aakash Kumar Nain (<a href="https://x.com/A_K_Nain"><span class="citation" data-cites="A_K_Nain">@A_K_Nain</span></a>) </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 12, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -235,365 +241,85 @@ window.Quarto = {
 </header>
 
 
+<p><a href="https://arxiv.org/abs/2509.06160">arXiv</a><br></p>
+<section id="what-is-it-about" class="level1">
+<h1>1. What is it about?</h1>
+<ul>
+<li>Reasoning is one of the hottest, if not the hottest, topics in LLMs nowadays. Almost all models are LRMs now.</li>
+<li>RL has predominantly helped unlock these capabilities in the current gen models. There is distillation as well, but RL has been the primary driver.</li>
+<li>Though it works, but is severely limited by the verifiability. Some domains are easy to verify, example includes programming, maths (not everything but many things). But there are domains where the reward signal and verifiability are not straightforward. A typical example of this is creative writing. It is subjective, graded on many aspects like originality, emotional resonance, coherence, etc.</li>
+<li>As a result, implementing deep reasoning for open-ended generation in the absence of task verifiability is an extremely challenging problem to solve. This paper tries to bridge this gap with a simple yet powerful approach</li>
+</ul>
+<p>And before you say, “Yeah, but we can still crowd-source it?” Subjective things are extremely nuanced. A good example of this lies in computer vision where capturing aesthetics of a photo is an equivalent problem. Aesthetics of a photo depends on factors like audience, age-groups, demographic opinion, the objects, the background, etc.</p>
+<p><br><br> <img src="../paper_screenshots/reer/1.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="proposal" class="level1">
+<h1>2. Proposal</h1>
+<ul>
+<li>Proposes REER to instill deep reasoning capabilities for open-ended generation that shifts the objective from generating a solution to discovering the latent reasoning process.</li>
+<li>Three stage process: Preparing a (synthetic )data of query-solution pairs for open-ended generation, reverse-engineering deep reasoning trajectories without the use of RL or distillation, and fine-tuning a base language model, teaching it to reason and plan deeply before generating a final solution.</li>
+<li>The recovery of high-quality thinking trajectories is done via gradient-free iterative search process</li>
+<li>Based on above, the authors created DeepWriting-20K, a comprehensive dataset of 20,000 thinking trajectories, and fine-tuned a Qwen3-8B base model</li>
+</ul>
+<p>Let us now discuss each of these steps in detail.</p>
+<section id="reverse-engineered-reasoning-as-a-search-problem." class="level2">
+<h2 class="anchored" data-anchor-id="reverse-engineered-reasoning-as-a-search-problem.">3.1 REverse-Engineered Reasoning as a Search Problem.</h2>
+<ul>
+<li>For an input query x, and y being a high-quality corresponding reference solution, the objective is to find a deep reasoning trajectory, denoted by z, which represents a structured, step-by-step thinking process that guides the generation of <span class="math inline">\(y\)</span> from <span class="math inline">\(x\)</span>.</li>
+<li>Use perplexity of the reference solution y conditioned both on <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> as a proxy for the quality of a given reasoning trajectory <span class="math inline">\(z\)</span>. Lower the perplexity for a given trajectory, better the latent reasoning.</li>
+<li>The reasoning trajectory is then modelled as a discrete sequence of reasoning steps, <span class="math inline">\(z = [z_1, z_2, . . . , z_n]\)</span>. The problem is then formulated as a search problem over all the possible trajectories to find the optimal trajectory.</li>
+<li>This entire optimization is performed via a gradient-free local search algorithm</li>
+</ul>
+<p><br><br> <img src="../paper_screenshots/reer/2.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="iterative-refinement-via-local-search" class="level2">
+<h2 class="anchored" data-anchor-id="iterative-refinement-via-local-search">3.2 Iterative Refinement via Local Search</h2>
+<ul>
+<li><em>Initialization</em>: For a given pair (x, y), initialize the first trajectory <span class="math inline">\(z_0 = [z_1, z_2, . . . , z_n]\)</span>, by prompting an LLM with a thought-provoking instruction to produce a plausible plan.</li>
+<li><em>Segment-wise Refinement</em>: Refine the segments of the initial trajectory in a loop. At every iteration, pick one segment and prompt the LLM to generate candidate refinements with more thinking-based details, elaborations and reflections. The context to the LLM includes the original query <span class="math inline">\((x)\)</span>, the reference solution <span class="math inline">\((y)\)</span>, refined segments <span class="math inline">\((z_j)\)</span> <span class="math inline">\(j &lt; i\)</span>, and unrefined segments <span class="math inline">\((z_k, \text{where} \ k &gt; i)\)</span>. It is ensured that the model does not copy the segments from the reference solution</li>
+<li><em>Node evaluation and selection</em>: For each generated candidate <span class="math inline">\(c\)</span>, the authors construct a temporary trajectory <span class="math inline">\(z^`_{cand}\)</span> by substituting <span class="math inline">\(z_i\)</span> with <span class="math inline">\(c\)</span>. They then evaluate each candidate by computing its quality score, <span class="math inline">\(S(c) = PPL(y|x, z^′_{cand})\)</span>. The candidate with the lowest perplexity score is chosen as the updated segment for the next iteration.</li>
+</ul>
+</section>
+<section id="data-curation" class="level2">
+<h2 class="anchored" data-anchor-id="data-curation">3.3 Data Curation</h2>
+<ul>
+<li>Need high quality triplets (x, y, z) i.e.&nbsp;(query, response, trajectory)</li>
+<li>Diversity is data is important to avoid overfitting. Data segregated into 25 manually nominated categories to ensure broad topic coverage.</li>
+<li>To ensure the generator model performs a true segment-wise edit without including edits for the subsequent parts of the trajectory, tha authors enforce a meta-structure for the reasoning process within the prompt</li>
+<li>Human-alike thinking based tokens like “Hmm, wait..,maybe..” etc. are injected for self-reflection</li>
+<li>Samples where thinking patterns persisted in the final 10% of the sequence were discarded.</li>
+<li>Samples exhibiting high n-gram repetition, a sign of degenerative looping expressions, were filtered out.</li>
+</ul>
+</section>
+</section>
+<section id="experimental-setup" class="level1">
+<h1>4. Experimental Setup</h1>
+<ul>
+<li>The mixed dataset containing 37,000 samples</li>
+<li>Qwen-3 8B for fine-tuning, and Qwen2.5-32B for trajectory synthesis. Interestingly, all other open models performs worse than Qwen(Go Qwen!)</li>
+<li>Fine-tune for 3 epochs, constant lr=2e-5, and a global batch size of 96. Apparently, no mention of the optimizer used</li>
+</ul>
+</section>
+<section id="results" class="level1">
+<h1>5. Results</h1>
+<p><br><br> <img src="../paper_screenshots/reer/3.png" class="img-fluid"> <br><br></p>
+</section>
+<section id="interesting-findings" class="level1">
+<h1>6. Interesting findings</h1>
+<ul>
+<li>Removing synthetic dataset caused highest degradation in performance</li>
+<li>Removing iterative search also degrades the performance but much lesser than removing the synthetic dataset</li>
+<li>Removing reflection tokens is much more nuanced. Some benchmarks aren’t affected that much, while others see significant drop</li>
+<li>Performance degradation after shortening trajectory length is entirely task dependent, much necessary for creative writing though</li>
+<li>Removing literature and arts data degrades performance across all benchmarks</li>
+<li>The fine-tuned model while performing on par with models like GPT-4, and Claude 3.5 beats them in depth of analysis and factual grounding</li>
+</ul>
+<p><br><br> <img src="../paper_screenshots/reer/4.png" class="img-fluid"> <br><br></p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDcmV0cmlldmFs" data-listing-date-sort="1757615400000" data-listing-file-modified-sort="1757674237780" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="849">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/reer.html" class="no-external">Reverse-Engineered Reasoning for Open-Ended Generation</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/reer.html" class="no-external">
-<div class="listing-date">
-Sep 12, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDcmV0cmlldmFs" data-listing-date-sort="1757356200000" data-listing-file-modified-sort="1757673518163" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1002">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/theoretical_limitations_of_emb.html" class="no-external">On the Theoretical Limitations of Embedding-Based Retrieval</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/theoretical_limitations_of_emb.html" class="no-external">
-<div class="listing-date">
-Sep 9, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbGxtJTJDYWdlbnRz" data-listing-date-sort="1753381800000" data-listing-file-modified-sort="1753608700000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1077">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/kimi_k2.html" class="no-external">Kimi K2: Open Agentic Intelligence</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/kimi_k2.html" class="no-external">
-<div class="listing-date">
-Jul 25, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbGxtJTJDc2NhbGluZw==" data-listing-date-sort="1751826600000" data-listing-file-modified-sort="1751819418000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="610">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/scaling_laws_for_downstream_tasks.html" class="no-external">Scaling Laws Are Unreliable for Downstream Tasks: A Reality Check</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/scaling_laws_for_downstream_tasks.html" class="no-external">
-<div class="listing-date">
-Jul 7, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDbHJt" data-listing-date-sort="1741545000000" data-listing-file-modified-sort="1741942627000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="798">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/lcpo.html" class="no-external">L1</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/lcpo.html" class="no-external">
-<div class="listing-date">
-Mar 10, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDcXVhbnRpemF0aW9uJTIwbGxtcw==" data-listing-date-sort="1739471400000" data-listing-file-modified-sort="1739550937000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="704">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/matquant.html" class="no-external">Matryoshka Quantization</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/matquant.html" class="no-external">
-<div class="listing-date">
-Feb 14, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDZGlmZnVzaW9u" data-listing-date-sort="1738002600000" data-listing-file-modified-sort="1738304416000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="559">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/januspro.html" class="no-external">Janus-Pro</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/januspro.html" class="no-external">
-<div class="listing-date">
-Jan 28, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1737397800000" data-listing-file-modified-sort="1737483817000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="805">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/deepseek_r1.html" class="no-external">DeepSeek-R1</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/deepseek_r1.html" class="no-external">
-<div class="listing-date">
-Jan 21, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDZGlmZnVzaW9u" data-listing-date-sort="1737311400000" data-listing-file-modified-sort="1737796146000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1124">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/inference_scaling_diffusion.html" class="no-external">Inference-Time Scaling for Diffusion Models beyond Scaling Denoising Steps</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/inference_scaling_diffusion.html" class="no-external">
-<div class="listing-date">
-Jan 20, 2025
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1734373800000" data-listing-file-modified-sort="1734892551000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="616">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/deepseek_vl2.html" class="no-external">DeepSeek-VL2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/deepseek_vl2.html" class="no-external">
-<div class="listing-date">
-Dec 17, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="10" data-categories="cGFwZXJzJTJDdmlzaW9u" data-listing-date-sort="1734287400000" data-listing-file-modified-sort="1735403826000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="669">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/gazelle.html" class="no-external">Gaze-LLE</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/gazelle.html" class="no-external">
-<div class="listing-date">
-Dec 16, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="11" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1734028200000" data-listing-file-modified-sort="1734887965000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="939">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/nvila.html" class="no-external">NVILA</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/nvila.html" class="no-external">
-<div class="listing-date">
-Dec 13, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="12" data-categories="TExNcyUyQ3Bvc2l0aW9uJTIwZW5jb2RpbmclMkNhZHZhbmNlZA==" data-listing-date-sort="1733769000000" data-listing-file-modified-sort="1734369520000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3487">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/ml_dl_concepts/rope.html" class="no-external">Rotary Position Encoding</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/ml_dl_concepts/rope.html" class="no-external">
-<div class="listing-date">
-Dec 10, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcw==" data-listing-date-sort="1733682600000" data-listing-file-modified-sort="1734885013000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="735">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/paligemma_2.html" class="no-external">PaliGemma 2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/paligemma_2.html" class="no-external">
-<div class="listing-date">
-Dec 9, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="14" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1733077800000" data-listing-file-modified-sort="1733678336000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="740">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/star_attention.html" class="no-external">Star Attention</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/star_attention.html" class="no-external">
-<div class="listing-date">
-Dec 2, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="15" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTUxMTXM=" data-listing-date-sort="1732645800000" data-listing-file-modified-sort="1733120590000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="970">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/aim_v2.html" class="no-external">AIMv2</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/aim_v2.html" class="no-external">
-<div class="listing-date">
-Nov 27, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="16" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTUxMTXMlMkNnZW5lcmF0aW9u" data-listing-date-sort="1732473000000" data-listing-file-modified-sort="1732820040000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="972">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/janusflow.html" class="no-external">JanusFlow</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/janusflow.html" class="no-external">
-<div class="listing-date">
-Nov 25, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1732041000000" data-listing-file-modified-sort="1732119780000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1014">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/cut_your_losses.html" class="no-external">Cut Your Losses in Large-Vocabulary Language Models</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/cut_your_losses.html" class="no-external">
-<div class="listing-date">
-Nov 20, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="18" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1731436200000" data-listing-file-modified-sort="1731597273000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="770">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/the_super_weight.html" class="no-external">The Super Weight in Large Language Models</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/the_super_weight.html" class="no-external">
-<div class="listing-date">
-Nov 13, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="19" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDdmlzaW9u" data-listing-date-sort="1731004200000" data-listing-file-modified-sort="1731333908000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1061">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/depthpro.html" class="no-external">Depth Pro</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/depthpro.html" class="no-external">
-<div class="listing-date">
-Nov 8, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="20" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDdHJhbnNmb3JtZXJzJTJDc2NhbGluZw==" data-listing-date-sort="1730658600000" data-listing-file-modified-sort="1730887529000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1073">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/scaling_laws_estimation.html" class="no-external">A Hitchhiker’s Guide to Scaling Law Estimation</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/scaling_laws_estimation.html" class="no-external">
-<div class="listing-date">
-Nov 4, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="21" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDVkxNcyUyQ01MTE1z" data-listing-date-sort="1730053800000" data-listing-file-modified-sort="1730445816000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="671">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/omniparser.html" class="no-external">OmniParser for Pure Vision Based GUI Agent</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/omniparser.html" class="no-external">
-<div class="listing-date">
-Oct 28, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="22" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3RyYW5zZm9ybWVycyUyQ3Jlc2VhcmNoJTJDTExNcw==" data-listing-date-sort="1729621800000" data-listing-file-modified-sort="1730141776000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="827">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/nGPT.html" class="no-external">Normalized Transformer</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/nGPT.html" class="no-external">
-<div class="listing-date">
-Oct 23, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="23" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3RyYW5zZm9ybWVycyUyQ3Jlc2VhcmNoJTJDTExNcyUyQ21vZGVsX21lcmdpbmc=" data-listing-date-sort="1728930600000" data-listing-file-modified-sort="1730141963000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="779">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/model_merging_at_scale.html" class="no-external">What Matters for Model Merging at Scale?</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/model_merging_at_scale.html" class="no-external">
-<div class="listing-date">
-Oct 15, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="24" data-categories="cGFwZXJzJTJDc3VtbWFyeSUyQ3Jlc2VhcmNoJTJDYWdlbnRz" data-listing-date-sort="1727116200000" data-listing-file-modified-sort="1730991567000" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="762">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/paper_summaries/agent_workflow_memory.html" class="no-external">Agent WorkFlow Memory</a>
-</h3>
-</div>
-<div class="metadata">
-<a href="./posts/paper_summaries/agent_workflow_memory.html" class="no-external">
-<div class="listing-date">
-Sep 24, 2024
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

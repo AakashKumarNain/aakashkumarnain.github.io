@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/reer.html",
       "/posts/paper_summaries/theoretical_limitations_of_emb.html",
       "/posts/paper_summaries/kimi_k2.html",
       "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
@@ -31,6 +32,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/paper_summaries/reer.html",
       "/posts/paper_summaries/theoretical_limitations_of_emb.html",
       "/posts/paper_summaries/kimi_k2.html",
       "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
