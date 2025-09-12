@@ -1,5 +1,5 @@
 ---
-title: "On the Theoretical Limitations of Embedding-Based Retrieval"
+title: "Reverse-Engineered Reasoning for Open-Ended Generation"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
 date: "2025-09-12"
 categories: [papers, summary, research, retrieval]
