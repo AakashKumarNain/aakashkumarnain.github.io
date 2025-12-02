@@ -2,7 +2,7 @@
 title: "Towards Robust Mathematical Reasoning"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
 date: "2025-11-12"
-categories: [papers, summary, research, retrieval]
+categories: [papers, summary, research]
 image: ""
 ---
 
