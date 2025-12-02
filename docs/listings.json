@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/paper_summaries/towards_robust_mathemtaical_reasoning.html",
       "/posts/paper_summaries/reer.html",
       "/posts/paper_summaries/theoretical_limitations_of_emb.html",
       "/posts/paper_summaries/kimi_k2.html",
@@ -32,6 +33,7 @@
   {
     "listing": "/archive.html",
     "items": [
+      "/posts/paper_summaries/towards_robust_mathemtaical_reasoning.html",
       "/posts/paper_summaries/reer.html",
       "/posts/paper_summaries/theoretical_limitations_of_emb.html",
       "/posts/paper_summaries/kimi_k2.html",
