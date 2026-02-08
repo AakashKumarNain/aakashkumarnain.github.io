@@ -13,7 +13,7 @@ page-layout: full
 
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-8}
 
-I am **Aakash Kumar Nain**, a Senior Machine Learning Engineer (Research) at Emergence AI, bringing over 8 years of experience in building and deploying advanced deep neural networks. A strong advocate for open-source development, I actively contribute to the machine learning ecosystem: I am a core collaborator on Keras 3.0, contribute within the JAX ecosystem, and maintain the TensorFlow-addons package. My expertise and contributions across the TensorFlow, Keras, and JAX frameworks led to my recognition as a Google Developers Expert (GDE).
+I am **Aakash Kumar Nain**, a Senior Machine Learning Engineer (Research), bringing over 9 years of experience in building and deploying advanced deep neural networks. A strong advocate for open-source development, I actively contribute to the machine learning ecosystem: I am a core collaborator on Keras 3.0, contribute within the JAX ecosystem, and maintain the TensorFlow-addons package. My expertise and contributions across the TensorFlow, Keras, and JAX frameworks led to my recognition as a Google Developers Expert (GDE).
 
 My current work focuses on developing Large Language Models (LLMs) and Multimodal Large Language Models(MLLMs). Building these models has led me to focus my research on:
 
@@ -45,6 +45,11 @@ Though the current ML systems have advanced a lot, a key question remains unansw
 ::: {.grid}
 ::: {.g-col-12  .g-col-sm-12 .g-col-md-12}
 ## Projects
+
+[nanoGPTJAX](https://github.com/AakashKumarNain/nanoGPTJAX/tree/main) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/nanoGPTJAX?color=blue&logo=github">
+
+This project is inspired by Karpathy's nanoGPT and nanochat, with one major difference: here we build everything from scratch in pure JAX (on both GPUs and TPUs), avoiding any higher-level third-party model/training libraries (no Flax/nnx/Equinox). The design choices made here cleanly separates “what to create” (parameter specifications), “where to put it” (sharding), and “how to create it” (initialization). That separation is the core abstraction that lets you write simple layer definitions and then scale them across devices without changing layer code.
+
 
 [Mistral-7B in JAX](https://github.com/AakashKumarNain/mistral_jax) &nbsp; <img src="https://img.shields.io/github/stars/AakashKumarNain/mistral_jax?color=blue&logo=github">
 
