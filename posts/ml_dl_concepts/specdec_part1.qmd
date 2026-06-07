@@ -33,7 +33,7 @@ There are many ways to mitigate the above problem. In this post, we will discuss
 
 # 2. Overview
 
-We will align the notation in our post with the [speculative decoding paper(https://arxiv.org/abs/2211.17192). 
+We will align the notation in our post with the [speculative decoding paper](https://arxiv.org/abs/2211.17192). 
 Let $M_p$ be the target model for which we are trying to accelerate inference, and let $p(x_t | x_{<t})$ be the distribution it generates for a prefix $x_{<t}$. Let $M_q$ be a more efficient approximation model for the same task, and let $q(x_t | x_{<t})$ be the distribution it generates for the same prefix. 
 
 The core idea behind speculative decoding is simply this:
@@ -42,11 +42,11 @@ The core idea behind speculative decoding is simply this:
 2. Use the target model to verify the generated tokens in parallel.
 3. Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).
 4. Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.
-5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, we will end up accepting anywhere from $1$ to $\gamma+1$ tokens in a single forward pass of the target model, hence accelerating inference.
+5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, we will end up accepting anywhere from $1$ to $(\gamma+1)$ tokens in a single forward pass of the target model, hence accelerating inference.
 
 Here is an overview of the end-to-end algorithm as described in the speculative decoding paper:
 
-$$
+
 \begin{array}{l}
 \textbf{Inputs: } M_p,\ M_q,\ prefix\\[0.8em]
 
@@ -74,7 +74,7 @@ p'(x) \leftarrow p_{n+1}(x)\\
 t \sim p'(x)\\
 \textbf{return}\ prefix + [x_1,\ldots,x_n,t]
 \end{array}
-$$
+
 
 # 3. Speculative Sampling
 
@@ -84,7 +84,27 @@ Apart from generation from a draft model and parallel verification, speculative 
 2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all the token after this position (if any).
 3. If the sample was rejected, then we sample the next token from an adjusted distribution $p'(x) = norm(max(0, p(x) - q(x)))$
 
-Speculative sampling guarantees that the output distribution is exactly the same as of the target model.
+There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. 
+
+
+### 3.1 Why Do We Sample from the Adjusted Distribution?
+
+One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
+
+The answer lies in **probability accounting**. When a sample is accepted, it already covers $min(px(x), q(x))$ of the probability for each token. If we sample
+from the target distribution, we may end up double-counting some outcomes already handled by the acceptance criteria. This would mean that we would be
+sampling from a distribution that is different from the target distribution.
+
+Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: $A, B, C, D$, and here are the probability distribution produced
+by the draft model and the verifier. 
+
+
+| Token | \(q(x)\) | \(p(x)\) |
+|---------|---------|---------|
+| A       | 0.10    | 0.05    |
+| B       | 0.60    | 0.10    |
+| C       | 0.20    | 0.60    |
+| D       | 0.10    | 0.25.   |
 
 
 
