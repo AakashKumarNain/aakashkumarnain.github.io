@@ -1,5 +1,8 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "!specdec_part1.qmd"
   output-dir: docs
 
 website:
@@ -7,6 +10,8 @@ website:
   site-url: ""
   description: ""
   navbar:
+    background: "#002b36"
+    foreground: "#839496"
     right:
       - icon: github
         href: https://github.com/AakashKumarNain
@@ -33,7 +38,7 @@ website:
 format:
   html:
     theme: theme.scss
-    highlight-style: oblivion
+    # highlight-style: oblivion
 
 
 
