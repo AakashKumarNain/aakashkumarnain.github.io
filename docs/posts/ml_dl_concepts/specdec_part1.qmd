@@ -1,0 +1,112 @@
+---
+title: "Speculative Decoding - The Bits and the Bytes!"
+subtitle: "Why you cannot afford to ignore it — Part 1"
+author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
+date: "2026-04-06"
+categories: [LLMs, sepculative decoding, beginner]
+image: ./images/specdec/cover.png
+
+format:
+  html:
+    theme: default
+    fontsize: 2em
+    backgroundcolor: rgb(255, 255, 255);
+    code-fold: true
+    code-summary: "Show the code"
+    css: styles.css
+execute: 
+  echo: false
+---
+
+# 1. Why bother with speculative decoding?
+
+We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a "small model" has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.
+
+Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding `K` tokens takes `K` serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.
+
+There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:
+
+- **Speculative Decoding: The bits and the bytes** (this post!) that will give you an overview of the fundamentals of speculative decoding.
+- **Medusa and Eagle**: Modern or most common ways to implement speculative decoding.
+- **DFlash**: The emerging new cool kid on the block.
+
+
+# 2. Overview
+
+We will align the notation in our post with the [speculative decoding paper](https://arxiv.org/abs/2211.17192). 
+Let $M_p$ be the target model for which we are trying to accelerate inference, and let $p(x_t | x_{<t})$ be the distribution it generates for a prefix $x_{<t}$. Let $M_q$ be a more efficient approximation model for the same task, and let $q(x_t | x_{<t})$ be the distribution it generates for the same prefix. 
+
+The core idea behind speculative decoding is simply this:
+
+1. Use the more efficient (smaller) model to generate $\gamma$ tokens. 
+2. Use the target model to verify the generated tokens in parallel.
+3. Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).
+4. Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.
+5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, we will end up accepting anywhere from $1$ to $(\gamma+1)$ tokens in a single forward pass of the target model, hence accelerating inference.
+
+Here is an overview of the end-to-end algorithm as described in the speculative decoding paper:
+
+
+\begin{array}{l}
+\textbf{Inputs: } M_p,\ M_q,\ prefix\\[0.8em]
+
+\triangleright\ \text{Sample } \gamma \text{ guesses } x_{1,\ldots,\gamma} \text{ from } M_q \text{ autoregressively.}\\[0.3em]
+\textbf{for}\ i = 1\ \textbf{to}\ \gamma\ \textbf{do}\\
+\quad q_i(x) \leftarrow M_q(prefix + [x_1,\ldots,x_{i-1}])\\
+\quad x_i \sim q_i(x)\\
+\textbf{end for}\\[0.8em]
+
+\triangleright\ \text{Run } M_p \text{ in parallel.}\\[0.3em]
+p_1(x),\ldots,p_{\gamma+1}(x) \leftarrow\\
+\qquad M_p(prefix),\ldots,M_p(prefix+[x_1,\ldots,x_\gamma])\\[0.8em]
+
+\triangleright\ \text{Determine the number of accepted guesses } n.\\[0.3em]
+r_1 \sim U(0,1),\ldots,r_\gamma \sim U(0,1)\\
+n \leftarrow \min\!\left(\left\{i-1 \;\middle|\; 1 \le i \le \gamma,\, r_i > \tfrac{p_i(x)}{q_i(x)}\right\} \cup \{\gamma\}\right)\\[0.8em]
+
+\triangleright\ \text{Adjust the distribution from } M_p \text{ if needed.}\\[0.3em]
+p'(x) \leftarrow p_{n+1}(x)\\
+\textbf{if}\ n < \gamma\ \textbf{then}\\
+\quad p'(x) \leftarrow \operatorname{norm}\!\left(\max(0,\, p_{n+1}(x) - q_{n+1}(x))\right)\\
+\textbf{end if}\\[0.8em]
+
+\triangleright\ \text{Return one token from } M_p\text{, and } n \text{ tokens from } M_q\text{.}\\[0.3em]
+t \sim p'(x)\\
+\textbf{return}\ prefix + [x_1,\ldots,x_n,t]
+\end{array}
+
+
+# 3. Speculative Sampling
+
+Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens, Here is an overview of how speculative sampling works:
+
+1. We sample $x \sim q(x)$
+2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all the token after this position (if any).
+3. If the sample was rejected, then we sample the next token from an adjusted distribution $p'(x) = norm(max(0, p(x) - q(x)))$
+
+There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. 
+
+
+### 3.1 Why Do We Sample from the Adjusted Distribution?
+
+One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
+
+The answer lies in **probability accounting**. When a sample is accepted, it already covers $min(px(x), q(x))$ of the probability for each token. If we sample
+from the target distribution, we may end up double-counting some outcomes already handled by the acceptance criteria. This would mean that we would be
+sampling from a distribution that is different from the target distribution.
+
+Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: $A, B, C, D$, and here are the probability distribution produced
+by the draft model and the verifier. 
+
+
+| Token | \(q(x)\) | \(p(x)\) |
+|---------|---------|---------|
+| A       | 0.10    | 0.05    |
+| B       | 0.60    | 0.10    |
+| C       | 0.20    | 0.60    |
+| D       | 0.10    | 0.25.   |
+
+
+
+
+# References
