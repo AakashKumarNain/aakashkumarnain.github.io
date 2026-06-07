@@ -7,11 +7,11 @@ categories: [LLMs, position encoding, advanced]
 image: ""
 format:
   html:
-    theme: default
-    fontsize: 2em
-    backgroundcolor: rgb(255, 255, 255);
-    code-fold: true
-    code-summary: "Show the code"
+    # theme: default
+    # fontsize: 2em
+#     # backgroundcolor: rgb(255, 255, 255);
+#     code-fold: true
+#     code-summary: "Show the code"
     css: styles.css
 execute: 
   echo: false
