@@ -79,5 +79,33 @@ $nav-tabs-link-hover-border-color:  $nav-tabs-border-color !default;
 $navbar-light-color:                rgba($black, .4) !default !default;
 $navbar-light-active-color:         rgba($black, .7) !default !default;
 
+// $navbar-dark-color:                 rgba($white, .75) !default;
+// $navbar-dark-active-color:          $white !default;
+// $navbar-dark-hover-color:           $green !default;
+
+// $navbar-bg:                         $gray-700 !default;
+// $navbar-fg:                         $gray-400 !default;
+// $navbar-hl:                         $green !default;
+
+/*-- scss:rules --*/
 
 
+.navbar {
+  background-color: #073642 !important;
+  border-bottom: 1px solid #0a4455;
+}
+
+.navbar .dropdown-menu {
+  background-color: #073642;
+  border: 1px solid #0a4455;
+}
+
+.navbar .dropdown-item {
+  color: #839496;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background-color: #0a4455;
+  color: #ffffff;
+}
