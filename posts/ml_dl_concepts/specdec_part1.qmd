@@ -2,18 +2,19 @@
 title: "Speculative Decoding - The Bits and the Bytes!"
 subtitle: "Why you cannot afford to ignore it — Part 1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
-date: "2026-04-06"
+date: "2026-06-08"
 categories: [LLMs, sepculative decoding, beginner]
 image: ./images/specdec/cover.png
 
 format:
   html:
-    theme: default
-    fontsize: 2em
-    backgroundcolor: rgb(255, 255, 255);
-    code-fold: true
-    code-summary: "Show the code"
     css: styles.css
+    grid:
+      sidebar-width: 300px
+      body-width: 800px
+      margin-width: 300px
+      gutter-width: 1.5rem
+
 execute: 
   echo: false
 ---
@@ -27,8 +28,8 @@ Like any other approach, scaling also comes with its pros and cons. Ideally, you
 There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:
 
 - **Speculative Decoding: The bits and the bytes** (this post!) that will give you an overview of the fundamentals of speculative decoding.
-- **Medusa and Eagle**: Modern or most common ways to implement speculative decoding.
-- **DFlash**: The emerging new cool kid on the block.
+- **Eagle**: Most commonly used algorithm for speculative decoding.
+- **Diffusion Based Methods (e.g. DFlash)**: The emerging new cool kid on the block.
 
 
 # 2. Overview
@@ -87,25 +88,327 @@ Apart from generation from a draft model and parallel verification, speculative 
 There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. 
 
 
-### 3.1 Why Do We Sample from the Adjusted Distribution?
+## 3.1 Why Do We Sample from the Adjusted Distribution?
 
 One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
 
-The answer lies in **probability accounting**. When a sample is accepted, it already covers $min(px(x), q(x))$ of the probability for each token. If we sample
-from the target distribution, we may end up double-counting some outcomes already handled by the acceptance criteria. This would mean that we would be
-sampling from a distribution that is different from the target distribution.
+The answer lies in **probability accounting**. For any token $x$, the probability of it being output through the acceptance path is:
 
-Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: $A, B, C, D$, and here are the probability distribution produced
-by the draft model and the verifier. 
+$$P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \left(1, \frac{p(x)}{q(x)}\right)}_{\text{prob of accepting } x} = \min(q(x),\ p(x))$$
+
+So the acceptance path already covered $\min(p(x), q(x))$ of the target probability for each token. In case the token is rejected, the resample must cover only the remainder $(p(x) - \min(p(x), q(x)))$, which is exactly $\max(0, p(x) - q(x))$. If we resampled from $p(x)$ directly instead, we would double-count the probability already handled by acceptance, and the output distribution would no longer match $p(x)$.
+
+Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: $A, B, C, D$, and here are the probability distributions produced by the draft model and the verifier.
+
+| Token | $p(x)$ | $q(x)$ |
+|-------|--------|--------|
+| A     | 0.50   | 0.20   |
+| B     | 0.10   | 0.40   |
+| C     | 0.30   | 0.15   |
+| D     | 0.10   | 0.25   |
+
+For the final output to be distributed as $p(x)$, every token must satisfy:
+
+$$P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)$$
+
+The acceptance path covers $\min(p(x), \ q(x))$ for each token:
+
+| Token | $p(x)$ | Covered by acceptance: $\min(p, q)$ | Still needed |
+|-------|--------|--------------------------------------|-------------|
+| A     | 0.50   | 0.20                                 | 0.30        |
+| B     | 0.10   | 0.10                                 | 0.00        |
+| C     | 0.30   | 0.15                                 | 0.15        |
+| D     | 0.10   | 0.10                                 | 0.00        |
+
+Look at token $B$. The acceptance path already accounts for its entire probability (0.10). It needs **nothing** from the resample. Same for token $D$. Now suppose we resample from $p(x)$ directly. Token $B$ has $p(B) = 0.10$, so the resample would give it additional probability, pushing its total **above** 0.10. The output distribution would no longer match $p(x)$. How?
+
+**Case 1: Resample from $p(x)$**
+
+$$
+\begin{align}
+P(B) = {\min(p, q)} + \underbrace{(1-\beta)}_{\text{prob of rejection}} \times \underbrace{\text{resample}(B)}_{\text{depends on choice}} \\~\\
+\text{where } \ \beta = \sum_x \min(p(x), q(x)) = 0.20 + 0.10 + 0.15 + 0.10 = 0.55 \\~\\
+P(B) = 0.10 + 0.45 \times p(B) = 0.10 + 0.45 \times 0.10 = 0.10 + 0.045 = 0.145
+\end{align}
+$$
+
+You can clearly see the additional probability assigned to it. Let us now look at the second case where we resample from the adjusted distribution instead.
+
+**Case 2: Resample from $p'(x) = norm(\max(0, p(x) - q(x)))$**
+
+$$
+P(B) = 0.10 + 0.45 \times p'(B) = 0.10 + 0.45 \times \frac{\max(0,0.10−0.40)}{0.45}​ = 0.10
+$$
+
+The adjusted distribution gives $B$ exactly zero probability in the resample, because $B$ was already fully covered. This has a very interesting implication i.e. *Speculative Sampling ensures that the output distribution in speculative decoding is exactly identical to the target distribution.*
+<br>
+
+# 4 Acceptance Rate And Number Of Generated Tokens
+
+For a given prefix, say $x_{<t}$, the acceptance rate $\beta$ is the probability of accepting $x_t ∼ q(x_t|x_{<t})$ by speculative sampling. Specifically:
+
+$$
+\begin{align}
+\beta
+&=
+\mathbb{E}_{x\sim q(x)}
+\left[
+\min\left(1,\frac{p(x)}{q(x)}\right)
+\right]
+\notag
+\\[6pt]
+&=
+\sum_x q(x)
+\min\left(1,\frac{p(x)}{q(x)}\right)
+\notag
+\\[6pt]
+&=
+\sum_x
+\min\left(q(x),q(x)\frac{p(x)}{q(x)}\right)
+\notag
+\\[6pt]
+\beta
+&=
+\sum_x \min\bigl(p(x),q(x)\bigr)
+\tag{1}
+\end{align}
+$$
+
+Remember, this acceptance rate is defined for a **single prefix** (it changes at every position within the same generation, since each position has a different prefix). If we assume that all $\beta s$ are *i.i.d*, then we can define the expected acceptance rate $\alpha = \mathbb{E}(\beta)$. It measures how well your draft model $M_q$ approximates the target model $M_p$. With that, we can now estimate the expected number of tokens that will be generated in a single run of the speculative decoding algorithm. Suppose $N$ is the number of tokens generated in one run, and the total number of draft tokens we are allowed to generate is $\gamma$. Then,
+
+- If draft 1 is rejected $\rightarrow N = 1$ (the resampled token)
+- If draft 1 accepted, draft 2 rejected $\rightarrow N = 2$ 
+- If drafts 1,2 accepted, draft 3 rejected $\rightarrow N = 3$ 
+- ...
+- If all $\gamma$ drafts accepted $\rightarrow N = (\gamma + 1)$  (includes bonus token)
+
+Each draft here is independently accepted with probability $\alpha$ (the i.i.d assumption). We can then define the PMF for two cases as shown below:
+
+For rejection at position $k$ where $(k = 1,2,\ldots,\gamma)$:
+
+$$
+P(N = k) = \alpha^{k-1}(1-\alpha) \tag{2}
+$$
+
+And for the case where $(k = \gamma + 1)$ (all accepted):
+
+$$
+P(N = \gamma + 1) = \alpha^\gamma \tag{3}
+$$
+
+Computing the expected number of generated tokens $\mathbb{E}(N)$ is now easy.  For any non-negative integer random variable:
+
+$$
+E(N)=\sum_{k=1}^{\max} P(N \ge k)
+$$
+
+Wherever $P(N \ge k)$, it means *at least $k$* tokens were generated, which requires the first $(k-1)$ drafts to all be accepted. Hence,
+
+$$
+P(N \ge k) = \alpha^{k-1} \\~\\
+E(N)
+= \sum_{k=1}^{\gamma+1} P(N \ge k)
+=\sum_{k=1}^{\gamma+1} \alpha^{k-1}
+=\sum_{j=0}^{\gamma} \alpha^j
+$$
+
+This is a geometric series with $(\gamma+1)$ terms (common ratio $\alpha$). Therefore the expected number of generated tokens in a single run of speculative decoding algorithm are:
+
+$$
+E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha} \tag{4}
+$$
+
+# Calculating $\alpha$
+
+Though we used $\alpha$ in the previous section for calculating expected number of generated tokens, we still have not have expressed $\alpha$ in a computable form. The authors of the speculative decoding [paper (Leviathan et al., 2023)](https://arxiv.org/abs/2211.17192) introduces a divergence $D_{LK}$, connects it to $\beta$ and then gets $\alpha$. Suppose $M(x)$ is the mid-point distribution defined as $M(x) = \frac{p(x) + q(x)}{2}$. We can then define the divergence as:
+
+$$
+D_{LK}(p,q)
+=
+\sum_x |p(x)-M(x)|
+=
+\sum_x |q(x)-M(x)|.
+\tag{5}
+$$
+
+Why are the two sums in the above expression equal? We can prove it. 
+
+$$
+\begin{aligned}
+|p(x)-M(x)|
+&=
+\left|p(x)-\frac{p(x)+q(x)}{2}\right|
+\\[4pt]
+&=
+\left|\frac{2p(x)-p(x)-q(x)}{2}\right|
+\\[4pt]
+&=
+\frac{|p(x)-q(x)|}{2}
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+|q(x)-M(x)|
+&=
+\left|q(x)-\frac{p(x)+q(x)}{2}\right|
+\\[4pt]
+&=
+\left|\frac{2q(x)-p(x)-q(x)}{2}\right|
+\\[4pt]
+&=
+\frac{|q(x)-p(x)|}{2}
+\\[4pt]
+&=
+\frac{|p(x)-q(x)|}{2}
+\end{aligned}
+$$
+
+Given that, we can derive the total variation distance between $p$ and $q$ as:
+
+$$
+\begin{align}
+D_{LK}(p,q)
+&=
+\sum_x \frac{|p(x)-q(x)|}{2}
+\notag
+\\[4pt]
+&=
+\sum_x
+\frac{
+p(x)+q(x)-2\min \bigl(p(x),q(x)\bigr)
+}{2}
+\notag
+\\[4pt]
+&=
+\frac{1}{2}
+\left[
+\sum_x p(x)
++
+\sum_x q(x)
+-
+2\sum_x \min \bigl(p(x),q(x)\bigr)
+\right]
+\notag
+\\[4pt]
+&=
+\frac{1}{2}
+\left[
+1+1
+-
+2\sum_x \min \bigl(p(x),q(x)\bigr)
+\right]
+\notag
+\\[4pt]
+D_{LK}(p,q)
+&=
+1-\sum_x \min \bigl(p(x),q(x)\bigr)
+\tag{6}
+\end{align}
+$$
+
+We can infer a few interesting things from eqn. ${(6)}$.
+
+- Because $\min(p(x),q(x)) = \min(q(x),p(x))$, we can say the divergence $D_{LK}$ is symmetric. How about the range? We can calculate it too.
+- $0 \le \min \bigl(p(x),q(x)\bigr) \le p(x) \ \Longrightarrow\ \ 0 \le \sum_x \min \bigl(p(x),q(x)\bigr) \le 1 \quad \Longrightarrow \ 0 \le D_{LK} \le 1$
+- $\begin{aligned} D_{LK}(p,q)=0 &\;\Longleftrightarrow\; p=q\end{aligned}$
+- $\begin{aligned} D_{LK}(p,q)=1 &\;\Longleftrightarrow\; p \text{ and } q \text{ have disjoint support} \end{aligned}$
+
+Using ${(1)}, {(5)}$ and ${(6)}$, we can now calculate $\alpha$ as:
+
+$$
+\alpha
+=
+1-\mathbb{E} \left[D_{LK}(p,q)\right]
+=
+\mathbb{E} \left[\min\!\bigl(p,q\bigr)\right]
+=
+\mathbb{E} \left[\sum_x \min \bigl(p(x),q(x)\bigr)\right]
+\tag{7}
+$$
+
+If you have $N$ prefixes, then for each prefix, run both models $M_q$ and $M_p$ and calculate $\sum_x \min \bigl(p(x),q(x)\bigr)$. Average that across prefixes and you have $\alpha$. This is exactly how it was calculated by the authors in the paper for 10K prefixes. <br><br>
+
+**Q. What are the implications of acceptance rate $\alpha=0$ and $\alpha=1$?**
+
+When the acceptance rate is zero, it means we are generating only one token (resampled one) per run, basically the same number of tokens as in standard decoding. This means $M_q$ is useless, and in fact hurts the overall performance as you are paying the cost of overhead for generating a single token. On the other hand, when acceptance rate is 1, that means we are generating $(\gamma +1)$ (1 for the bonus token we get after verification) in one run. A High α means the drafter $M_q$ has high distributional overlap with the target model $M_p$.
 
 
-| Token | \(q(x)\) | \(p(x)\) |
-|---------|---------|---------|
-| A       | 0.10    | 0.05    |
-| B       | 0.60    | 0.10    |
-| C       | 0.20    | 0.60    |
-| D       | 0.10    | 0.25.   |
+**Q. If $M_q$ is very close to $M_p$ i.e. we have high $\alpha$, does that guarantee in a wall time improvement?**
 
+No, a high $\alpha$ does not guarantee that. The speed up factor depends on the size of the drafter. With the increase in the size of the drafter, the gains in wall time decrease. We will discuss this in detail in the next few sections. 
+<br>
+
+
+# Walltime Improvement
+
+The whole point of using speculative decoding is to improve the walltime for inference. We proved that the we can reduce the number of calls to the target model for inference by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, but we have not formalized the *expected walltime improvement* yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate $\gamma$ tokens and do $(\gamma + 1)$ concurrent evaluations in parallel without increasing the walltime
+
+We know the expected tokens per iteration. Now we factor in the cost of running $M_q$​ to get the actual walltime improvement. Suppose the ratio between the time for a single run of $M_q$ and the time for a single run of $M_p$ is the cost coefficient $c$.
+$$ c = \frac{T_{M_q}}{T_{M_p}} \tag{8}$$
+
+Note that the cost coefficient here **depends** on the **hardware configuration and the software implementation**. In the author's setup, $M_q$ was a couple of orders of magnitude smaller than $M_p$, and $c$ was always less than 0.05; often negligibly close to 0. 
+
+Let $T$ be the time taken by a single forward pass of target model $M_p$​. We can now derive the walltime improvement step by step.
+
+1. **Cost of one iteration of speculative decoding algorithm**
+    - Maximum number of tokens generated by the drafter $M_q \rightarrow \ \gamma$
+    - Each forward pass of the drafter takes $cT$ (using ${(8)}$) time.
+    - $\gamma$ forward passes of the drafter model takes a total of $\gamma cT$ time.
+    - One forward pass of $M_p$ verifies $(\gamma + 1)$ tokens in parallel in time $T$
+    - Therefore, the total cost per iteration is given as: $$T_{\mathrm{spec}}​ = \gamma cT \ + \ T=(γc+1)T \tag{9}$$
+
+2. **Tokens per iteration**: We already have the expected number of tokens from ${4}$ given as: $$E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha}$$
+3. **Cost per token with speculative decoding**: Given that, we can now calculate the overall expected cost for producing a token with speculative decoding as:
+$$\frac{T_{\mathrm{spec}}}{E(N)}
+=
+\frac{(\gamma c + 1)T}
+{\dfrac{1-\alpha^{\gamma+1}}{1-\alpha}}
+=
+\frac{(\gamma c + 1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot T
+$$  
+4. **Cost per token with standard decoding**: The cost of producing one token with standard decoding is the same as the time taken by one forward pass of the target model $M_p$. Hence $$T_{\mathrm{standard}} = T$$
+5. **Calculate walltime improvement**:
+$$
+\text{Improvement}
+=
+\frac{T_{\text{standard}}}{T_{\text{spec}}}
+=
+\frac{T}
+{\dfrac{(\gamma c + 1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot T}
+=
+\frac{1-\alpha^{\gamma+1}}
+{(1-\alpha)(\gamma c + 1)}
+\tag {10}
+$$
+
+In the last section, we said that having a high expected acceptance rate $\alpha$ does not guarantee a walltime improvement or speedup. It is to relate the "why" with Eq.$(10)$. Ignoring the $\gamma$ for a bit, we can see that if your acceptance rate is high but the cost coefficient $c$ is higher ($\alpha < c$), meaning the forward pass of the drafter is costly, then you may or may not notice any speed up. For speed ups, we need both: **high $\alpha$ and low $c$**.
+
+If $\alpha > c$, then we can derive the expected speed up for the bare minimum value of draft tokens. Plugging $(\gamma = 1)$ in the above equation:
+
+$$
+\begin {aligned}
+\text{Improvement}
+=
+\frac{1-\alpha^2}{(1-\alpha)(c+1)}
+=
+\frac{(1-\alpha)(1+\alpha)}
+{(1-\alpha)(1+c)}
+=
+\frac{1+\alpha}{1+c}
+\end{aligned}
+$$
+
+Since $\alpha > c$, we can say that:
+
+$$
+(1+\alpha > 1+c) \quad
+\text {or} \quad \frac{1+\alpha}{1+c} > 1
+$$
 
 
 
