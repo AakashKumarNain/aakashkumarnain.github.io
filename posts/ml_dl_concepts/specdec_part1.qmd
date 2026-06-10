@@ -218,7 +218,7 @@ $$
 E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha} \tag{4}
 $$
 
-# Calculating $\alpha$
+# 5. Calculating $\alpha$
 
 Though we used $\alpha$ in the previous section for calculating expected number of generated tokens, we still have not have expressed $\alpha$ in a computable form. The authors of the speculative decoding [paper (Leviathan et al., 2023)](https://arxiv.org/abs/2211.17192) introduces a divergence $D_{LK}$, connects it to $\beta$ and then gets $\alpha$. Suppose $M(x)$ is the mid-point distribution defined as $M(x) = \frac{p(x) + q(x)}{2}$. We can then define the divergence as:
 
@@ -340,7 +340,7 @@ No, a high $\alpha$ does not guarantee that. The speed up factor depends on the 
 <br>
 
 
-# Walltime Improvement
+# 6. Walltime Improvement
 
 The whole point of using speculative decoding is to improve the walltime for inference. We proved that the we can reduce the number of calls to the target model for inference by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, but we have not formalized the *expected walltime improvement* yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate $\gamma$ tokens and do $(\gamma + 1)$ concurrent evaluations in parallel without increasing the walltime
 
@@ -409,6 +409,55 @@ $$
 (1+\alpha > 1+c) \quad
 \text {or} \quad \frac{1+\alpha}{1+c} > 1
 $$
+
+
+# 7. Number of Arithmetic Operations
+
+Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for walltime. We generate at most $(\gamma + 1)$ tokens using the drafter and run $M_p$ in parallel for verification. A single run of the speculative decoding then results in $\gamma$ runs of $M_q$ and $(\gamma +1)$ parallel runs of $M_p$. We *may* end up doing more arithmetic operations compared to standard decoding. It depends on the acceptance factor.
+
+*Note: We are talking about arithmetic operations here, not walltime. $(\gamma + 1)$ parallel runs of $M_p$ cost the same walltime as a single run (one memory read), but they cost $(\gamma + 1) \times \mathrm{Ops}$.*
+
+
+Say $F$ is the number of of arithmetic operations for a single forward pass of standard decoding. Let $\mu$ be the ratio of arithmetic operations per token of the draft model $M_q$ to that of the target model $M_p$: $$\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}$$
+
+Let's do the math step by step:
+
+1. **Derive the Ops per iteration of speculative decoding**
+    - $\gamma$ runs of $M_q$ resulting in a total of $\gamma F_{M_q} \Longrightarrow \gamma \mu F$ ops
+    - $(\gamma + 1)$ parallel runs of $M_p$ resulting in a total of $(\gamma + 1)F$ ops
+    - Total ops per iteration: $F_{iter} = \gamma \mu F + (\gamma + 1)F = (\gamma \mu + \gamma + 1)F$
+
+2. **Derive the Ops per token in speculative decoding**: To get the number of ops per toke, simply divide the ops per iteration by the expected number of tokens generated using speculative decoding.
+$$
+\begin{aligned}
+\mathrm{F}_{\mathrm{spec}}
+&=
+\frac{(\gamma \mu +\gamma+1)F}
+{\dfrac{1-\alpha^{\gamma+1}}{1-\alpha}}
+\\~\\[4pt]
+\mathrm{F}_{\mathrm{spec}}
+&=
+\frac{(\gamma \mu +\gamma+1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot F
+\end{aligned}
+$$
+
+3. We can now calculate the expected factor of increase in the number of total operations as:
+$$
+\mathrm{F_{factor}}
+=
+\frac{\mathrm{F}_{\mathrm{spec}}}
+{\mathrm{F}_{\mathrm{standard}}}
+=
+\frac{(1-\alpha)(\gamma c+\gamma+1)}
+{1-\alpha^{\gamma+1}}
+\tag{11}
+$$
+
+So, a low $\alpha$ results in the increase of arithmetic operations, and vice-versa. 
+
+
 
 
 
