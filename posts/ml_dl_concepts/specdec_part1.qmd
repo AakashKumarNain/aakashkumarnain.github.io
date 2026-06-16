@@ -2,9 +2,8 @@
 title: "Speculative Decoding - The Bits and the Bytes!"
 subtitle: "Why you cannot afford to ignore it — Part 1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
-date: "2026-06-08"
-categories: [LLMs, sepculative decoding, beginner]
-image: ./images/specdec/cover.png
+date: "2026-06-17"
+categories: [LLMs, sepculative decoding]
 
 format:
   html:
@@ -23,7 +22,7 @@ execute:
 
 We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a "small model" has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.
 
-Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding `K` tokens takes `K` serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.
+Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding $K$ tokens takes $K$ serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.
 
 There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:
 
@@ -45,8 +44,7 @@ The core idea behind speculative decoding is simply this:
 4. Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.
 5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, we will end up accepting anywhere from $1$ to $(\gamma+1)$ tokens in a single forward pass of the target model, hence accelerating inference.
 
-Here is an overview of the end-to-end algorithm as described in the speculative decoding paper:
-
+<br>
 
 $$
 \begin{array}{l}
@@ -54,28 +52,33 @@ $$
 \textbf{Algorithm 1 } \text{SpeculativeDecodingStep} \\
 \hline
 \textbf{Inputs: } M_p, M_q, prefix. \\
-\color{#008000}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
+\color{#D4AC0D}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
 \textbf{for } i = 1 \textbf{ to } \gamma \textbf{ do} \\
 \quad q_i(x) \leftarrow M_q(prefix + [x_1, \dots, x_{i-1}]) \\
 \quad x_i \sim q_i(x) \\
 \textbf{end for} \\
-\color{#008000}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
+\color{#D4AC0D}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
 p_1(x), \dots, p_{\gamma+1}(x) \leftarrow M_p(prefix), \dots, M_p(prefix + [x_1, \dots, x_\gamma]) \\
-\color{#008000}{\triangleright \text{ Determine the number of accepted guesses } n.} \\
+\color{#D4AC0D}{\triangleright \text{ Determine the number of accepted guesses } n.} \\
 r_1 \sim U(0, 1), \dots, r_\gamma \sim U(0, 1) \\
 n \leftarrow \min\left(\{i - 1 \mid 1 \leq i \leq \gamma, r_i > \frac{p_i(x)}{q_i(x)}\} \cup \{\gamma\}\right) \\
-\color{#008000}{\triangleright \text{ Adjust the distribution from } M_p \text{ if needed.}} \\
+\color{#D4AC0D}{\triangleright \text{ Adjust the distribution from } M_p \text{ if needed.}} \\
 p'(x) \leftarrow p_{n+1}(x) \\
 \textbf{if } n < \gamma \textbf{ then} \\
 \quad p'(x) \leftarrow norm(\max(0, p_{n+1}(x) - q_{n+1}(x))) \\
 \textbf{end if} \\
-\color{#008000}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
+\color{#D4AC0D}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
 t \sim p'(x) \\
 \textbf{return } prefix + [x_1, \dots, x_n, t] \\
 \hline
 \end{array}
 $$
 
+<br><br>
+
+![An example demonstrating how the algorithm works. (*PS: I skipped "lazy" because it was overflowing. Sorry!)*](./animations/specdec/overview.mp4){autoplay=true, loop=true}
+
+<br>
 
 # Speculative Sampling
 
@@ -85,10 +88,10 @@ Apart from generation from a draft model and parallel verification, speculative 
 2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all the token after this position (if any).
 3. If the sample was rejected, then we sample the next token from an adjusted distribution $p'(x) = norm(max(0, p(x) - q(x)))$
 
-There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. 
+There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br>
 
 
-## Why Do We Sample from the Adjusted Distribution?
+## Why do we sample from the adjusted Distribution?
 
 One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
 
@@ -120,7 +123,7 @@ The acceptance path covers $\min(p(x), \ q(x))$ for each token:
 | C     | 0.30   | 0.15                                 | 0.15        |
 | D     | 0.10   | 0.10                                 | 0.00        |
 
-Look at token $B$. The acceptance path already accounts for its entire probability (0.10). It needs **nothing** from the resample. Same for token $D$. Now suppose we resample from $p(x)$ directly. Token $B$ has $p(B) = 0.10$, so the resample would give it additional probability, pushing its total **above** 0.10. The output distribution would no longer match $p(x)$. How?
+Look at token $B$. The acceptance path already accounts for its entire probability (0.10). It needs **nothing** from the resample. Same for token $D$. Now suppose we resample from $p(x)$ directly. Token $B$ has $p(B) = 0.10$, so the resample would give it additional probability, pushing its total **above** 0.10. The output distribution would no longer match $p(x)$. How? <br>
 
 **Case 1: Resample from $p(x)$**
 
@@ -132,7 +135,7 @@ P(B) = 0.10 + 0.45 \times p(B) = 0.10 + 0.45 \times 0.10 = 0.10 + 0.045 = 0.145
 \end{align}
 $$
 
-You can clearly see the additional probability assigned to it. Let us now look at the second case where we resample from the adjusted distribution instead.
+You can clearly see the additional probability assigned to it. Let us now look at the second case where we resample from the adjusted distribution instead.<br><br>
 
 **Case 2: Resample from $p'(x) = norm(\max(0, p(x) - q(x)))$**
 
@@ -141,7 +144,7 @@ P(B) = 0.10 + 0.45 \times p'(B) = 0.10 + 0.45 \times \frac{\max(0,0.10−0.40)}{
 $$
 
 The adjusted distribution gives $B$ exactly zero probability in the resample, because $B$ was already fully covered. This has a very interesting implication i.e. *Speculative Sampling ensures that the output distribution in speculative decoding is exactly identical to the target distribution.*
-<br>
+<br><br>
 
 # Acceptance Rate And Number Of Generated Tokens
 
@@ -217,6 +220,7 @@ This is a geometric series with $(\gamma+1)$ terms (common ratio $\alpha$). Ther
 $$
 E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha} \tag{4}
 $$
+<br><br>
 
 # Calculating $\alpha$
 
@@ -339,7 +343,7 @@ Not necessarily. The speed-up factor depends on the drafter's size. As the size 
 <br>
 
 
-# wall time Improvement
+# Wall time Improvement
 
 The whole point of using speculative decoding is to improve the wall time for inference. We proved that we can reduce the number of calls to the target model for inference by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, but we have not formalized the *expected wall time improvement* yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate $\gamma$ tokens and do $(\gamma + 1)$ concurrent evaluations in parallel without increasing the wall time
 
@@ -408,7 +412,7 @@ $$
 (1+\alpha > 1+c) \quad
 \text {or} \quad \frac{1+\alpha}{1+c} > 1
 $$
-
+<br><br>
 
 # Number of Arithmetic Operations
 
@@ -454,7 +458,7 @@ $$
 \tag{11}
 $$
 
-So, a low $\alpha$ (more rejections) increases arithmetic operations, and vice versa. In most cases, the drafter is so small that these additional ops are negligible compared to the overall arithmetic operations. On the other hand, we are reducing the memory reads per token by the target model by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, which is good because inference is memory-bound. 
+So, a low $\alpha$ (more rejections) increases arithmetic operations, and vice versa. In most cases, the drafter is so small that these additional ops are negligible compared to the overall arithmetic operations. On the other hand, we are reducing the memory reads per token by the target model by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, which is good because inference is memory-bound. <br> 
 
 
 # Choosing $\gamma$
@@ -466,19 +470,16 @@ f(\gamma)
 =
 \frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)}
 =
-\underbrace{
 \frac{1-\alpha^{\gamma+1}}
      {1-\alpha}
-}_{\text{expected tokens}}
-\times
-\underbrace{
+\cdot
 \frac{1}{\gamma c+1}
-}_{\text{cost discount}}
 $$
 
-- The first factor in the above equation is the "expected number of generated tojens" per iteration. When $\gamma$ (the number of generated tokens) grows, this term grows but with diminishing returns. The second factor $\gamma c + 1$ is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when $c > 0$. Let us take an example to understand this. Say, the acceptance rate is $\alpha=0.8$, and the cost coefficient is $c=0.02$. What is the impact on the wall time improvement factor as we increase the value of $\gamma$? Take a look below:
+- The first factor in the above equation is the "expected number of generated tojens" per iteration. When $\gamma$ (the number of generated tokens) grows, this term grows but with diminishing returns.
+- The second factor $\gamma c + 1$ is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when $c > 0$. Let us take an example to understand this. Say, the acceptance rate is $\alpha=0.8$, and the cost coefficient is $c=0.02$. What is the impact on the wall time improvement factor as we increase the value of $\gamma$? Take a look below<br><br>
 
-| $\gamma$ | $\approx E(\text{# generated tokens})$ | Cost $\gamma c + 1$ | f(γ) |
+| $\gamma$ | E(# generated tokens) | Cost $\gamma c + 1$ | $f(\gamma)$ |
 | :--- | :--- | :--- | :--- |
 | 1 | 2 | 1.02 | 1.96 |
 | 2 | 2 | 1.04 | 1.92 |
@@ -490,10 +491,10 @@ $$
 | 20 | 5 | 1.40 | 3.57 |
 | 25 | 5 | 1.50 | 3.33 |
 
-The cost factor increases linearly with $\gamma$ and the improvement factor peaks around $\gamma=10$. 
+<br>The cost factor increases linearly with $\gamma$ and the improvement factor peaks around $\gamma=10$. <br>
 
 
-*Does an upper bound exist for the expected number of generated tokens?*
+## Does an upper bound exist for the expected number of generated tokens?
 
 In the above example, we used a fixed value of $\alpha$. What if we have an oracle that can predict the acceptance rate and vary $\gamma$ accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to $\frac{1}{1-\alpha}$. It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e. $\alpha=0.8$), then;
 
@@ -502,3 +503,10 @@ $$
 $$
 
 which is in line with the computations in the above table.
+
+*That's all for the first part. Feedback is always welcome!*
+
+
+# References
+
+- [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192)
