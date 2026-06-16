@@ -19,7 +19,7 @@ execute:
   echo: false
 ---
 
-# 1. Why bother with speculative decoding?
+# Why bother with speculative decoding?
 
 We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a "small model" has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.
 
@@ -32,7 +32,7 @@ There are many ways to mitigate the above problem. In this post, we will discuss
 - **Diffusion Based Methods (e.g. DFlash)**: The emerging new cool kid on the block.
 
 
-# 2. Overview
+# Overview
 
 We will align the notation in our post with the [speculative decoding paper](https://arxiv.org/abs/2211.17192). 
 Let $M_p$ be the target model for which we are trying to accelerate inference, and let $p(x_t | x_{<t})$ be the distribution it generates for a prefix $x_{<t}$. Let $M_q$ be a more efficient approximation model for the same task, and let $q(x_t | x_{<t})$ be the distribution it generates for the same prefix. 
@@ -48,36 +48,36 @@ The core idea behind speculative decoding is simply this:
 Here is an overview of the end-to-end algorithm as described in the speculative decoding paper:
 
 
+$$
 \begin{array}{l}
-\textbf{Inputs: } M_p,\ M_q,\ prefix\\[0.8em]
-
-\triangleright\ \text{Sample } \gamma \text{ guesses } x_{1,\ldots,\gamma} \text{ from } M_q \text{ autoregressively.}\\[0.3em]
-\textbf{for}\ i = 1\ \textbf{to}\ \gamma\ \textbf{do}\\
-\quad q_i(x) \leftarrow M_q(prefix + [x_1,\ldots,x_{i-1}])\\
-\quad x_i \sim q_i(x)\\
-\textbf{end for}\\[0.8em]
-
-\triangleright\ \text{Run } M_p \text{ in parallel.}\\[0.3em]
-p_1(x),\ldots,p_{\gamma+1}(x) \leftarrow\\
-\qquad M_p(prefix),\ldots,M_p(prefix+[x_1,\ldots,x_\gamma])\\[0.8em]
-
-\triangleright\ \text{Determine the number of accepted guesses } n.\\[0.3em]
-r_1 \sim U(0,1),\ldots,r_\gamma \sim U(0,1)\\
-n \leftarrow \min\!\left(\left\{i-1 \;\middle|\; 1 \le i \le \gamma,\, r_i > \tfrac{p_i(x)}{q_i(x)}\right\} \cup \{\gamma\}\right)\\[0.8em]
-
-\triangleright\ \text{Adjust the distribution from } M_p \text{ if needed.}\\[0.3em]
-p'(x) \leftarrow p_{n+1}(x)\\
-\textbf{if}\ n < \gamma\ \textbf{then}\\
-\quad p'(x) \leftarrow \operatorname{norm}\!\left(\max(0,\, p_{n+1}(x) - q_{n+1}(x))\right)\\
-\textbf{end if}\\[0.8em]
-
-\triangleright\ \text{Return one token from } M_p\text{, and } n \text{ tokens from } M_q\text{.}\\[0.3em]
-t \sim p'(x)\\
-\textbf{return}\ prefix + [x_1,\ldots,x_n,t]
+\hline
+\textbf{Algorithm 1 } \text{SpeculativeDecodingStep} \\
+\hline
+\textbf{Inputs: } M_p, M_q, prefix. \\
+\color{#008000}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
+\textbf{for } i = 1 \textbf{ to } \gamma \textbf{ do} \\
+\quad q_i(x) \leftarrow M_q(prefix + [x_1, \dots, x_{i-1}]) \\
+\quad x_i \sim q_i(x) \\
+\textbf{end for} \\
+\color{#008000}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
+p_1(x), \dots, p_{\gamma+1}(x) \leftarrow M_p(prefix), \dots, M_p(prefix + [x_1, \dots, x_\gamma]) \\
+\color{#008000}{\triangleright \text{ Determine the number of accepted guesses } n.} \\
+r_1 \sim U(0, 1), \dots, r_\gamma \sim U(0, 1) \\
+n \leftarrow \min\left(\{i - 1 \mid 1 \leq i \leq \gamma, r_i > \frac{p_i(x)}{q_i(x)}\} \cup \{\gamma\}\right) \\
+\color{#008000}{\triangleright \text{ Adjust the distribution from } M_p \text{ if needed.}} \\
+p'(x) \leftarrow p_{n+1}(x) \\
+\textbf{if } n < \gamma \textbf{ then} \\
+\quad p'(x) \leftarrow norm(\max(0, p_{n+1}(x) - q_{n+1}(x))) \\
+\textbf{end if} \\
+\color{#008000}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
+t \sim p'(x) \\
+\textbf{return } prefix + [x_1, \dots, x_n, t] \\
+\hline
 \end{array}
+$$
 
 
-# 3. Speculative Sampling
+# Speculative Sampling
 
 Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens, Here is an overview of how speculative sampling works:
 
@@ -88,7 +88,7 @@ Apart from generation from a draft model and parallel verification, speculative 
 There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. 
 
 
-## 3.1 Why Do We Sample from the Adjusted Distribution?
+## Why Do We Sample from the Adjusted Distribution?
 
 One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
 
@@ -143,7 +143,7 @@ $$
 The adjusted distribution gives $B$ exactly zero probability in the resample, because $B$ was already fully covered. This has a very interesting implication i.e. *Speculative Sampling ensures that the output distribution in speculative decoding is exactly identical to the target distribution.*
 <br>
 
-# 4 Acceptance Rate And Number Of Generated Tokens
+# Acceptance Rate And Number Of Generated Tokens
 
 For a given prefix, say $x_{<t}$, the acceptance rate $\beta$ is the probability of accepting $x_t ∼ q(x_t|x_{<t})$ by speculative sampling. Specifically:
 
@@ -174,7 +174,7 @@ $$
 \end{align}
 $$
 
-Remember, this acceptance rate is defined for a **single prefix** (it changes at every position within the same generation, since each position has a different prefix). If we assume that all $\beta s$ are *i.i.d*, then we can define the expected acceptance rate $\alpha = \mathbb{E}(\beta)$. It measures how well your draft model $M_q$ approximates the target model $M_p$. With that, we can now estimate the expected number of tokens that will be generated in a single run of the speculative decoding algorithm. Suppose $N$ is the number of tokens generated in one run, and the total number of draft tokens we are allowed to generate is $\gamma$. Then,
+Remember, this acceptance rate is defined for a **single prefix** (it changes at every position within the same generation, since each position has a different prefix). If we assume that all $\beta s$ are *i.i.d*, then we can define the expected acceptance rate $\alpha = \mathbb{E}(\beta)$. It measures how well your draft model $M_q$ approximates the target model $M_p$. With that, we can now estimate the expected number of tokens generated in one run of the speculative decoding algorithm. Suppose $N$ is the number of tokens generated in one run, and the total number of draft tokens we are allowed to generate is $\gamma$. Then,
 
 - If draft 1 is rejected $\rightarrow N = 1$ (the resampled token)
 - If draft 1 accepted, draft 2 rejected $\rightarrow N = 2$ 
@@ -218,9 +218,9 @@ $$
 E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha} \tag{4}
 $$
 
-# 5. Calculating $\alpha$
+# Calculating $\alpha$
 
-Though we used $\alpha$ in the previous section for calculating expected number of generated tokens, we still have not have expressed $\alpha$ in a computable form. The authors of the speculative decoding [paper (Leviathan et al., 2023)](https://arxiv.org/abs/2211.17192) introduces a divergence $D_{LK}$, connects it to $\beta$ and then gets $\alpha$. Suppose $M(x)$ is the mid-point distribution defined as $M(x) = \frac{p(x) + q(x)}{2}$. We can then define the divergence as:
+Though we used $\alpha$ in the previous section for calculating the expected number of generated tokens, we still have not expressed $\alpha$ in a computable form. The authors of the speculative decoding [paper (Leviathan et al., 2023)](https://arxiv.org/abs/2211.17192) introduce a divergence $D_{LK}$, connect it to $\beta$, and then get $\alpha$. Suppose $M(x)$ is the mid-point distribution defined as $M(x) = \frac{p(x) + q(x)}{2}$. We can then define the divergence as:
 
 $$
 D_{LK}(p,q)
@@ -329,32 +329,31 @@ $$
 
 If you have $N$ prefixes, then for each prefix, run both models $M_q$ and $M_p$ and calculate $\sum_x \min \bigl(p(x),q(x)\bigr)$. Average that across prefixes and you have $\alpha$. This is exactly how it was calculated by the authors in the paper for 10K prefixes. <br><br>
 
-**Q. What are the implications of acceptance rate $\alpha=0$ and $\alpha=1$?**
+**Q. **What are the implications of acceptance rate $\alpha=0$ and $\alpha=1$?**
 
-When the acceptance rate is zero, it means we are generating only one token (resampled one) per run, basically the same number of tokens as in standard decoding. This means $M_q$ is useless, and in fact hurts the overall performance as you are paying the cost of overhead for generating a single token. On the other hand, when acceptance rate is 1, that means we are generating $(\gamma +1)$ (1 for the bonus token we get after verification) in one run. A High α means the drafter $M_q$ has high distributional overlap with the target model $M_p$.
+When the acceptance rate is zero, it means we generate only one token (the resampled one) per run, which is the same number of tokens as in standard decoding. This means $M_q$ provides no benefit and, in fact, hurts the overall performance, as we incur the overhead cost of the drafter for generating a single token. On the other hand, when the acceptance rate is 1, we generate $(\gamma + 1)$ tokens (including 1 for the bonus token we get after verification) in a single run. A high $\alpha$ means the drafter $M_q$ has a high distributional overlap with the target model $M_p$.
 
+**Q. If $M_q$ is very close to $M_p$, i.e., we have a high $\alpha$, does that guarantee a wall-time improvement?**
 
-**Q. If $M_q$ is very close to $M_p$ i.e. we have high $\alpha$, does that guarantee in a wall time improvement?**
-
-No, a high $\alpha$ does not guarantee that. The speed up factor depends on the size of the drafter. With the increase in the size of the drafter, the gains in wall time decrease. We will discuss this in detail in the next few sections. 
+Not necessarily. The speed-up factor depends on the drafter's size. As the size of the drafter increases, the gains in wall time decrease. We will discuss this in detail in the next few sections.
 <br>
 
 
-# 6. Walltime Improvement
+# wall time Improvement
 
-The whole point of using speculative decoding is to improve the walltime for inference. We proved that the we can reduce the number of calls to the target model for inference by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, but we have not formalized the *expected walltime improvement* yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate $\gamma$ tokens and do $(\gamma + 1)$ concurrent evaluations in parallel without increasing the walltime
+The whole point of using speculative decoding is to improve the wall time for inference. We proved that we can reduce the number of calls to the target model for inference by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, but we have not formalized the *expected wall time improvement* yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate $\gamma$ tokens and do $(\gamma + 1)$ concurrent evaluations in parallel without increasing the wall time
 
-We know the expected tokens per iteration. Now we factor in the cost of running $M_q$​ to get the actual walltime improvement. Suppose the ratio between the time for a single run of $M_q$ and the time for a single run of $M_p$ is the cost coefficient $c$.
+We know the expected tokens per iteration. We now factor in the cost of running $M_q$ to get the actual wall-time improvement. Suppose the ratio between the time for a single run of $M_q$ and the time for a single run of $M_p$ is the cost coefficient $c$.
 $$ c = \frac{T_{M_q}}{T_{M_p}} \tag{8}$$
 
 Note that the cost coefficient here **depends** on the **hardware configuration and the software implementation**. In the author's setup, $M_q$ was a couple of orders of magnitude smaller than $M_p$, and $c$ was always less than 0.05; often negligibly close to 0. 
 
-Let $T$ be the time taken by a single forward pass of target model $M_p$​. We can now derive the walltime improvement step by step.
+Let $T$ be the time taken by a single forward pass of the target model $M_p$​. We can now derive the wall time improvement step by step.
 
 1. **Cost of one iteration of speculative decoding algorithm**
     - Maximum number of tokens generated by the drafter $M_q \rightarrow \ \gamma$
     - Each forward pass of the drafter takes $cT$ (using ${(8)}$) time.
-    - $\gamma$ forward passes of the drafter model takes a total of $\gamma cT$ time.
+    - $\gamma$ forward passes of the drafter model take a total of $\gamma cT$ time.
     - One forward pass of $M_p$ verifies $(\gamma + 1)$ tokens in parallel in time $T$
     - Therefore, the total cost per iteration is given as: $$T_{\mathrm{spec}}​ = \gamma cT \ + \ T=(γc+1)T \tag{9}$$
 
@@ -370,7 +369,7 @@ $$\frac{T_{\mathrm{spec}}}{E(N)}
 \cdot T
 $$  
 4. **Cost per token with standard decoding**: The cost of producing one token with standard decoding is the same as the time taken by one forward pass of the target model $M_p$. Hence $$T_{\mathrm{standard}} = T$$
-5. **Calculate walltime improvement**:
+5. **Calculate wall time improvement**:
 $$
 \text{Improvement}
 =
@@ -386,7 +385,7 @@ $$
 \tag {10}
 $$
 
-In the last section, we said that having a high expected acceptance rate $\alpha$ does not guarantee a walltime improvement or speedup. It is to relate the "why" with Eq.$(10)$. Ignoring the $\gamma$ for a bit, we can see that if your acceptance rate is high but the cost coefficient $c$ is higher ($\alpha < c$), meaning the forward pass of the drafter is costly, then you may or may not notice any speed up. For speed ups, we need both: **high $\alpha$ and low $c$**.
+In the last section, we said that having a high expected acceptance rate $\alpha$ does not guarantee a wall time improvement or speedup. It is to relate the "why" with Eq.$(10)$. Ignoring the $\gamma$ for a bit, we can see that if your acceptance rate is high but the cost coefficient $c$ is higher ($\alpha < c$), meaning the forward pass of the drafter is costly, then you may or may not notice any speed up. For speedups, we need both **high $\alpha$ and low $c$**.
 
 If $\alpha > c$, then we can derive the expected speed up for the bare minimum value of draft tokens. Plugging $(\gamma = 1)$ in the above equation:
 
@@ -411,11 +410,11 @@ $$
 $$
 
 
-# 7. Number of Arithmetic Operations
+# Number of Arithmetic Operations
 
-Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for walltime. We generate at most $(\gamma + 1)$ tokens using the drafter and run $M_p$ in parallel for verification. A single run of the speculative decoding then results in $\gamma$ runs of $M_q$ and $(\gamma +1)$ parallel runs of $M_p$. We *may* end up doing more arithmetic operations compared to standard decoding. It depends on the acceptance factor.
+Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. We generate at most $(\gamma + 1)$ tokens using the drafter and run $M_p$ in parallel for verification. A single run of the speculative decoding then results in $\gamma$ runs of $M_q$ and $(\gamma +1)$ parallel runs of $M_p$. We *may* end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.
 
-*Note: We are talking about arithmetic operations here, not walltime. $(\gamma + 1)$ parallel runs of $M_p$ cost the same walltime as a single run (one memory read), but they cost $(\gamma + 1) \times \mathrm{Ops}$.*
+*Note: We are talking about arithmetic operations here, not wall time. $(\gamma + 1)$ parallel runs of $M_p$ cost the same wall time as a single run (one memory read), but they cost $(\gamma + 1) \times \mathrm{Ops}$.*
 
 
 Say $F$ is the number of of arithmetic operations for a single forward pass of standard decoding. Let $\mu$ be the ratio of arithmetic operations per token of the draft model $M_q$ to that of the target model $M_p$: $$\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}$$
@@ -427,7 +426,7 @@ Let's do the math step by step:
     - $(\gamma + 1)$ parallel runs of $M_p$ resulting in a total of $(\gamma + 1)F$ ops
     - Total ops per iteration: $F_{iter} = \gamma \mu F + (\gamma + 1)F = (\gamma \mu + \gamma + 1)F$
 
-2. **Derive the Ops per token in speculative decoding**: To get the number of ops per toke, simply divide the ops per iteration by the expected number of tokens generated using speculative decoding.
+2. **Derive the ops per token in speculative decoding**: To calculate the number of ops per token, divide the ops per iteration by the expected number of tokens generated using speculative decoding.
 $$
 \begin{aligned}
 \mathrm{F}_{\mathrm{spec}}
@@ -455,10 +454,51 @@ $$
 \tag{11}
 $$
 
-So, a low $\alpha$ results in the increase of arithmetic operations, and vice-versa. 
+So, a low $\alpha$ (more rejections) increases arithmetic operations, and vice versa. In most cases, the drafter is so small that these additional ops are negligible compared to the overall arithmetic operations. On the other hand, we are reducing the memory reads per token by the target model by a factor of $\frac{1-\alpha^{\gamma+1}}{1-\alpha}$, which is good because inference is memory-bound. 
 
 
+# Choosing $\gamma$
+
+The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation $\gamma$, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement $(\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})$, and the optimal $\gamma$ is the one that maximizes it. Let's analyze if a sweet spot exists. wall time improvement is given as:
+
+$$
+f(\gamma)
+=
+\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)}
+=
+\underbrace{
+\frac{1-\alpha^{\gamma+1}}
+     {1-\alpha}
+}_{\text{expected tokens}}
+\times
+\underbrace{
+\frac{1}{\gamma c+1}
+}_{\text{cost discount}}
+$$
+
+- The first factor in the above equation is the "expected number of generated tojens" per iteration. When $\gamma$ (the number of generated tokens) grows, this term grows but with diminishing returns. The second factor $\gamma c + 1$ is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when $c > 0$. Let us take an example to understand this. Say, the acceptance rate is $\alpha=0.8$, and the cost coefficient is $c=0.02$. What is the impact on the wall time improvement factor as we increase the value of $\gamma$? Take a look below:
+
+| $\gamma$ | $\approx E(\text{# generated tokens})$ | Cost $\gamma c + 1$ | f(γ) |
+| :--- | :--- | :--- | :--- |
+| 1 | 2 | 1.02 | 1.96 |
+| 2 | 2 | 1.04 | 1.92 |
+| 3 | 3 | 1.06 | 2.83 |
+| 5 | 4 | 1.10 | 3.64 |
+| 7 | 4 | 1.14 | 3.51 |
+| 10 | 5 | 1.20 | 4.17 |
+| 15 | 5 | 1.30 | 3.85 |
+| 20 | 5 | 1.40 | 3.57 |
+| 25 | 5 | 1.50 | 3.33 |
+
+The cost factor increases linearly with $\gamma$ and the improvement factor peaks around $\gamma=10$. 
 
 
+*Does an upper bound exist for the expected number of generated tokens?*
 
-# References
+In the above example, we used a fixed value of $\alpha$. What if we have an oracle that can predict the acceptance rate and vary $\gamma$ accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to $\frac{1}{1-\alpha}$. It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e. $\alpha=0.8$), then;
+
+$$
+\text{saturation level} = \frac{1}{1-0.8} = 5 
+$$
+
+which is in line with the computations in the above table.
