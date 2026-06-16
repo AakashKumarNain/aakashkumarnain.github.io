@@ -1,36 +1,5 @@
 [
   {
-    "listing": "/archive.html",
-    "items": [
-      "/posts/paper_summaries/towards_robust_mathemtaical_reasoning.html",
-      "/posts/paper_summaries/reer.html",
-      "/posts/paper_summaries/theoretical_limitations_of_emb.html",
-      "/posts/paper_summaries/kimi_k2.html",
-      "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
-      "/posts/paper_summaries/lcpo.html",
-      "/posts/paper_summaries/matquant.html",
-      "/posts/paper_summaries/januspro.html",
-      "/posts/paper_summaries/deepseek_r1.html",
-      "/posts/paper_summaries/inference_scaling_diffusion.html",
-      "/posts/paper_summaries/deepseek_vl2.html",
-      "/posts/paper_summaries/gazelle.html",
-      "/posts/paper_summaries/nvila.html",
-      "/posts/ml_dl_concepts/rope.html",
-      "/posts/paper_summaries/paligemma_2.html",
-      "/posts/paper_summaries/star_attention.html",
-      "/posts/paper_summaries/aim_v2.html",
-      "/posts/paper_summaries/janusflow.html",
-      "/posts/paper_summaries/cut_your_losses.html",
-      "/posts/paper_summaries/the_super_weight.html",
-      "/posts/paper_summaries/depthpro.html",
-      "/posts/paper_summaries/scaling_laws_estimation.html",
-      "/posts/paper_summaries/omniparser.html",
-      "/posts/paper_summaries/nGPT.html",
-      "/posts/paper_summaries/model_merging_at_scale.html",
-      "/posts/paper_summaries/agent_workflow_memory.html"
-    ]
-  },
-  {
     "listing": "/blog.html",
     "items": [
       "/posts/paper_summaries/towards_robust_mathemtaical_reasoning.html",
@@ -58,7 +27,40 @@
       "/posts/paper_summaries/nGPT.html",
       "/posts/paper_summaries/model_merging_at_scale.html",
       "/posts/paper_summaries/agent_workflow_memory.html",
+      "/posts/ml_dl_concepts/specdec_part1.html",
       "/posts/ml_dl_concepts/rope.html"
+    ]
+  },
+  {
+    "listing": "/archive.html",
+    "items": [
+      "/posts/ml_dl_concepts/specdec_part1.html",
+      "/posts/paper_summaries/towards_robust_mathemtaical_reasoning.html",
+      "/posts/paper_summaries/reer.html",
+      "/posts/paper_summaries/theoretical_limitations_of_emb.html",
+      "/posts/paper_summaries/kimi_k2.html",
+      "/posts/paper_summaries/scaling_laws_for_downstream_tasks.html",
+      "/posts/paper_summaries/lcpo.html",
+      "/posts/paper_summaries/matquant.html",
+      "/posts/paper_summaries/januspro.html",
+      "/posts/paper_summaries/deepseek_r1.html",
+      "/posts/paper_summaries/inference_scaling_diffusion.html",
+      "/posts/paper_summaries/deepseek_vl2.html",
+      "/posts/paper_summaries/gazelle.html",
+      "/posts/paper_summaries/nvila.html",
+      "/posts/ml_dl_concepts/rope.html",
+      "/posts/paper_summaries/paligemma_2.html",
+      "/posts/paper_summaries/star_attention.html",
+      "/posts/paper_summaries/aim_v2.html",
+      "/posts/paper_summaries/janusflow.html",
+      "/posts/paper_summaries/cut_your_losses.html",
+      "/posts/paper_summaries/the_super_weight.html",
+      "/posts/paper_summaries/depthpro.html",
+      "/posts/paper_summaries/scaling_laws_estimation.html",
+      "/posts/paper_summaries/omniparser.html",
+      "/posts/paper_summaries/nGPT.html",
+      "/posts/paper_summaries/model_merging_at_scale.html",
+      "/posts/paper_summaries/agent_workflow_memory.html"
     ]
   }
 ]

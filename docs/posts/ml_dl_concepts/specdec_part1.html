@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Aakash Kumar Nain (@A_K_Nain)">
+<meta name="dcterms.date" content="2026-06-17">
+
+<title>Speculative Decoding - The Bits and the Bytes! – Aakash Kumar Nain</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-0a6b7249c26820e032cb0bd839ff02b1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-b820136769b48616cc714f4199988894.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Aakash Kumar Nain</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/AakashKumarNain"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/A_K_Nain"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/aakash-kumar-nain"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../assets/resume_aakash_kumar_nain.pdf"> 
+<span class="menu-text">CV</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../archive.html"> 
+<span class="menu-text">Archive</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Resources</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-resources">    
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/annotated_research_papers">
+ <span class="dropdown-text">Annotated Research Papers</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://www.kaggle.com/aakashnain/code?userId=536977">
+ <span class="dropdown-text">Kaggle Notebooks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/TF_JAX_tutorials">
+ <span class="dropdown-text">TF-JAX Tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/AakashKumarNain/diffusion_models">
+ <span class="dropdown-text">Diffusion Models Tutorials</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-bother-with-speculative-decoding" id="toc-why-bother-with-speculative-decoding" class="nav-link active" data-scroll-target="#why-bother-with-speculative-decoding">Why bother with speculative decoding?</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#speculative-sampling" id="toc-speculative-sampling" class="nav-link" data-scroll-target="#speculative-sampling">Speculative Sampling</a>
+  <ul class="collapse">
+  <li><a href="#why-do-we-sample-from-the-adjusted-distribution" id="toc-why-do-we-sample-from-the-adjusted-distribution" class="nav-link" data-scroll-target="#why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted Distribution?</a></li>
+  </ul></li>
+  <li><a href="#acceptance-rate-and-number-of-generated-tokens" id="toc-acceptance-rate-and-number-of-generated-tokens" class="nav-link" data-scroll-target="#acceptance-rate-and-number-of-generated-tokens">Acceptance Rate And Number Of Generated Tokens</a></li>
+  <li><a href="#calculating-alpha" id="toc-calculating-alpha" class="nav-link" data-scroll-target="#calculating-alpha">Calculating <span class="math inline">\(\alpha\)</span></a></li>
+  <li><a href="#wall-time-improvement" id="toc-wall-time-improvement" class="nav-link" data-scroll-target="#wall-time-improvement">Wall time Improvement</a></li>
+  <li><a href="#number-of-arithmetic-operations" id="toc-number-of-arithmetic-operations" class="nav-link" data-scroll-target="#number-of-arithmetic-operations">Number of Arithmetic Operations</a></li>
+  <li><a href="#choosing-gamma" id="toc-choosing-gamma" class="nav-link" data-scroll-target="#choosing-gamma">Choosing <span class="math inline">\(\gamma\)</span></a>
+  <ul class="collapse">
+  <li><a href="#does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens" id="toc-does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens" class="nav-link" data-scroll-target="#does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens">Does an upper bound exist for the expected number of generated tokens?</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Speculative Decoding - The Bits and the Bytes!</h1>
+<p class="subtitle lead">Why you cannot afford to ignore it — Part 1</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">LLMs</div>
+    <div class="quarto-category">sepculative decoding</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aakash Kumar Nain (<a href="https://x.com/A_K_Nain"><span class="citation" data-cites="A_K_Nain">@A_K_Nain</span></a>) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">June 17, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="why-bother-with-speculative-decoding" class="level1">
+<h1>Why bother with speculative decoding?</h1>
+<p>We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a “small model” has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.</p>
+<p>Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding <span class="math inline">\(K\)</span> tokens takes <span class="math inline">\(K\)</span> serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.</p>
+<p>There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:</p>
+<ul>
+<li><strong>Speculative Decoding: The bits and the bytes</strong> (this post!) that will give you an overview of the fundamentals of speculative decoding.</li>
+<li><strong>Eagle</strong>: Most commonly used algorithm for speculative decoding.</li>
+<li><strong>Diffusion Based Methods (e.g.&nbsp;DFlash)</strong>: The emerging new cool kid on the block.</li>
+</ul>
+</section>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>We will align the notation in our post with the <a href="https://arxiv.org/abs/2211.17192">speculative decoding paper</a>. Let <span class="math inline">\(M_p\)</span> be the target model for which we are trying to accelerate inference, and let <span class="math inline">\(p(x_t | x_{&lt;t})\)</span> be the distribution it generates for a prefix <span class="math inline">\(x_{&lt;t}\)</span>. Let <span class="math inline">\(M_q\)</span> be a more efficient approximation model for the same task, and let <span class="math inline">\(q(x_t | x_{&lt;t})\)</span> be the distribution it generates for the same prefix.</p>
+<p>The core idea behind speculative decoding is simply this:</p>
+<ol type="1">
+<li>Use the more efficient (smaller) model to generate <span class="math inline">\(\gamma\)</span> tokens.</li>
+<li>Use the target model to verify the generated tokens in parallel.</li>
+<li>Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).</li>
+<li>Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.</li>
+<li>In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of <span class="math inline">\(M_p\)</span>. Consequently, we will end up accepting anywhere from <span class="math inline">\(1\)</span> to <span class="math inline">\((\gamma+1)\)</span> tokens in a single forward pass of the target model, hence accelerating inference.</li>
+</ol>
+<p><br></p>
+<p><span class="math display">\[
+\begin{array}{l}
+\hline
+\textbf{Algorithm 1 } \text{SpeculativeDecodingStep} \\
+\hline
+\textbf{Inputs: } M_p, M_q, prefix. \\
+\color{#D4AC0D}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
+\textbf{for } i = 1 \textbf{ to } \gamma \textbf{ do} \\
+\quad q_i(x) \leftarrow M_q(prefix + [x_1, \dots, x_{i-1}]) \\
+\quad x_i \sim q_i(x) \\
+\textbf{end for} \\
+\color{#D4AC0D}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
+p_1(x), \dots, p_{\gamma+1}(x) \leftarrow M_p(prefix), \dots, M_p(prefix + [x_1, \dots, x_\gamma]) \\
+\color{#D4AC0D}{\triangleright \text{ Determine the number of accepted guesses } n.} \\
+r_1 \sim U(0, 1), \dots, r_\gamma \sim U(0, 1) \\
+n \leftarrow \min\left(\{i - 1 \mid 1 \leq i \leq \gamma, r_i &gt; \frac{p_i(x)}{q_i(x)}\} \cup \{\gamma\}\right) \\
+\color{#D4AC0D}{\triangleright \text{ Adjust the distribution from } M_p \text{ if needed.}} \\
+p'(x) \leftarrow p_{n+1}(x) \\
+\textbf{if } n &lt; \gamma \textbf{ then} \\
+\quad p'(x) \leftarrow norm(\max(0, p_{n+1}(x) - q_{n+1}(x))) \\
+\textbf{end if} \\
+\color{#D4AC0D}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
+t \sim p'(x) \\
+\textbf{return } prefix + [x_1, \dots, x_n, t] \\
+\hline
+\end{array}
+\]</span></p>
+<p><br><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><video src="./animations/specdec/overview.mp4" class="img-fluid" autoplay="true," loop="true" controls=""><a href="./animations/specdec/overview.mp4">Video</a></video></p>
+<figcaption>An example demonstrating how the algorithm works. (<em>PS: I skipped “lazy” because it was overflowing. Sorry!)</em></figcaption>
+</figure>
+</div>
+<p><br></p>
+</section>
+<section id="speculative-sampling" class="level1">
+<h1>Speculative Sampling</h1>
+<p>Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens, Here is an overview of how speculative sampling works:</p>
+<ol type="1">
+<li>We sample <span class="math inline">\(x \sim q(x)\)</span></li>
+<li>If <span class="math inline">\(q(x) \leq p(x)\)</span>, we accept the token. But if <span class="math inline">\(q(x) \gt p(x)\)</span>, then we reject the sample with a probability <span class="math inline">\((1 - \frac{p(x)}{q(x)})\)</span>. We discard all the token after this position (if any).</li>
+<li>If the sample was rejected, then we sample the next token from an adjusted distribution <span class="math inline">\(p'(x) = norm(max(0, p(x) - q(x)))\)</span></li>
+</ol>
+<p>There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br></p>
+<section id="why-do-we-sample-from-the-adjusted-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted Distribution?</h2>
+<p>One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution <span class="math inline">\(p(x)\)</span>?</p>
+<p>The answer lies in <strong>probability accounting</strong>. For any token <span class="math inline">\(x\)</span>, the probability of it being output through the acceptance path is:</p>
+<p><span class="math display">\[P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \left(1, \frac{p(x)}{q(x)}\right)}_{\text{prob of accepting } x} = \min(q(x),\ p(x))\]</span></p>
+<p>So the acceptance path already covered <span class="math inline">\(\min(p(x), q(x))\)</span> of the target probability for each token. In case the token is rejected, the resample must cover only the remainder <span class="math inline">\((p(x) - \min(p(x), q(x)))\)</span>, which is exactly <span class="math inline">\(\max(0, p(x) - q(x))\)</span>. If we resampled from <span class="math inline">\(p(x)\)</span> directly instead, we would double-count the probability already handled by acceptance, and the output distribution would no longer match <span class="math inline">\(p(x)\)</span>.</p>
+<p>Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: <span class="math inline">\(A, B, C, D\)</span>, and here are the probability distributions produced by the draft model and the verifier.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Token</th>
+<th><span class="math inline">\(p(x)\)</span></th>
+<th><span class="math inline">\(q(x)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>0.50</td>
+<td>0.20</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>0.10</td>
+<td>0.40</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>0.30</td>
+<td>0.15</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>0.10</td>
+<td>0.25</td>
+</tr>
+</tbody>
+</table>
+<p>For the final output to be distributed as <span class="math inline">\(p(x)\)</span>, every token must satisfy:</p>
+<p><span class="math display">\[P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)\]</span></p>
+<p>The acceptance path covers <span class="math inline">\(\min(p(x), \ q(x))\)</span> for each token:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Token</th>
+<th><span class="math inline">\(p(x)\)</span></th>
+<th>Covered by acceptance: <span class="math inline">\(\min(p, q)\)</span></th>
+<th>Still needed</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>0.50</td>
+<td>0.20</td>
+<td>0.30</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>0.10</td>
+<td>0.10</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>0.30</td>
+<td>0.15</td>
+<td>0.15</td>
+</tr>
+<tr class="even">
+<td>D</td>
+<td>0.10</td>
+<td>0.10</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Look at token <span class="math inline">\(B\)</span>. The acceptance path already accounts for its entire probability (0.10). It needs <strong>nothing</strong> from the resample. Same for token <span class="math inline">\(D\)</span>. Now suppose we resample from <span class="math inline">\(p(x)\)</span> directly. Token <span class="math inline">\(B\)</span> has <span class="math inline">\(p(B) = 0.10\)</span>, so the resample would give it additional probability, pushing its total <strong>above</strong> 0.10. The output distribution would no longer match <span class="math inline">\(p(x)\)</span>. How? <br></p>
+<p><strong>Case 1: Resample from <span class="math inline">\(p(x)\)</span></strong></p>
+<p><span class="math display">\[
+\begin{align}
+P(B) = {\min(p, q)} + \underbrace{(1-\beta)}_{\text{prob of rejection}} \times \underbrace{\text{resample}(B)}_{\text{depends on choice}} \\~\\
+\text{where } \ \beta = \sum_x \min(p(x), q(x)) = 0.20 + 0.10 + 0.15 + 0.10 = 0.55 \\~\\
+P(B) = 0.10 + 0.45 \times p(B) = 0.10 + 0.45 \times 0.10 = 0.10 + 0.045 = 0.145
+\end{align}
+\]</span></p>
+<p>You can clearly see the additional probability assigned to it. Let us now look at the second case where we resample from the adjusted distribution instead.<br><br></p>
+<p><strong>Case 2: Resample from <span class="math inline">\(p'(x) = norm(\max(0, p(x) - q(x)))\)</span></strong></p>
+<p><span class="math display">\[
+P(B) = 0.10 + 0.45 \times p'(B) = 0.10 + 0.45 \times \frac{\max(0,0.10−0.40)}{0.45}​ = 0.10
+\]</span></p>
+<p>The adjusted distribution gives <span class="math inline">\(B\)</span> exactly zero probability in the resample, because <span class="math inline">\(B\)</span> was already fully covered. This has a very interesting implication i.e.&nbsp;<em>Speculative Sampling ensures that the output distribution in speculative decoding is exactly identical to the target distribution.</em> <br><br></p>
+</section>
+</section>
+<section id="acceptance-rate-and-number-of-generated-tokens" class="level1">
+<h1>Acceptance Rate And Number Of Generated Tokens</h1>
+<p>For a given prefix, say <span class="math inline">\(x_{&lt;t}\)</span>, the acceptance rate <span class="math inline">\(\beta\)</span> is the probability of accepting <span class="math inline">\(x_t ∼ q(x_t|x_{&lt;t})\)</span> by speculative sampling. Specifically:</p>
+<p><span class="math display">\[
+\begin{align}
+\beta
+&amp;=
+\mathbb{E}_{x\sim q(x)}
+\left[
+\min\left(1,\frac{p(x)}{q(x)}\right)
+\right]
+\notag
+\\[6pt]
+&amp;=
+\sum_x q(x)
+\min\left(1,\frac{p(x)}{q(x)}\right)
+\notag
+\\[6pt]
+&amp;=
+\sum_x
+\min\left(q(x),q(x)\frac{p(x)}{q(x)}\right)
+\notag
+\\[6pt]
+\beta
+&amp;=
+\sum_x \min\bigl(p(x),q(x)\bigr)
+\tag{1}
+\end{align}
+\]</span></p>
+<p>Remember, this acceptance rate is defined for a <strong>single prefix</strong> (it changes at every position within the same generation, since each position has a different prefix). If we assume that all <span class="math inline">\(\beta s\)</span> are <em>i.i.d</em>, then we can define the expected acceptance rate <span class="math inline">\(\alpha = \mathbb{E}(\beta)\)</span>. It measures how well your draft model <span class="math inline">\(M_q\)</span> approximates the target model <span class="math inline">\(M_p\)</span>. With that, we can now estimate the expected number of tokens generated in one run of the speculative decoding algorithm. Suppose <span class="math inline">\(N\)</span> is the number of tokens generated in one run, and the total number of draft tokens we are allowed to generate is <span class="math inline">\(\gamma\)</span>. Then,</p>
+<ul>
+<li>If draft 1 is rejected <span class="math inline">\(\rightarrow N = 1\)</span> (the resampled token)</li>
+<li>If draft 1 accepted, draft 2 rejected <span class="math inline">\(\rightarrow N = 2\)</span></li>
+<li>If drafts 1,2 accepted, draft 3 rejected <span class="math inline">\(\rightarrow N = 3\)</span></li>
+<li>…</li>
+<li>If all <span class="math inline">\(\gamma\)</span> drafts accepted <span class="math inline">\(\rightarrow N = (\gamma + 1)\)</span> (includes bonus token)</li>
+</ul>
+<p>Each draft here is independently accepted with probability <span class="math inline">\(\alpha\)</span> (the i.i.d assumption). We can then define the PMF for two cases as shown below:</p>
+<p>For rejection at position <span class="math inline">\(k\)</span> where <span class="math inline">\((k = 1,2,\ldots,\gamma)\)</span>:</p>
+<p><span class="math display">\[
+P(N = k) = \alpha^{k-1}(1-\alpha) \tag{2}
+\]</span></p>
+<p>And for the case where <span class="math inline">\((k = \gamma + 1)\)</span> (all accepted):</p>
+<p><span class="math display">\[
+P(N = \gamma + 1) = \alpha^\gamma \tag{3}
+\]</span></p>
+<p>Computing the expected number of generated tokens <span class="math inline">\(\mathbb{E}(N)\)</span> is now easy. For any non-negative integer random variable:</p>
+<p><span class="math display">\[
+E(N)=\sum_{k=1}^{\max} P(N \ge k)
+\]</span></p>
+<p>Wherever <span class="math inline">\(P(N \ge k)\)</span>, it means <em>at least <span class="math inline">\(k\)</span></em> tokens were generated, which requires the first <span class="math inline">\((k-1)\)</span> drafts to all be accepted. Hence,</p>
+<p><span class="math display">\[
+P(N \ge k) = \alpha^{k-1} \\~\\
+E(N)
+= \sum_{k=1}^{\gamma+1} P(N \ge k)
+=\sum_{k=1}^{\gamma+1} \alpha^{k-1}
+=\sum_{j=0}^{\gamma} \alpha^j
+\]</span></p>
+<p>This is a geometric series with <span class="math inline">\((\gamma+1)\)</span> terms (common ratio <span class="math inline">\(\alpha\)</span>). Therefore the expected number of generated tokens in a single run of speculative decoding algorithm are:</p>
+<p><span class="math display">\[
+E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha} \tag{4}
+\]</span> <br><br></p>
+</section>
+<section id="calculating-alpha" class="level1">
+<h1>Calculating <span class="math inline">\(\alpha\)</span></h1>
+<p>Though we used <span class="math inline">\(\alpha\)</span> in the previous section for calculating the expected number of generated tokens, we still have not expressed <span class="math inline">\(\alpha\)</span> in a computable form. The authors of the speculative decoding <a href="https://arxiv.org/abs/2211.17192">paper (Leviathan et al., 2023)</a> introduce a divergence <span class="math inline">\(D_{LK}\)</span>, connect it to <span class="math inline">\(\beta\)</span>, and then get <span class="math inline">\(\alpha\)</span>. Suppose <span class="math inline">\(M(x)\)</span> is the mid-point distribution defined as <span class="math inline">\(M(x) = \frac{p(x) + q(x)}{2}\)</span>. We can then define the divergence as:</p>
+<p><span class="math display">\[
+D_{LK}(p,q)
+=
+\sum_x |p(x)-M(x)|
+=
+\sum_x |q(x)-M(x)|.
+\tag{5}
+\]</span></p>
+<p>Why are the two sums in the above expression equal? We can prove it.</p>
+<p><span class="math display">\[
+\begin{aligned}
+|p(x)-M(x)|
+&amp;=
+\left|p(x)-\frac{p(x)+q(x)}{2}\right|
+\\[4pt]
+&amp;=
+\left|\frac{2p(x)-p(x)-q(x)}{2}\right|
+\\[4pt]
+&amp;=
+\frac{|p(x)-q(x)|}{2}
+\end{aligned}
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+|q(x)-M(x)|
+&amp;=
+\left|q(x)-\frac{p(x)+q(x)}{2}\right|
+\\[4pt]
+&amp;=
+\left|\frac{2q(x)-p(x)-q(x)}{2}\right|
+\\[4pt]
+&amp;=
+\frac{|q(x)-p(x)|}{2}
+\\[4pt]
+&amp;=
+\frac{|p(x)-q(x)|}{2}
+\end{aligned}
+\]</span></p>
+<p>Given that, we can derive the total variation distance between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> as:</p>
+<p><span class="math display">\[
+\begin{align}
+D_{LK}(p,q)
+&amp;=
+\sum_x \frac{|p(x)-q(x)|}{2}
+\notag
+\\[4pt]
+&amp;=
+\sum_x
+\frac{
+p(x)+q(x)-2\min \bigl(p(x),q(x)\bigr)
+}{2}
+\notag
+\\[4pt]
+&amp;=
+\frac{1}{2}
+\left[
+\sum_x p(x)
++
+\sum_x q(x)
+-
+2\sum_x \min \bigl(p(x),q(x)\bigr)
+\right]
+\notag
+\\[4pt]
+&amp;=
+\frac{1}{2}
+\left[
+1+1
+-
+2\sum_x \min \bigl(p(x),q(x)\bigr)
+\right]
+\notag
+\\[4pt]
+D_{LK}(p,q)
+&amp;=
+1-\sum_x \min \bigl(p(x),q(x)\bigr)
+\tag{6}
+\end{align}
+\]</span></p>
+<p>We can infer a few interesting things from eqn. <span class="math inline">\({(6)}\)</span>.</p>
+<ul>
+<li>Because <span class="math inline">\(\min(p(x),q(x)) = \min(q(x),p(x))\)</span>, we can say the divergence <span class="math inline">\(D_{LK}\)</span> is symmetric. How about the range? We can calculate it too.</li>
+<li><span class="math inline">\(0 \le \min \bigl(p(x),q(x)\bigr) \le p(x) \ \Longrightarrow\ \ 0 \le \sum_x \min \bigl(p(x),q(x)\bigr) \le 1 \quad \Longrightarrow \ 0 \le D_{LK} \le 1\)</span></li>
+<li><span class="math inline">\(\begin{aligned} D_{LK}(p,q)=0 &amp;\;\Longleftrightarrow\; p=q\end{aligned}\)</span></li>
+<li><span class="math inline">\(\begin{aligned} D_{LK}(p,q)=1 &amp;\;\Longleftrightarrow\; p \text{ and } q \text{ have disjoint support} \end{aligned}\)</span></li>
+</ul>
+<p>Using <span class="math inline">\({(1)}, {(5)}\)</span> and <span class="math inline">\({(6)}\)</span>, we can now calculate <span class="math inline">\(\alpha\)</span> as:</p>
+<p><span class="math display">\[
+\alpha
+=
+1-\mathbb{E} \left[D_{LK}(p,q)\right]
+=
+\mathbb{E} \left[\min\!\bigl(p,q\bigr)\right]
+=
+\mathbb{E} \left[\sum_x \min \bigl(p(x),q(x)\bigr)\right]
+\tag{7}
+\]</span></p>
+<p>If you have <span class="math inline">\(N\)</span> prefixes, then for each prefix, run both models <span class="math inline">\(M_q\)</span> and <span class="math inline">\(M_p\)</span> and calculate <span class="math inline">\(\sum_x \min \bigl(p(x),q(x)\bigr)\)</span>. Average that across prefixes and you have <span class="math inline">\(\alpha\)</span>. This is exactly how it was calculated by the authors in the paper for 10K prefixes. <br><br></p>
+<p><strong>Q. </strong>What are the implications of acceptance rate <span class="math inline">\(\alpha=0\)</span> and <span class="math inline">\(\alpha=1\)</span>?**</p>
+<p>When the acceptance rate is zero, it means we generate only one token (the resampled one) per run, which is the same number of tokens as in standard decoding. This means <span class="math inline">\(M_q\)</span> provides no benefit and, in fact, hurts the overall performance, as we incur the overhead cost of the drafter for generating a single token. On the other hand, when the acceptance rate is 1, we generate <span class="math inline">\((\gamma + 1)\)</span> tokens (including 1 for the bonus token we get after verification) in a single run. A high <span class="math inline">\(\alpha\)</span> means the drafter <span class="math inline">\(M_q\)</span> has a high distributional overlap with the target model <span class="math inline">\(M_p\)</span>.</p>
+<p><strong>Q. If <span class="math inline">\(M_q\)</span> is very close to <span class="math inline">\(M_p\)</span>, i.e., we have a high <span class="math inline">\(\alpha\)</span>, does that guarantee a wall-time improvement?</strong></p>
+<p>Not necessarily. The speed-up factor depends on the drafter’s size. As the size of the drafter increases, the gains in wall time decrease. We will discuss this in detail in the next few sections. <br></p>
+</section>
+<section id="wall-time-improvement" class="level1">
+<h1>Wall time Improvement</h1>
+<p>The whole point of using speculative decoding is to improve the wall time for inference. We proved that we can reduce the number of calls to the target model for inference by a factor of <span class="math inline">\(\frac{1-\alpha^{\gamma+1}}{1-\alpha}\)</span>, but we have not formalized the <em>expected wall time improvement</em> yet. Also, it should be clear that the assumption here is that you have enough compute at hand to support the increased concurrency, meaning we can generate <span class="math inline">\(\gamma\)</span> tokens and do <span class="math inline">\((\gamma + 1)\)</span> concurrent evaluations in parallel without increasing the wall time</p>
+<p>We know the expected tokens per iteration. We now factor in the cost of running <span class="math inline">\(M_q\)</span> to get the actual wall-time improvement. Suppose the ratio between the time for a single run of <span class="math inline">\(M_q\)</span> and the time for a single run of <span class="math inline">\(M_p\)</span> is the cost coefficient <span class="math inline">\(c\)</span>. <span class="math display">\[ c = \frac{T_{M_q}}{T_{M_p}} \tag{8}\]</span></p>
+<p>Note that the cost coefficient here <strong>depends</strong> on the <strong>hardware configuration and the software implementation</strong>. In the author’s setup, <span class="math inline">\(M_q\)</span> was a couple of orders of magnitude smaller than <span class="math inline">\(M_p\)</span>, and <span class="math inline">\(c\)</span> was always less than 0.05; often negligibly close to 0.</p>
+<p>Let <span class="math inline">\(T\)</span> be the time taken by a single forward pass of the target model <span class="math inline">\(M_p\)</span>​. We can now derive the wall time improvement step by step.</p>
+<ol type="1">
+<li><strong>Cost of one iteration of speculative decoding algorithm</strong>
+<ul>
+<li>Maximum number of tokens generated by the drafter <span class="math inline">\(M_q \rightarrow \ \gamma\)</span></li>
+<li>Each forward pass of the drafter takes <span class="math inline">\(cT\)</span> (using <span class="math inline">\({(8)}\)</span>) time.</li>
+<li><span class="math inline">\(\gamma\)</span> forward passes of the drafter model take a total of <span class="math inline">\(\gamma cT\)</span> time.</li>
+<li>One forward pass of <span class="math inline">\(M_p\)</span> verifies <span class="math inline">\((\gamma + 1)\)</span> tokens in parallel in time <span class="math inline">\(T\)</span></li>
+<li>Therefore, the total cost per iteration is given as: <span class="math display">\[T_{\mathrm{spec}}​ = \gamma cT \ + \ T=(γc+1)T \tag{9}\]</span></li>
+</ul></li>
+<li><strong>Tokens per iteration</strong>: We already have the expected number of tokens from <span class="math inline">\({4}\)</span> given as: <span class="math display">\[E(N)= \frac{1-\alpha^{\gamma+1}}{1-\alpha}\]</span></li>
+<li><strong>Cost per token with speculative decoding</strong>: Given that, we can now calculate the overall expected cost for producing a token with speculative decoding as: <span class="math display">\[\frac{T_{\mathrm{spec}}}{E(N)}
+=
+\frac{(\gamma c + 1)T}
+{\dfrac{1-\alpha^{\gamma+1}}{1-\alpha}}
+=
+\frac{(\gamma c + 1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot T
+\]</span><br>
+</li>
+<li><strong>Cost per token with standard decoding</strong>: The cost of producing one token with standard decoding is the same as the time taken by one forward pass of the target model <span class="math inline">\(M_p\)</span>. Hence <span class="math display">\[T_{\mathrm{standard}} = T\]</span></li>
+<li><strong>Calculate wall time improvement</strong>: <span class="math display">\[
+\text{Improvement}
+=
+\frac{T_{\text{standard}}}{T_{\text{spec}}}
+=
+\frac{T}
+{\dfrac{(\gamma c + 1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot T}
+=
+\frac{1-\alpha^{\gamma+1}}
+{(1-\alpha)(\gamma c + 1)}
+\tag {10}
+\]</span></li>
+</ol>
+<p>In the last section, we said that having a high expected acceptance rate <span class="math inline">\(\alpha\)</span> does not guarantee a wall time improvement or speedup. It is to relate the “why” with Eq.<span class="math inline">\((10)\)</span>. Ignoring the <span class="math inline">\(\gamma\)</span> for a bit, we can see that if your acceptance rate is high but the cost coefficient <span class="math inline">\(c\)</span> is higher (<span class="math inline">\(\alpha &lt; c\)</span>), meaning the forward pass of the drafter is costly, then you may or may not notice any speed up. For speedups, we need both <strong>high <span class="math inline">\(\alpha\)</span> and low <span class="math inline">\(c\)</span></strong>.</p>
+<p>If <span class="math inline">\(\alpha &gt; c\)</span>, then we can derive the expected speed up for the bare minimum value of draft tokens. Plugging <span class="math inline">\((\gamma = 1)\)</span> in the above equation:</p>
+<p><span class="math display">\[
+\begin {aligned}
+\text{Improvement}
+=
+\frac{1-\alpha^2}{(1-\alpha)(c+1)}
+=
+\frac{(1-\alpha)(1+\alpha)}
+{(1-\alpha)(1+c)}
+=
+\frac{1+\alpha}{1+c}
+\end{aligned}
+\]</span></p>
+<p>Since <span class="math inline">\(\alpha &gt; c\)</span>, we can say that:</p>
+<p><span class="math display">\[
+(1+\alpha &gt; 1+c) \quad
+\text {or} \quad \frac{1+\alpha}{1+c} &gt; 1
+\]</span> <br><br></p>
+</section>
+<section id="number-of-arithmetic-operations" class="level1">
+<h1>Number of Arithmetic Operations</h1>
+<p>Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. We generate at most <span class="math inline">\((\gamma + 1)\)</span> tokens using the drafter and run <span class="math inline">\(M_p\)</span> in parallel for verification. A single run of the speculative decoding then results in <span class="math inline">\(\gamma\)</span> runs of <span class="math inline">\(M_q\)</span> and <span class="math inline">\((\gamma +1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span>. We <em>may</em> end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.</p>
+<p><em>Note: We are talking about arithmetic operations here, not wall time. <span class="math inline">\((\gamma + 1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span> cost the same wall time as a single run (one memory read), but they cost <span class="math inline">\((\gamma + 1) \times \mathrm{Ops}\)</span>.</em></p>
+<p>Say <span class="math inline">\(F\)</span> is the number of of arithmetic operations for a single forward pass of standard decoding. Let <span class="math inline">\(\mu\)</span> be the ratio of arithmetic operations per token of the draft model <span class="math inline">\(M_q\)</span> to that of the target model <span class="math inline">\(M_p\)</span>: <span class="math display">\[\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}\]</span></p>
+<p>Let’s do the math step by step:</p>
+<ol type="1">
+<li><p><strong>Derive the Ops per iteration of speculative decoding</strong></p>
+<ul>
+<li><span class="math inline">\(\gamma\)</span> runs of <span class="math inline">\(M_q\)</span> resulting in a total of <span class="math inline">\(\gamma F_{M_q} \Longrightarrow \gamma \mu F\)</span> ops</li>
+<li><span class="math inline">\((\gamma + 1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span> resulting in a total of <span class="math inline">\((\gamma + 1)F\)</span> ops</li>
+<li>Total ops per iteration: <span class="math inline">\(F_{iter} = \gamma \mu F + (\gamma + 1)F = (\gamma \mu + \gamma + 1)F\)</span></li>
+</ul></li>
+<li><p><strong>Derive the ops per token in speculative decoding</strong>: To calculate the number of ops per token, divide the ops per iteration by the expected number of tokens generated using speculative decoding. <span class="math display">\[
+\begin{aligned}
+\mathrm{F}_{\mathrm{spec}}
+&amp;=
+\frac{(\gamma \mu +\gamma+1)F}
+{\dfrac{1-\alpha^{\gamma+1}}{1-\alpha}}
+\\~\\[4pt]
+\mathrm{F}_{\mathrm{spec}}
+&amp;=
+\frac{(\gamma \mu +\gamma+1)(1-\alpha)}
+{1-\alpha^{\gamma+1}}
+\cdot F
+\end{aligned}
+\]</span></p></li>
+<li><p>We can now calculate the expected factor of increase in the number of total operations as: <span class="math display">\[
+\mathrm{F_{factor}}
+=
+\frac{\mathrm{F}_{\mathrm{spec}}}
+{\mathrm{F}_{\mathrm{standard}}}
+=
+\frac{(1-\alpha)(\gamma c+\gamma+1)}
+{1-\alpha^{\gamma+1}}
+\tag{11}
+\]</span></p></li>
+</ol>
+<p>So, a low <span class="math inline">\(\alpha\)</span> (more rejections) increases arithmetic operations, and vice versa. In most cases, the drafter is so small that these additional ops are negligible compared to the overall arithmetic operations. On the other hand, we are reducing the memory reads per token by the target model by a factor of <span class="math inline">\(\frac{1-\alpha^{\gamma+1}}{1-\alpha}\)</span>, which is good because inference is memory-bound. <br></p>
+</section>
+<section id="choosing-gamma" class="level1">
+<h1>Choosing <span class="math inline">\(\gamma\)</span></h1>
+<p>The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation <span class="math inline">\(\gamma\)</span>, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement <span class="math inline">\((\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})\)</span>, and the optimal <span class="math inline">\(\gamma\)</span> is the one that maximizes it. Let’s analyze if a sweet spot exists. wall time improvement is given as:</p>
+<p><span class="math display">\[
+f(\gamma)
+=
+\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)}
+=
+\frac{1-\alpha^{\gamma+1}}
+     {1-\alpha}
+\cdot
+\frac{1}{\gamma c+1}
+\]</span></p>
+<ul>
+<li>The first factor in the above equation is the “expected number of generated tojens” per iteration. When <span class="math inline">\(\gamma\)</span> (the number of generated tokens) grows, this term grows but with diminishing returns.</li>
+<li>The second factor <span class="math inline">\(\gamma c + 1\)</span> is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when <span class="math inline">\(c &gt; 0\)</span>. Let us take an example to understand this. Say, the acceptance rate is <span class="math inline">\(\alpha=0.8\)</span>, and the cost coefficient is <span class="math inline">\(c=0.02\)</span>. What is the impact on the wall time improvement factor as we increase the value of <span class="math inline">\(\gamma\)</span>? Take a look below<br><br></li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(\gamma\)</span></th>
+<th style="text-align: left;">E(# generated tokens)</th>
+<th style="text-align: left;">Cost <span class="math inline">\(\gamma c + 1\)</span></th>
+<th style="text-align: left;"><span class="math inline">\(f(\gamma)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1.02</td>
+<td style="text-align: left;">1.96</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1.04</td>
+<td style="text-align: left;">1.92</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1.06</td>
+<td style="text-align: left;">2.83</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">1.10</td>
+<td style="text-align: left;">3.64</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">1.14</td>
+<td style="text-align: left;">3.51</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1.20</td>
+<td style="text-align: left;">4.17</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">15</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1.30</td>
+<td style="text-align: left;">3.85</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">20</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1.40</td>
+<td style="text-align: left;">3.57</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">25</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">1.50</td>
+<td style="text-align: left;">3.33</td>
+</tr>
+</tbody>
+</table>
+<p><br>The cost factor increases linearly with <span class="math inline">\(\gamma\)</span> and the improvement factor peaks around <span class="math inline">\(\gamma=10\)</span>. <br></p>
+<section id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens" class="level2">
+<h2 class="anchored" data-anchor-id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens">Does an upper bound exist for the expected number of generated tokens?</h2>
+<p>In the above example, we used a fixed value of <span class="math inline">\(\alpha\)</span>. What if we have an oracle that can predict the acceptance rate and vary <span class="math inline">\(\gamma\)</span> accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to <span class="math inline">\(\frac{1}{1-\alpha}\)</span>. It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e.&nbsp;<span class="math inline">\(\alpha=0.8\)</span>), then;</p>
+<p><span class="math display">\[
+\text{saturation level} = \frac{1}{1-0.8} = 5
+\]</span></p>
+<p>which is in line with the computations in the above table.</p>
+<p><em>That’s all for the first part. Feedback is always welcome!</em></p>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<ul>
+<li><a href="https://arxiv.org/abs/2211.17192">Fast Inference from Transformers via Speculative Decoding</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
