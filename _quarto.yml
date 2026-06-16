@@ -2,7 +2,7 @@ project:
   type: website
   render:
     - "*.qmd"
-    - "!specdec_part1.qmd"
+    # - "!specdec_part1.qmd"
   output-dir: docs
 
 website:
