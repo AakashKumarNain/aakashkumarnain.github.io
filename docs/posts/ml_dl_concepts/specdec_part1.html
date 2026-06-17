@@ -318,7 +318,7 @@ t \sim p'(x) \\
 <h2 class="anchored" data-anchor-id="why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted Distribution?</h2>
 <p>One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution <span class="math inline">\(p(x)\)</span>?</p>
 <p>The answer lies in <strong>probability accounting</strong>. For any token <span class="math inline">\(x\)</span>, the probability of it being output through the acceptance path is:</p>
-<p><span class="math display">\[P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \left(1, \frac{p(x)}{q(x)}\right)}_{\text{prob of accepting } x} = \min(q(x),\ p(x))\]</span></p>
+<p><span class="math display">\[P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \bigg(1, \frac{p(x)}{q(x)}\bigg)}_{\text{prob of accepting } x} = \min\big(q(x),\ p(x)\big)\]</span></p>
 <p>So the acceptance path already covered <span class="math inline">\(\min(p(x), q(x))\)</span> of the target probability for each token. In case the token is rejected, the resample must cover only the remainder <span class="math inline">\((p(x) - \min(p(x), q(x)))\)</span>, which is exactly <span class="math inline">\(\max(0, p(x) - q(x))\)</span>. If we resampled from <span class="math inline">\(p(x)\)</span> directly instead, we would double-count the probability already handled by acceptance, and the output distribution would no longer match <span class="math inline">\(p(x)\)</span>.</p>
 <p>Let us take a simple example to understand this. Suppose our vocabulary contains four tokens: <span class="math inline">\(A, B, C, D\)</span>, and here are the probability distributions produced by the draft model and the verifier.</p>
 <table class="caption-top table">
@@ -354,6 +354,7 @@ t \sim p'(x) \\
 </table>
 <p>For the final output to be distributed as <span class="math inline">\(p(x)\)</span>, every token must satisfy:</p>
 <p><span class="math display">\[P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)\]</span></p>
+<p><brr></brr></p>
 <p>The acceptance path covers <span class="math inline">\(\min(p(x), \ q(x))\)</span> for each token:</p>
 <table class="caption-top table">
 <thead>
@@ -391,7 +392,7 @@ t \sim p'(x) \\
 </tr>
 </tbody>
 </table>
-<p>Look at token <span class="math inline">\(B\)</span>. The acceptance path already accounts for its entire probability (0.10). It needs <strong>nothing</strong> from the resample. Same for token <span class="math inline">\(D\)</span>. Now suppose we resample from <span class="math inline">\(p(x)\)</span> directly. Token <span class="math inline">\(B\)</span> has <span class="math inline">\(p(B) = 0.10\)</span>, so the resample would give it additional probability, pushing its total <strong>above</strong> 0.10. The output distribution would no longer match <span class="math inline">\(p(x)\)</span>. How? <br></p>
+<p>Look at token <span class="math inline">\(B\)</span>. The acceptance path already accounts for its entire probability (0.10). It needs <strong>nothing</strong> from the resample. Same for token <span class="math inline">\(D\)</span>. Now suppose we resample from <span class="math inline">\(p(x)\)</span> directly. Token <span class="math inline">\(B\)</span> has <span class="math inline">\(p(B) = 0.10\)</span>, so the resample would give it additional probability, pushing its total <strong>above</strong> 0.10. The output distribution would no longer match <span class="math inline">\(p(x)\)</span>. How? <br><br></p>
 <p><strong>Case 1: Resample from <span class="math inline">\(p(x)\)</span></strong></p>
 <p><span class="math display">\[
 \begin{align}
@@ -416,19 +417,19 @@ P(B) = 0.10 + 0.45 \times p'(B) = 0.10 + 0.45 \times \frac{\max(0,0.10−0.40)}{
 \beta
 &amp;=
 \mathbb{E}_{x\sim q(x)}
-\left[
-\min\left(1,\frac{p(x)}{q(x)}\right)
-\right]
+\bigg[
+\min\big(1,\frac{p(x)}{q(x)}\big)
+\bigg]
 \notag
 \\[6pt]
 &amp;=
 \sum_x q(x)
-\min\left(1,\frac{p(x)}{q(x)}\right)
+\min\bigg(1,\frac{p(x)}{q(x)}\bigg)
 \notag
 \\[6pt]
 &amp;=
 \sum_x
-\min\left(q(x),q(x)\frac{p(x)}{q(x)}\right)
+\min\bigg(q(x),q(x)\frac{p(x)}{q(x)}\bigg)
 \notag
 \\[6pt]
 \beta
@@ -482,7 +483,7 @@ D_{LK}(p,q)
 \sum_x |q(x)-M(x)|.
 \tag{5}
 \]</span></p>
-<p><em>Note: The midpoint distribution <span class="math inline">\(M(x)\)</span> is a construction used to define <span class="math inline">\(D_{LK}\)</span> in a way that makes the symmetry between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> obvious. As we will show below, <span class="math inline">\(D_{LK}\)</span> reduces to the total variation distance <span class="math inline">\(\sum_x \frac{|p(x) - q(x)|}{2}\)</span>, and <span class="math inline">\(M(x)\)</span> never appears again in any subsequential result.</em> <br></p>
+<p><em>Note: The midpoint distribution <span class="math inline">\(M(x)\)</span> is a construction used to define <span class="math inline">\(D_{LK}\)</span> in a way that makes the symmetry between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> obvious. As we will show below, <span class="math inline">\(D_{LK}\)</span> reduces to the total variation distance <span class="math inline">\(\sum_x \frac{|p(x) - q(x)|}{2}\)</span>, and <span class="math inline">\(M(x)\)</span> never appears again in any subsequential result.</em> <br><br></p>
 <p>Why are the two sums in the above expression equal? We can prove it.</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -567,9 +568,9 @@ D_{LK}(p,q)
 =
 1-\mathbb{E} \left[D_{LK}(p,q)\right]
 =
-\mathbb{E} \left[\min\!\bigl(p,q\bigr)\right]
+\mathbb{E} \big[\min\!\bigl(p,q\bigr)\big]
 =
-\mathbb{E} \left[\sum_x \min \bigl(p(x),q(x)\bigr)\right]
+\mathbb{E} \bigg[\sum_x \min \bigl(p(x),q(x)\bigr)\bigg]
 \tag{7}
 \]</span></p>
 <p>If you have <span class="math inline">\(N\)</span> prefixes, then for each prefix, run both models <span class="math inline">\(M_q\)</span> and <span class="math inline">\(M_p\)</span> and calculate <span class="math inline">\(\sum_x \min \bigl(p(x),q(x)\bigr)\)</span>. Average that across prefixes and you have <span class="math inline">\(\alpha\)</span>. This is exactly how it was calculated by the authors in the paper for 10K generated tokens. <br><br></p>
@@ -764,6 +765,12 @@ f(\gamma)
 </tbody>
 </table>
 <p><br>The cost factor increases linearly with <span class="math inline">\(\gamma\)</span> and the improvement factor peaks around <span class="math inline">\(\gamma=10\)</span>. <br></p>
+<p>Here is a plot showcasing different scenarios for different values of the cost coefficient <span class="math inline">\(c\)</span>, acceptance rate <span class="math inline">\(\alpha\)</span> and the number of draft tokens <span class="math inline">\(\gamma\)</span></p>
+<p><img src="./images/specdec/speedup_vs_gamma.png" class="img-fluid"> <br></p>
+<ul>
+<li><strong><span class="math inline">\(c = 0\)</span> (free drafter)</strong>: There is no penalty for drafting more, so larger <span class="math inline">\(\gamma\)</span> is always better (just diminishing returns). This is the theoretical ideal.</li>
+<li><strong><span class="math inline">\(c = 0.1\)</span> (expensive drafter)</strong>: Peaks and then sharp decline. Speculative decoding in this case hurts performance at large <span class="math inline">\(\gamma\)</span>. <br></li>
+</ul>
 <section id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens" class="level2">
 <h2 class="anchored" data-anchor-id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens">Does an upper bound exist for the expected number of generated tokens?</h2>
 <p>In the section above, we used a fixed value of <span class="math inline">\(\gamma\)</span> for every iteration. But <span class="math inline">\(\beta\)</span> varies across positions as some tokens are easy to draft, others are hard. What if we had an oracle that knew <span class="math inline">\(\beta\)</span> at each position and could set <span class="math inline">\(\gamma\)</span> accordingly? It would draft many tokens when acceptance is likely and skip drafting when rejection is certain thereby wasting no computation.</p>
