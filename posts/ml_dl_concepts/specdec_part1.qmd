@@ -98,7 +98,7 @@ One question that instantly comes to mind when reading about speculative samplin
 
 The answer lies in **probability accounting**. For any token $x$, the probability of it being output through the acceptance path is:
 
-$$P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \left(1, \frac{p(x)}{q(x)}\right)}_{\text{prob of accepting } x} = \min(q(x),\ p(x))$$
+$$P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \bigg(1, \frac{p(x)}{q(x)}\bigg)}_{\text{prob of accepting } x} = \min\big(q(x),\ p(x)\big)$$
 
 So the acceptance path already covered $\min(p(x), q(x))$ of the target probability for each token. In case the token is rejected, the resample must cover only the remainder $(p(x) - \min(p(x), q(x)))$, which is exactly $\max(0, p(x) - q(x))$. If we resampled from $p(x)$ directly instead, we would double-count the probability already handled by acceptance, and the output distribution would no longer match $p(x)$.
 
@@ -113,7 +113,9 @@ Let us take a simple example to understand this. Suppose our vocabulary contains
 
 For the final output to be distributed as $p(x)$, every token must satisfy:
 
-$$P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)$$
+$$P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)$$ 
+
+<brr>
 
 The acceptance path covers $\min(p(x), \ q(x))$ for each token:
 
@@ -124,7 +126,7 @@ The acceptance path covers $\min(p(x), \ q(x))$ for each token:
 | C     | 0.30   | 0.15                                 | 0.15        |
 | D     | 0.10   | 0.10                                 | 0.00        |
 
-Look at token $B$. The acceptance path already accounts for its entire probability (0.10). It needs **nothing** from the resample. Same for token $D$. Now suppose we resample from $p(x)$ directly. Token $B$ has $p(B) = 0.10$, so the resample would give it additional probability, pushing its total **above** 0.10. The output distribution would no longer match $p(x)$. How? <br>
+Look at token $B$. The acceptance path already accounts for its entire probability (0.10). It needs **nothing** from the resample. Same for token $D$. Now suppose we resample from $p(x)$ directly. Token $B$ has $p(B) = 0.10$, so the resample would give it additional probability, pushing its total **above** 0.10. The output distribution would no longer match $p(x)$. How? <br><br>
 
 **Case 1: Resample from $p(x)$**
 
@@ -156,19 +158,19 @@ $$
 \beta
 &=
 \mathbb{E}_{x\sim q(x)}
-\left[
-\min\left(1,\frac{p(x)}{q(x)}\right)
-\right]
+\bigg[
+\min\big(1,\frac{p(x)}{q(x)}\big)
+\bigg]
 \notag
 \\[6pt]
 &=
 \sum_x q(x)
-\min\left(1,\frac{p(x)}{q(x)}\right)
+\min\bigg(1,\frac{p(x)}{q(x)}\bigg)
 \notag
 \\[6pt]
 &=
 \sum_x
-\min\left(q(x),q(x)\frac{p(x)}{q(x)}\right)
+\min\bigg(q(x),q(x)\frac{p(x)}{q(x)}\bigg)
 \notag
 \\[6pt]
 \beta
@@ -236,7 +238,7 @@ D_{LK}(p,q)
 \tag{5}
 $$
 
-*Note: The midpoint distribution $M(x)$ is a construction used to define $D_{LK}$ in a way that makes the symmetry between $p$ and $q$ obvious. As we will show below, $D_{LK}$ reduces to the total variation distance $\sum_x \frac{|p(x) - q(x)|}{2}$, and $M(x)$ never appears again in any subsequential result.* <br>
+*Note: The midpoint distribution $M(x)$ is a construction used to define $D_{LK}$ in a way that makes the symmetry between $p$ and $q$ obvious. As we will show below, $D_{LK}$ reduces to the total variation distance $\sum_x \frac{|p(x) - q(x)|}{2}$, and $M(x)$ never appears again in any subsequential result.* <br><br>
 
 Why are the two sums in the above expression equal? We can prove it. 
 
@@ -328,9 +330,9 @@ $$
 =
 1-\mathbb{E} \left[D_{LK}(p,q)\right]
 =
-\mathbb{E} \left[\min\!\bigl(p,q\bigr)\right]
+\mathbb{E} \big[\min\!\bigl(p,q\bigr)\big]
 =
-\mathbb{E} \left[\sum_x \min \bigl(p(x),q(x)\bigr)\right]
+\mathbb{E} \bigg[\sum_x \min \bigl(p(x),q(x)\bigr)\bigg]
 \tag{7}
 $$
 
@@ -495,6 +497,15 @@ $$
 | 25 | 4.98 | 1.50 | 3.32 |
 
 <br>The cost factor increases linearly with $\gamma$ and the improvement factor peaks around $\gamma=10$. <br>
+
+Here is a plot showcasing different scenarios for different values of the cost coefficient $c$, acceptance rate $\alpha$ and the number of draft tokens $\gamma$
+
+![](./images/specdec/speedup_vs_gamma.png)
+<br>
+
+- **$c = 0$ (free drafter)**: There is no penalty for drafting more, so larger $\gamma$ is always better (just diminishing returns). This is the theoretical ideal.
+- **$c = 0.1$ (expensive drafter)**: Peaks and then sharp decline. Speculative decoding in this case hurts performance at large $\gamma$. 
+<br>
 
 
 ## Does an upper bound exist for the expected number of generated tokens?
