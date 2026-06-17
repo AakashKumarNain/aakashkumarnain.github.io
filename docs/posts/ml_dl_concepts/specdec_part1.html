@@ -216,7 +216,7 @@ window.Quarto = {
 <p class="subtitle lead">Why you cannot afford to ignore it — Part 1</p>
   <div class="quarto-categories">
     <div class="quarto-category">LLMs</div>
-    <div class="quarto-category">sepculative decoding</div>
+    <div class="quarto-category">speculative decoding</div>
   </div>
   </div>
 
@@ -266,7 +266,7 @@ window.Quarto = {
 <li>Use the target model to verify the generated tokens in parallel.</li>
 <li>Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).</li>
 <li>Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.</li>
-<li>In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of <span class="math inline">\(M_p\)</span>. Consequently, we will end up accepting anywhere from <span class="math inline">\(1\)</span> to <span class="math inline">\((\gamma+1)\)</span> tokens in a single forward pass of the target model, hence accelerating inference.</li>
+<li>In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of <span class="math inline">\(M_p\)</span>. Consequently, a single forward pass of the target model can output anywhere from <span class="math inline">\(1\)</span> to <span class="math inline">\((\gamma+1)\)</span> tokens (up to <span class="math inline">\(\gamma\)</span> accepted draft tokens plus one bonus token samples using the target model <span class="math inline">\(M_p\)</span>), hence accelerating inference.</li>
 </ol>
 <p><br></p>
 <p><span class="math display">\[
@@ -307,10 +307,10 @@ t \sim p'(x) \\
 </section>
 <section id="speculative-sampling" class="level1">
 <h1>Speculative Sampling</h1>
-<p>Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens, Here is an overview of how speculative sampling works:</p>
+<p>Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens. Here is an overview of how speculative sampling works:</p>
 <ol type="1">
 <li>We sample <span class="math inline">\(x \sim q(x)\)</span></li>
-<li>If <span class="math inline">\(q(x) \leq p(x)\)</span>, we accept the token. But if <span class="math inline">\(q(x) \gt p(x)\)</span>, then we reject the sample with a probability <span class="math inline">\((1 - \frac{p(x)}{q(x)})\)</span>. We discard all the token after this position (if any).</li>
+<li>If <span class="math inline">\(q(x) \leq p(x)\)</span>, we accept the token. But if <span class="math inline">\(q(x) \gt p(x)\)</span>, then we reject the sample with a probability <span class="math inline">\((1 - \frac{p(x)}{q(x)})\)</span>. We discard all tokens after this position (if any).</li>
 <li>If the sample was rejected, then we sample the next token from an adjusted distribution <span class="math inline">\(p'(x) = norm(max(0, p(x) - q(x)))\)</span></li>
 </ol>
 <p>There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br></p>
@@ -571,8 +571,8 @@ D_{LK}(p,q)
 \mathbb{E} \left[\sum_x \min \bigl(p(x),q(x)\bigr)\right]
 \tag{7}
 \]</span></p>
-<p>If you have <span class="math inline">\(N\)</span> prefixes, then for each prefix, run both models <span class="math inline">\(M_q\)</span> and <span class="math inline">\(M_p\)</span> and calculate <span class="math inline">\(\sum_x \min \bigl(p(x),q(x)\bigr)\)</span>. Average that across prefixes and you have <span class="math inline">\(\alpha\)</span>. This is exactly how it was calculated by the authors in the paper for 10K prefixes. <br><br></p>
-<p><strong>Q. </strong>What are the implications of acceptance rate <span class="math inline">\(\alpha=0\)</span> and <span class="math inline">\(\alpha=1\)</span>?**</p>
+<p>If you have <span class="math inline">\(N\)</span> prefixes, then for each prefix, run both models <span class="math inline">\(M_q\)</span> and <span class="math inline">\(M_p\)</span> and calculate <span class="math inline">\(\sum_x \min \bigl(p(x),q(x)\bigr)\)</span>. Average that across prefixes and you have <span class="math inline">\(\alpha\)</span>. This is exactly how it was calculated by the authors in the paper for 10K generated tokens. <br><br></p>
+<p><strong>Q. What are the implications of acceptance rate <span class="math inline">\(\alpha=0\)</span> and <span class="math inline">\(\alpha=1\)</span>?</strong></p>
 <p>When the acceptance rate is zero, it means we generate only one token (the resampled one) per run, which is the same number of tokens as in standard decoding. This means <span class="math inline">\(M_q\)</span> provides no benefit and, in fact, hurts the overall performance, as we incur the overhead cost of the drafter for generating a single token. On the other hand, when the acceptance rate is 1, we generate <span class="math inline">\((\gamma + 1)\)</span> tokens (including 1 for the bonus token we get after verification) in a single run. A high <span class="math inline">\(\alpha\)</span> means the drafter <span class="math inline">\(M_q\)</span> has a high distributional overlap with the target model <span class="math inline">\(M_p\)</span>.</p>
 <p><strong>Q. If <span class="math inline">\(M_q\)</span> is very close to <span class="math inline">\(M_p\)</span>, i.e., we have a high <span class="math inline">\(\alpha\)</span>, does that guarantee a wall-time improvement?</strong></p>
 <p>Not necessarily. The speed-up factor depends on the drafter’s size. As the size of the drafter increases, the gains in wall time decrease. We will discuss this in detail in the next few sections. <br></p>
@@ -607,7 +607,7 @@ D_{LK}(p,q)
 <li><strong>Calculate wall time improvement</strong>: <span class="math display">\[
 \text{Improvement}
 =
-\frac{T_{\text{standard}}}{T_{\text{spec}}}
+\frac{T_{\text{standard}}}{T_{\text{spec/token}}}
 =
 \frac{T}
 {\dfrac{(\gamma c + 1)(1-\alpha)}
@@ -641,7 +641,7 @@ D_{LK}(p,q)
 </section>
 <section id="number-of-arithmetic-operations" class="level1">
 <h1>Number of Arithmetic Operations</h1>
-<p>Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. We generate at most <span class="math inline">\((\gamma + 1)\)</span> tokens using the drafter and run <span class="math inline">\(M_p\)</span> in parallel for verification. A single run of the speculative decoding then results in <span class="math inline">\(\gamma\)</span> runs of <span class="math inline">\(M_q\)</span> and <span class="math inline">\((\gamma +1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span>. We <em>may</em> end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.</p>
+<p>Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. The drafter generates <span class="math inline">\(\gamma\)</span> draft tokens, and one iteration may output up to <span class="math inline">\(\gamma +1\)</span> tokens. A single run of the speculative decoding then results in <span class="math inline">\(\gamma\)</span> runs of <span class="math inline">\(M_q\)</span> and <span class="math inline">\((\gamma +1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span>. We <em>may</em> end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.</p>
 <p><em>Note: We are talking about arithmetic operations here, not wall time. <span class="math inline">\((\gamma + 1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span> cost the same wall time as a single run (one memory read), but they cost <span class="math inline">\((\gamma + 1) \times \mathrm{Ops}\)</span>.</em></p>
 <p>Say <span class="math inline">\(F\)</span> is the number of of arithmetic operations for a single forward pass of standard decoding. Let <span class="math inline">\(\mu\)</span> be the ratio of arithmetic operations per token of the draft model <span class="math inline">\(M_q\)</span> to that of the target model <span class="math inline">\(M_p\)</span>: <span class="math display">\[\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}\]</span></p>
 <p>Let’s do the math step by step:</p>
@@ -672,7 +672,7 @@ D_{LK}(p,q)
 \frac{\mathrm{F}_{\mathrm{spec}}}
 {\mathrm{F}_{\mathrm{standard}}}
 =
-\frac{(1-\alpha)(\gamma c+\gamma+1)}
+\frac{(1-\alpha)(\mu c+\gamma+1)}
 {1-\alpha^{\gamma+1}}
 \tag{11}
 \]</span></p></li>
@@ -693,8 +693,8 @@ f(\gamma)
 \frac{1}{\gamma c+1}
 \]</span></p>
 <ul>
-<li>The first factor in the above equation is the “expected number of generated tojens” per iteration. When <span class="math inline">\(\gamma\)</span> (the number of generated tokens) grows, this term grows but with diminishing returns.</li>
-<li>The second factor <span class="math inline">\(\gamma c + 1\)</span> is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when <span class="math inline">\(c &gt; 0\)</span>. Let us take an example to understand this. Say, the acceptance rate is <span class="math inline">\(\alpha=0.8\)</span>, and the cost coefficient is <span class="math inline">\(c=0.02\)</span>. What is the impact on the wall time improvement factor as we increase the value of <span class="math inline">\(\gamma\)</span>? Take a look below<br><br></li>
+<li>The first factor in the above equation is the “expected number of generated tokens” per iteration. When <span class="math inline">\(\gamma\)</span> (the number of generated tokens) grows, this term grows but with diminishing returns.</li>
+<li>The denominator of the second factor, <span class="math inline">\(\gamma c + 1\)</span>, is the relative iteration cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when <span class="math inline">\(c &gt; 0\)</span>. Let us take an example to understand this. Say, the acceptance rate is <span class="math inline">\(\alpha=0.8\)</span>, and the cost coefficient is <span class="math inline">\(c=0.02\)</span>. What is the impact on the wall time improvement factor as we increase the value of <span class="math inline">\(\gamma\)</span>? Take a look below<br><br></li>
 </ul>
 <table class="caption-top table">
 <thead>
@@ -708,68 +708,73 @@ f(\gamma)
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">1</td>
-<td style="text-align: left;">2</td>
+<td style="text-align: left;">1.80</td>
 <td style="text-align: left;">1.02</td>
-<td style="text-align: left;">1.96</td>
+<td style="text-align: left;">1.76</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">2</td>
-<td style="text-align: left;">2</td>
+<td style="text-align: left;">2.44</td>
 <td style="text-align: left;">1.04</td>
-<td style="text-align: left;">1.92</td>
+<td style="text-align: left;">2.35</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">3</td>
-<td style="text-align: left;">3</td>
+<td style="text-align: left;">2.95</td>
 <td style="text-align: left;">1.06</td>
-<td style="text-align: left;">2.83</td>
+<td style="text-align: left;">2.78</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">5</td>
-<td style="text-align: left;">4</td>
+<td style="text-align: left;">3.69</td>
 <td style="text-align: left;">1.10</td>
-<td style="text-align: left;">3.64</td>
+<td style="text-align: left;">3.35</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">7</td>
-<td style="text-align: left;">4</td>
+<td style="text-align: left;">4.16</td>
 <td style="text-align: left;">1.14</td>
-<td style="text-align: left;">3.51</td>
+<td style="text-align: left;">3.65</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">10</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">4.57</td>
 <td style="text-align: left;">1.20</td>
-<td style="text-align: left;">4.17</td>
+<td style="text-align: left;">3.81</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">15</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">4.86</td>
 <td style="text-align: left;">1.30</td>
-<td style="text-align: left;">3.85</td>
+<td style="text-align: left;">3.74</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">20</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">4.95</td>
 <td style="text-align: left;">1.40</td>
-<td style="text-align: left;">3.57</td>
+<td style="text-align: left;">3.54</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">25</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">4.98</td>
 <td style="text-align: left;">1.50</td>
-<td style="text-align: left;">3.33</td>
+<td style="text-align: left;">3.32</td>
 </tr>
 </tbody>
 </table>
 <p><br>The cost factor increases linearly with <span class="math inline">\(\gamma\)</span> and the improvement factor peaks around <span class="math inline">\(\gamma=10\)</span>. <br></p>
 <section id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens" class="level2">
 <h2 class="anchored" data-anchor-id="does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens">Does an upper bound exist for the expected number of generated tokens?</h2>
-<p>In the above example, we used a fixed value of <span class="math inline">\(\alpha\)</span>. What if we have an oracle that can predict the acceptance rate and vary <span class="math inline">\(\gamma\)</span> accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to <span class="math inline">\(\frac{1}{1-\alpha}\)</span>. It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e.&nbsp;<span class="math inline">\(\alpha=0.8\)</span>), then;</p>
+<p>In the section above, we used a fixed value of <span class="math inline">\(\gamma\)</span> for every iteration. But <span class="math inline">\(\beta\)</span> varies across positions as some tokens are easy to draft, others are hard. What if we had an oracle that knew <span class="math inline">\(\beta\)</span> at each position and could set <span class="math inline">\(\gamma\)</span> accordingly? It would draft many tokens when acceptance is likely and skip drafting when rejection is certain thereby wasting no computation.</p>
+<p>With a fixed <span class="math inline">\(\gamma\)</span>, the expected tokens per iteration are capped by the geometric series:</p>
 <p><span class="math display">\[
-\text{saturation level} = \frac{1}{1-0.8} = 5
+E(N_{\text{fixed}}) = \sum_{j=0}^{\gamma} \alpha^j = \frac{1-\alpha^{\gamma + 1}}{1- \alpha}
 \]</span></p>
-<p>which is in line with the computations in the above table.</p>
+<p>The oracle removes this cap by always choosing the perfect <span class="math inline">\(\gamma\)</span>. Expected number of generated tokens in that case:</p>
+<p><span class="math display">\[
+E(N_{\text{oracle}}) = \sum_{j=0}^{\infty} \alpha^j = \frac{1}{1- \alpha}
+\]</span></p>
+<p>For <span class="math inline">\(\alpha = 0.8\)</span>, it gives <span class="math inline">\(\frac{1}{0.2} = 5\)</span>, which is consistent with the computations in the table above. The oracle tells us that five tokens per iteration is a hard ceiling for this acceptance rate, no matter how large the <span class="math inline">\(\gamma\)</span> is. The oracle is not practically achievable though. Why? Because knowing <span class="math inline">\(\beta\)</span> at a position requires running <span class="math inline">\(M_p\)</span> which is the very computation we are trying to avoid, but it serves a useful theoretical ceiling.</p>
 <p><em>That’s all for the first part. Feedback is always welcome!</em></p>
 </section>
 </section>

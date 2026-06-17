@@ -151,14 +151,14 @@
     "href": "blog.html",
     "title": "Blog Posts",
     "section": "",
-    "text": "LLMs\n\nsepculative decoding\n\n\n\n\n\n\nJun 17, 2026\n\n18 min\n\n\n\n\n\n\n\n\nLLMs\n\nposition encoding\n\nadvanced\n\n\n\n\n\n\nDec 10, 2024\n\n18 min\n\n\n\n\nNo matching items"
+    "text": "LLMs\n\nspeculative decoding\n\n\n\n\n\n\nJun 17, 2026\n\n18 min\n\n\n\n\n\n\n\n\nLLMs\n\nposition encoding\n\nadvanced\n\n\n\n\n\n\nDec 10, 2024\n\n18 min\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog.html#ml-dl-concepts",
     "href": "blog.html#ml-dl-concepts",
     "title": "Blog Posts",
     "section": "",
-    "text": "LLMs\n\nsepculative decoding\n\n\n\n\n\n\nJun 17, 2026\n\n18 min\n\n\n\n\n\n\n\n\nLLMs\n\nposition encoding\n\nadvanced\n\n\n\n\n\n\nDec 10, 2024\n\n18 min\n\n\n\n\nNo matching items"
+    "text": "LLMs\n\nspeculative decoding\n\n\n\n\n\n\nJun 17, 2026\n\n18 min\n\n\n\n\n\n\n\n\nLLMs\n\nposition encoding\n\nadvanced\n\n\n\n\n\n\nDec 10, 2024\n\n18 min\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "blog.html#paper-summaries",
@@ -319,6 +319,6 @@
     "href": "posts/ml_dl_concepts/specdec_part1.html#does-an-upper-bound-exist-for-the-expected-number-of-generated-tokens",
     "title": "Speculative Decoding - The Bits and the Bytes!",
     "section": "Does an upper bound exist for the expected number of generated tokens?",
-    "text": "Does an upper bound exist for the expected number of generated tokens?\nIn the above example, we used a fixed value of \\(\\alpha\\). What if we have an oracle that can predict the acceptance rate and vary \\(\\gamma\\) accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to \\(\\frac{1}{1-\\alpha}\\). It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e. \\(\\alpha=0.8\\)), then;\n\\[\n\\text{saturation level} = \\frac{1}{1-0.8} = 5\n\\]\nwhich is in line with the computations in the above table.\nThat’s all for the first part. Feedback is always welcome!"
+    "text": "Does an upper bound exist for the expected number of generated tokens?\nIn the section above, we used a fixed value of \\(\\gamma\\) for every iteration. But \\(\\beta\\) varies across positions as some tokens are easy to draft, others are hard. What if we had an oracle that knew \\(\\beta\\) at each position and could set \\(\\gamma\\) accordingly? It would draft many tokens when acceptance is likely and skip drafting when rejection is certain thereby wasting no computation.\nWith a fixed \\(\\gamma\\), the expected tokens per iteration are capped by the geometric series:\n\\[\nE(N_{\\text{fixed}}) = \\sum_{j=0}^{\\gamma} \\alpha^j = \\frac{1-\\alpha^{\\gamma + 1}}{1- \\alpha}\n\\]\nThe oracle removes this cap by always choosing the perfect \\(\\gamma\\). Expected number of generated tokens in that case:\n\\[\nE(N_{\\text{oracle}}) = \\sum_{j=0}^{\\infty} \\alpha^j = \\frac{1}{1- \\alpha}\n\\]\nFor \\(\\alpha = 0.8\\), it gives \\(\\frac{1}{0.2} = 5\\), which is consistent with the computations in the table above. The oracle tells us that five tokens per iteration is a hard ceiling for this acceptance rate, no matter how large the \\(\\gamma\\) is. The oracle is not practically achievable though. Why? Because knowing \\(\\beta\\) at a position requires running \\(M_p\\) which is the very computation we are trying to avoid, but it serves a useful theoretical ceiling.\nThat’s all for the first part. Feedback is always welcome!"
   }
 ]
