@@ -42,7 +42,7 @@ The core idea behind speculative decoding is simply this:
 2. Use the target model to verify the generated tokens in parallel.
 3. Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).
 4. Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.
-5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, a single forward pass of the target model can output anywhere from $1$ to $(\gamma+1)$ tokens (up to $\gamma$ accepted draft tokens plus one bonus token samples using the target model $M_p$), hence accelerating inference.
+5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, a single forward pass of the target model can output anywhere from $1$ to $(\gamma+1)$ tokens (up to $\gamma$ accepted draft tokens plus one bonus token sampled using the target model $M_p$), hence accelerating inference.
 
 <br>
 
@@ -75,6 +75,7 @@ t \sim p'(x) \\
 $$
 
 <br><br>
+
 
 ![An example demonstrating how the algorithm works. (*PS: I skipped "lazy" because it was overflowing. Sorry!)*](./animations/specdec/overview.mp4){autoplay=true, loop=true}
 
@@ -234,6 +235,8 @@ D_{LK}(p,q)
 \sum_x |q(x)-M(x)|.
 \tag{5}
 $$
+
+*Note: The midpoint distribution $M(x)$ is a construction used to define $D_{LK}$ in a way that makes the symmetry between $p$ and $q$ obvious. As we will show below, $D_{LK}$ reduces to the total variation distance $\sum_x \frac{|p(x) - q(x)|}{2}$, and $M(x)$ never appears again in any subsequential result.* <br>
 
 Why are the two sums in the above expression equal? We can prove it. 
 
@@ -421,7 +424,7 @@ Even though the cost of the drafter is negligible in many cases, we cannot ignor
 *Note: We are talking about arithmetic operations here, not wall time. $(\gamma + 1)$ parallel runs of $M_p$ cost the same wall time as a single run (one memory read), but they cost $(\gamma + 1) \times \mathrm{Ops}$.*
 
 
-Say $F$ is the number of of arithmetic operations for a single forward pass of standard decoding. Let $\mu$ be the ratio of arithmetic operations per token of the draft model $M_q$ to that of the target model $M_p$: $$\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}$$
+Say $F$ is the number of arithmetic operations for a single forward pass of standard decoding. Let $\mu$ be the ratio of arithmetic operations per token of the draft model $M_q$ to that of the target model $M_p$: $$\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}$$
 
 Let's do the math step by step:
 
@@ -453,7 +456,7 @@ $$
 \frac{\mathrm{F}_{\mathrm{spec}}}
 {\mathrm{F}_{\mathrm{standard}}}
 =
-\frac{(1-\alpha)(\mu c+\gamma+1)}
+\frac{(1-\alpha)(\gamma \mu + \gamma + 1)}
 {1-\alpha^{\gamma+1}}
 \tag{11}
 $$
@@ -519,3 +522,4 @@ For $\alpha = 0.8$, it gives $\frac{1}{0.2} = 5$, which is consistent with the c
 # References
 
 - [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192)
+- [Accelerating Large Language Model Decoding with Speculative Sampling](https://arxiv.org/abs/2302.01318)
