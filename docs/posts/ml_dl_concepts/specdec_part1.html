@@ -266,7 +266,7 @@ window.Quarto = {
 <li>Use the target model to verify the generated tokens in parallel.</li>
 <li>Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).</li>
 <li>Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.</li>
-<li>In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of <span class="math inline">\(M_p\)</span>. Consequently, a single forward pass of the target model can output anywhere from <span class="math inline">\(1\)</span> to <span class="math inline">\((\gamma+1)\)</span> tokens (up to <span class="math inline">\(\gamma\)</span> accepted draft tokens plus one bonus token samples using the target model <span class="math inline">\(M_p\)</span>), hence accelerating inference.</li>
+<li>In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of <span class="math inline">\(M_p\)</span>. Consequently, a single forward pass of the target model can output anywhere from <span class="math inline">\(1\)</span> to <span class="math inline">\((\gamma+1)\)</span> tokens (up to <span class="math inline">\(\gamma\)</span> accepted draft tokens plus one bonus token sampled using the target model <span class="math inline">\(M_p\)</span>), hence accelerating inference.</li>
 </ol>
 <p><br></p>
 <p><span class="math display">\[
@@ -482,6 +482,7 @@ D_{LK}(p,q)
 \sum_x |q(x)-M(x)|.
 \tag{5}
 \]</span></p>
+<p><em>Note: The midpoint distribution <span class="math inline">\(M(x)\)</span> is a construction used to define <span class="math inline">\(D_{LK}\)</span> in a way that makes the symmetry between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> obvious. As we will show below, <span class="math inline">\(D_{LK}\)</span> reduces to the total variation distance <span class="math inline">\(\sum_x \frac{|p(x) - q(x)|}{2}\)</span>, and <span class="math inline">\(M(x)\)</span> never appears again in any subsequential result.</em> <br></p>
 <p>Why are the two sums in the above expression equal? We can prove it.</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -643,7 +644,7 @@ D_{LK}(p,q)
 <h1>Number of Arithmetic Operations</h1>
 <p>Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. The drafter generates <span class="math inline">\(\gamma\)</span> draft tokens, and one iteration may output up to <span class="math inline">\(\gamma +1\)</span> tokens. A single run of the speculative decoding then results in <span class="math inline">\(\gamma\)</span> runs of <span class="math inline">\(M_q\)</span> and <span class="math inline">\((\gamma +1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span>. We <em>may</em> end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.</p>
 <p><em>Note: We are talking about arithmetic operations here, not wall time. <span class="math inline">\((\gamma + 1)\)</span> parallel runs of <span class="math inline">\(M_p\)</span> cost the same wall time as a single run (one memory read), but they cost <span class="math inline">\((\gamma + 1) \times \mathrm{Ops}\)</span>.</em></p>
-<p>Say <span class="math inline">\(F\)</span> is the number of of arithmetic operations for a single forward pass of standard decoding. Let <span class="math inline">\(\mu\)</span> be the ratio of arithmetic operations per token of the draft model <span class="math inline">\(M_q\)</span> to that of the target model <span class="math inline">\(M_p\)</span>: <span class="math display">\[\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}\]</span></p>
+<p>Say <span class="math inline">\(F\)</span> is the number of arithmetic operations for a single forward pass of standard decoding. Let <span class="math inline">\(\mu\)</span> be the ratio of arithmetic operations per token of the draft model <span class="math inline">\(M_q\)</span> to that of the target model <span class="math inline">\(M_p\)</span>: <span class="math display">\[\mu = \frac{F_{M_q}}{F_{Mp}} = \frac{F_{M_q}}{F}\]</span></p>
 <p>Let’s do the math step by step:</p>
 <ol type="1">
 <li><p><strong>Derive the Ops per iteration of speculative decoding</strong></p>
@@ -672,7 +673,7 @@ D_{LK}(p,q)
 \frac{\mathrm{F}_{\mathrm{spec}}}
 {\mathrm{F}_{\mathrm{standard}}}
 =
-\frac{(1-\alpha)(\mu c+\gamma+1)}
+\frac{(1-\alpha)(\gamma \mu + \gamma + 1)}
 {1-\alpha^{\gamma+1}}
 \tag{11}
 \]</span></p></li>
@@ -782,6 +783,7 @@ E(N_{\text{oracle}}) = \sum_{j=0}^{\infty} \alpha^j = \frac{1}{1- \alpha}
 <h1>References</h1>
 <ul>
 <li><a href="https://arxiv.org/abs/2211.17192">Fast Inference from Transformers via Speculative Decoding</a></li>
+<li><a href="https://arxiv.org/abs/2302.01318">Accelerating Large Language Model Decoding with Speculative Sampling</a></li>
 </ul>
 
 
