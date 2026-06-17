@@ -3,7 +3,7 @@ title: "Speculative Decoding - The Bits and the Bytes!"
 subtitle: "Why you cannot afford to ignore it — Part 1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
 date: "2026-06-17"
-categories: [LLMs, sepculative decoding]
+categories: [LLMs, speculative decoding]
 
 format:
   html:
@@ -42,7 +42,7 @@ The core idea behind speculative decoding is simply this:
 2. Use the target model to verify the generated tokens in parallel.
 3. Accept or reject the tokens based on an acceptance criterion (which we will define later in the post).
 4. Sample an additional token from an adjusted distribution to fix the first rejection, or to add one in case all are accepted.
-5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, we will end up accepting anywhere from $1$ to $(\gamma+1)$ tokens in a single forward pass of the target model, hence accelerating inference.
+5. In the best-case scenario, we will accept all the generated tokens. In the worst-case scenario, we will still end up with at least one newly generated token with just one parallel run of $M_p$. Consequently, a single forward pass of the target model can output anywhere from $1$ to $(\gamma+1)$ tokens (up to $\gamma$ accepted draft tokens plus one bonus token samples using the target model $M_p$), hence accelerating inference.
 
 <br>
 
@@ -82,10 +82,10 @@ $$
 
 # Speculative Sampling
 
-Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens, Here is an overview of how speculative sampling works:
+Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens. Here is an overview of how speculative sampling works:
 
 1. We sample $x \sim q(x)$
-2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all the token after this position (if any).
+2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all tokens after this position (if any).
 3. If the sample was rejected, then we sample the next token from an adjusted distribution $p'(x) = norm(max(0, p(x) - q(x)))$
 
 There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br>
@@ -331,9 +331,9 @@ $$
 \tag{7}
 $$
 
-If you have $N$ prefixes, then for each prefix, run both models $M_q$ and $M_p$ and calculate $\sum_x \min \bigl(p(x),q(x)\bigr)$. Average that across prefixes and you have $\alpha$. This is exactly how it was calculated by the authors in the paper for 10K prefixes. <br><br>
+If you have $N$ prefixes, then for each prefix, run both models $M_q$ and $M_p$ and calculate $\sum_x \min \bigl(p(x),q(x)\bigr)$. Average that across prefixes and you have $\alpha$. This is exactly how it was calculated by the authors in the paper for 10K generated tokens. <br><br>
 
-**Q. **What are the implications of acceptance rate $\alpha=0$ and $\alpha=1$?**
+**Q. What are the implications of acceptance rate $\alpha=0$ and $\alpha=1$?**
 
 When the acceptance rate is zero, it means we generate only one token (the resampled one) per run, which is the same number of tokens as in standard decoding. This means $M_q$ provides no benefit and, in fact, hurts the overall performance, as we incur the overhead cost of the drafter for generating a single token. On the other hand, when the acceptance rate is 1, we generate $(\gamma + 1)$ tokens (including 1 for the bonus token we get after verification) in a single run. A high $\alpha$ means the drafter $M_q$ has a high distributional overlap with the target model $M_p$.
 
@@ -377,7 +377,7 @@ $$
 $$
 \text{Improvement}
 =
-\frac{T_{\text{standard}}}{T_{\text{spec}}}
+\frac{T_{\text{standard}}}{T_{\text{spec/token}}}
 =
 \frac{T}
 {\dfrac{(\gamma c + 1)(1-\alpha)}
@@ -416,7 +416,7 @@ $$
 
 # Number of Arithmetic Operations
 
-Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. We generate at most $(\gamma + 1)$ tokens using the drafter and run $M_p$ in parallel for verification. A single run of the speculative decoding then results in $\gamma$ runs of $M_q$ and $(\gamma +1)$ parallel runs of $M_p$. We *may* end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.
+Even though the cost of the drafter is negligible in many cases, we cannot ignore the fact that speculative decoding trades compute for wall time. The drafter generates $\gamma$ draft tokens, and one iteration may output up to $\gamma +1$ tokens. A single run of the speculative decoding then results in $\gamma$ runs of $M_q$ and $(\gamma +1)$ parallel runs of $M_p$. We *may* end up performing more arithmetic operations than standard decoding. It depends on the acceptance factor.
 
 *Note: We are talking about arithmetic operations here, not wall time. $(\gamma + 1)$ parallel runs of $M_p$ cost the same wall time as a single run (one memory read), but they cost $(\gamma + 1) \times \mathrm{Ops}$.*
 
@@ -453,7 +453,7 @@ $$
 \frac{\mathrm{F}_{\mathrm{spec}}}
 {\mathrm{F}_{\mathrm{standard}}}
 =
-\frac{(1-\alpha)(\gamma c+\gamma+1)}
+\frac{(1-\alpha)(\mu c+\gamma+1)}
 {1-\alpha^{\gamma+1}}
 \tag{11}
 $$
@@ -476,33 +476,42 @@ f(\gamma)
 \frac{1}{\gamma c+1}
 $$
 
-- The first factor in the above equation is the "expected number of generated tojens" per iteration. When $\gamma$ (the number of generated tokens) grows, this term grows but with diminishing returns.
-- The second factor $\gamma c + 1$ is the cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when $c > 0$. Let us take an example to understand this. Say, the acceptance rate is $\alpha=0.8$, and the cost coefficient is $c=0.02$. What is the impact on the wall time improvement factor as we increase the value of $\gamma$? Take a look below<br><br>
+- The first factor in the above equation is the "expected number of generated tokens" per iteration. When $\gamma$ (the number of generated tokens) grows, this term grows but with diminishing returns.
+- The denominator of the second factor, $\gamma c + 1$, is the relative iteration cost. When the cost of running the drafter is negligible, this term does not affect our speedup or wall time improvement factor. But it certainly affects when $c > 0$. Let us take an example to understand this. Say, the acceptance rate is $\alpha=0.8$, and the cost coefficient is $c=0.02$. What is the impact on the wall time improvement factor as we increase the value of $\gamma$? Take a look below<br><br>
 
 | $\gamma$ | E(# generated tokens) | Cost $\gamma c + 1$ | $f(\gamma)$ |
 | :--- | :--- | :--- | :--- |
-| 1 | 2 | 1.02 | 1.96 |
-| 2 | 2 | 1.04 | 1.92 |
-| 3 | 3 | 1.06 | 2.83 |
-| 5 | 4 | 1.10 | 3.64 |
-| 7 | 4 | 1.14 | 3.51 |
-| 10 | 5 | 1.20 | 4.17 |
-| 15 | 5 | 1.30 | 3.85 |
-| 20 | 5 | 1.40 | 3.57 |
-| 25 | 5 | 1.50 | 3.33 |
+| 1 | 1.80 | 1.02 | 1.76 |
+| 2 | 2.44 | 1.04 | 2.35 |
+| 3 | 2.95 | 1.06 | 2.78 |
+| 5 | 3.69 | 1.10 | 3.35 |
+| 7 | 4.16 | 1.14 | 3.65 |
+| 10 | 4.57 | 1.20 | 3.81 |
+| 15 | 4.86 | 1.30 | 3.74 |
+| 20 | 4.95 | 1.40 | 3.54 |
+| 25 | 4.98 | 1.50 | 3.32 |
 
 <br>The cost factor increases linearly with $\gamma$ and the improvement factor peaks around $\gamma=10$. <br>
 
 
 ## Does an upper bound exist for the expected number of generated tokens?
 
-In the above example, we used a fixed value of $\alpha$. What if we have an oracle that can predict the acceptance rate and vary $\gamma$ accordingly at each step? This means we can sample an infinite number of draft tokens, as all of them will be accepted. Then the first term in that equation reduces to $\frac{1}{1-\alpha}$. It means that for a fixed expected acceptance rate, the expected number of tokens generated per iteration will eventually hit a saturation point. For example, suppose the acceptance rate here is 0.8 (i.e. $\alpha=0.8$), then;
+In the section above, we used a fixed value of $\gamma$ for every iteration. But $\beta$ varies across positions as some tokens are easy to draft, others are hard. What if we had an oracle that knew $\beta$ at each position and could set $\gamma$ accordingly? It would draft many tokens when acceptance is likely and skip drafting when rejection is certain thereby wasting no computation.
+
+With a fixed $\gamma$, the expected tokens per iteration are capped by the geometric series:
 
 $$
-\text{saturation level} = \frac{1}{1-0.8} = 5 
+E(N_{\text{fixed}}) = \sum_{j=0}^{\gamma} \alpha^j = \frac{1-\alpha^{\gamma + 1}}{1- \alpha}
 $$
 
-which is in line with the computations in the above table.
+The oracle removes this cap by always choosing the perfect $\gamma$. Expected number of generated tokens in that case:
+
+$$
+E(N_{\text{oracle}}) = \sum_{j=0}^{\infty} \alpha^j = \frac{1}{1- \alpha}
+$$
+
+For $\alpha = 0.8$, it gives $\frac{1}{0.2} = 5$, which is consistent with the computations in the table above. The oracle tells us that five tokens per iteration is a hard ceiling for this acceptance rate, no matter how large the $\gamma$ is. The oracle is not practically achievable though. Why? Because knowing $\beta$ at a position requires running $M_p$ which is the very computation we are trying to avoid, but it serves a useful theoretical ceiling. 
+
 
 *That's all for the first part. Feedback is always welcome!*
 
