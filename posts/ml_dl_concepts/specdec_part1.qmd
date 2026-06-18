@@ -18,13 +18,13 @@ execute:
   echo: false
 ---
 
-# Why bother with speculative decoding?
+# What is speculative decoding and why bother with it?
 
 We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a "small model" has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.
 
-Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding $K$ tokens takes $K$ serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.
+Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. However, inference from autoregressive transformers is slow. Decoding $K$ tokens takes $K$ serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.
 
-There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:
+There are many ways to mitigate the above problem. In this post, we will discuss one such technique, **speculative decoding**, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:
 
 - **Speculative Decoding: The bits and the bytes** (this post!) that will give you an overview of the fundamentals of speculative decoding.
 - **Eagle**: Most commonly used algorithm for speculative decoding.
@@ -33,7 +33,9 @@ There are many ways to mitigate the above problem. In this post, we will discuss
 
 # Overview
 
-We will align the notation in our post with the [speculative decoding paper](https://arxiv.org/abs/2211.17192). 
+We will align the notation in our post with the [speculative decoding paper](https://arxiv.org/abs/2211.17192), but with a few changes to avoid any confusions. Specifically, we use $p$ and $q$ to denote the full probability distribution over the vocabulary.  When we write $p(x)$ or $q(x)$ for a specific token $x$, it refers to the scalar probability that the distribution assigns to that token. So $x \sim q$ means "draw a token from distribution $q$", and $q(x)$ is the probability of the specific token we drew. <br>
+
+
 Let $M_p$ be the target model for which we are trying to accelerate inference, and let $p(x_t | x_{<t})$ be the distribution it generates for a prefix $x_{<t}$. Let $M_q$ be a more efficient approximation model for the same task, and let $q(x_t | x_{<t})$ be the distribution it generates for the same prefix. 
 
 The core idea behind speculative decoding is simply this:
@@ -54,8 +56,8 @@ $$
 \textbf{Inputs: } M_p, M_q, prefix. \\
 \color{#D4AC0D}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
 \textbf{for } i = 1 \textbf{ to } \gamma \textbf{ do} \\
-\quad q_i(x) \leftarrow M_q(prefix + [x_1, \dots, x_{i-1}]) \\
-\quad x_i \sim q_i(x) \\
+\quad q_i(x) \leftarrow M_q\big(prefix + [x_1, \dots, x_{i-1}]\big) \\
+\quad x_i \sim q_i \\
 \textbf{end for} \\
 \color{#D4AC0D}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
 p_1(x), \dots, p_{\gamma+1}(x) \leftarrow M_p(prefix), \dots, M_p(prefix + [x_1, \dots, x_\gamma]) \\
@@ -68,14 +70,15 @@ p'(x) \leftarrow p_{n+1}(x) \\
 \quad p'(x) \leftarrow norm(\max(0, p_{n+1}(x) - q_{n+1}(x))) \\
 \textbf{end if} \\
 \color{#D4AC0D}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
-t \sim p'(x) \\
+t \sim p' \\
 \textbf{return } prefix + [x_1, \dots, x_n, t] \\
 \hline
 \end{array}
 $$
 
-<br><br>
+<br>
 
+**Note**: People often get confused by the phrase "verification in parallel", so let me try to simplify and clarify it before going further. Verification is very similar to prefill for the target model. The target model has all the draft tokens from $M_q$ available upfront. From $M_p's$ perspective, they are just like a prompt to prefill over. Processing the sequence $\big[\text{prefix}, x_1, x_2...x_\gamma \big]$ in one forward pass of the target model thus produces $\gamma + 1$ distributions. The last token is the bonus/free sampled token we get when every draft token is accepted. <br><br>
 
 ![An example demonstrating how the algorithm works. (*PS: I skipped "lazy" because it was overflowing. Sorry!)*](./animations/specdec/overview.mp4){autoplay=true, loop=true}
 
@@ -85,14 +88,14 @@ $$
 
 Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens. Here is an overview of how speculative sampling works:
 
-1. We sample $x \sim q(x)$
+1. We sample $x \sim q$
 2. If $q(x) \leq p(x)$, we accept the token. But if $q(x) \gt p(x)$, then we reject the sample with a probability $(1 - \frac{p(x)}{q(x)})$. We discard all tokens after this position (if any).
 3. If the sample was rejected, then we sample the next token from an adjusted distribution $p'(x) = norm(max(0, p(x) - q(x)))$
 
 There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br>
 
 
-## Why do we sample from the adjusted Distribution?
+## Why do we sample from the adjusted distribution?
 
 One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution $p(x)$?
 
@@ -157,7 +160,7 @@ $$
 \begin{align}
 \beta
 &=
-\mathbb{E}_{x\sim q(x)}
+\mathbb{E}_{x\sim q}
 \bigg[
 \min\big(1,\frac{p(x)}{q(x)}\big)
 \bigg]
@@ -330,7 +333,7 @@ $$
 =
 1-\mathbb{E} \left[D_{LK}(p,q)\right]
 =
-\mathbb{E} \big[\min\!\bigl(p,q\bigr)\big]
+\mathbb{E} \bigg[\min \bigl(p(x),q(x)\bigr)\bigg]
 =
 \mathbb{E} \bigg[\sum_x \min \bigl(p(x),q(x)\bigr)\bigg]
 \tag{7}
