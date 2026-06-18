@@ -189,11 +189,11 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why-bother-with-speculative-decoding" id="toc-why-bother-with-speculative-decoding" class="nav-link active" data-scroll-target="#why-bother-with-speculative-decoding">Why bother with speculative decoding?</a></li>
+  <li><a href="#what-is-speculative-decoding-and-why-bother-with-it" id="toc-what-is-speculative-decoding-and-why-bother-with-it" class="nav-link active" data-scroll-target="#what-is-speculative-decoding-and-why-bother-with-it">What is speculative decoding and why bother with it?</a></li>
   <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#speculative-sampling" id="toc-speculative-sampling" class="nav-link" data-scroll-target="#speculative-sampling">Speculative Sampling</a>
   <ul class="collapse">
-  <li><a href="#why-do-we-sample-from-the-adjusted-distribution" id="toc-why-do-we-sample-from-the-adjusted-distribution" class="nav-link" data-scroll-target="#why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted Distribution?</a></li>
+  <li><a href="#why-do-we-sample-from-the-adjusted-distribution" id="toc-why-do-we-sample-from-the-adjusted-distribution" class="nav-link" data-scroll-target="#why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted distribution?</a></li>
   </ul></li>
   <li><a href="#acceptance-rate-and-number-of-generated-tokens" id="toc-acceptance-rate-and-number-of-generated-tokens" class="nav-link" data-scroll-target="#acceptance-rate-and-number-of-generated-tokens">Acceptance Rate And Number Of Generated Tokens</a></li>
   <li><a href="#calculating-alpha" id="toc-calculating-alpha" class="nav-link" data-scroll-target="#calculating-alpha">Calculating <span class="math inline">\(\alpha\)</span></a></li>
@@ -246,11 +246,11 @@ window.Quarto = {
 </header>
 
 
-<section id="why-bother-with-speculative-decoding" class="level1">
-<h1>Why bother with speculative decoding?</h1>
+<section id="what-is-speculative-decoding-and-why-bother-with-it" class="level1">
+<h1>What is speculative decoding and why bother with it?</h1>
 <p>We are in the era of scaling models. Transformers have taken the world by storm, and LLMs are at the forefront. We have not hit any scaling wall, and we continuously see improved capabilities as we scale these models. The definition of a “small model” has changed significantly. While a model with a million parameters was considered small in the past, that label has now shifted to a model with 3-7B parameters.</p>
-<p>Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. Inference from autoregressive transformers is slow. Decoding <span class="math inline">\(K\)</span> tokens takes <span class="math inline">\(K\)</span> serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.</p>
-<p>There are many ways to mitigate the above problem. In this post, we will discuss one such technique, Speculative Decoding, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:</p>
+<p>Like any other approach, scaling also comes with its pros and cons. Ideally, you would want to serve the biggest model with better capabilities at scale. However, inference from autoregressive transformers is slow. Decoding <span class="math inline">\(K\)</span> tokens takes <span class="math inline">\(K\)</span> serial runs of the model. Hence, increasing the size of a model (or the active number of parameters, to be precise) increases latency, which in turn makes the model unusable for many real-world tasks. It makes LLM inference as challenging as, if not more challenging than, LLM training.</p>
+<p>There are many ways to mitigate the above problem. In this post, we will discuss one such technique, <strong>speculative decoding</strong>, that does not require any changes to the original model itself, yet can help speed up inference without compromising on the quality of output tokens. We will divide the entirety of speculative decoding into three parts, namely:</p>
 <ul>
 <li><strong>Speculative Decoding: The bits and the bytes</strong> (this post!) that will give you an overview of the fundamentals of speculative decoding.</li>
 <li><strong>Eagle</strong>: Most commonly used algorithm for speculative decoding.</li>
@@ -259,7 +259,8 @@ window.Quarto = {
 </section>
 <section id="overview" class="level1">
 <h1>Overview</h1>
-<p>We will align the notation in our post with the <a href="https://arxiv.org/abs/2211.17192">speculative decoding paper</a>. Let <span class="math inline">\(M_p\)</span> be the target model for which we are trying to accelerate inference, and let <span class="math inline">\(p(x_t | x_{&lt;t})\)</span> be the distribution it generates for a prefix <span class="math inline">\(x_{&lt;t}\)</span>. Let <span class="math inline">\(M_q\)</span> be a more efficient approximation model for the same task, and let <span class="math inline">\(q(x_t | x_{&lt;t})\)</span> be the distribution it generates for the same prefix.</p>
+<p>We will align the notation in our post with the <a href="https://arxiv.org/abs/2211.17192">speculative decoding paper</a>, but with a few changes to avoid any confusions. Specifically, we use <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> to denote the full probability distribution over the vocabulary. When we write <span class="math inline">\(p(x)\)</span> or <span class="math inline">\(q(x)\)</span> for a specific token <span class="math inline">\(x\)</span>, it refers to the scalar probability that the distribution assigns to that token. So <span class="math inline">\(x \sim q\)</span> means “draw a token from distribution <span class="math inline">\(q\)</span>”, and <span class="math inline">\(q(x)\)</span> is the probability of the specific token we drew. <br></p>
+<p>Let <span class="math inline">\(M_p\)</span> be the target model for which we are trying to accelerate inference, and let <span class="math inline">\(p(x_t | x_{&lt;t})\)</span> be the distribution it generates for a prefix <span class="math inline">\(x_{&lt;t}\)</span>. Let <span class="math inline">\(M_q\)</span> be a more efficient approximation model for the same task, and let <span class="math inline">\(q(x_t | x_{&lt;t})\)</span> be the distribution it generates for the same prefix.</p>
 <p>The core idea behind speculative decoding is simply this:</p>
 <ol type="1">
 <li>Use the more efficient (smaller) model to generate <span class="math inline">\(\gamma\)</span> tokens.</li>
@@ -277,8 +278,8 @@ window.Quarto = {
 \textbf{Inputs: } M_p, M_q, prefix. \\
 \color{#D4AC0D}{\triangleright \text{ Sample } \gamma \text{ guesses } x_{1,\dots,\gamma} \text{ from } M_q \text{ autoregressively.}} \\
 \textbf{for } i = 1 \textbf{ to } \gamma \textbf{ do} \\
-\quad q_i(x) \leftarrow M_q(prefix + [x_1, \dots, x_{i-1}]) \\
-\quad x_i \sim q_i(x) \\
+\quad q_i(x) \leftarrow M_q\big(prefix + [x_1, \dots, x_{i-1}]\big) \\
+\quad x_i \sim q_i \\
 \textbf{end for} \\
 \color{#D4AC0D}{\triangleright \text{ Run } M_p \text{ in parallel.}} \\
 p_1(x), \dots, p_{\gamma+1}(x) \leftarrow M_p(prefix), \dots, M_p(prefix + [x_1, \dots, x_\gamma]) \\
@@ -291,12 +292,13 @@ p'(x) \leftarrow p_{n+1}(x) \\
 \quad p'(x) \leftarrow norm(\max(0, p_{n+1}(x) - q_{n+1}(x))) \\
 \textbf{end if} \\
 \color{#D4AC0D}{\triangleright \text{ Return one token from } M_p\text{, and } n \text{ tokens from } M_q.} \\
-t \sim p'(x) \\
+t \sim p' \\
 \textbf{return } prefix + [x_1, \dots, x_n, t] \\
 \hline
 \end{array}
 \]</span></p>
-<p><br><br></p>
+<p><br></p>
+<p><strong>Note</strong>: People often get confused by the phrase “verification in parallel”, so let me try to simplify and clarify it before going further. Verification is very similar to prefill for the target model. The target model has all the draft tokens from <span class="math inline">\(M_q\)</span> available upfront. From <span class="math inline">\(M_p's\)</span> perspective, they are just like a prompt to prefill over. Processing the sequence <span class="math inline">\(\big[\text{prefix}, x_1, x_2...x_\gamma \big]\)</span> in one forward pass of the target model thus produces <span class="math inline">\(\gamma + 1\)</span> distributions. The last token is the bonus/free sampled token we get when every draft token is accepted. <br><br></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><video src="./animations/specdec/overview.mp4" class="img-fluid" autoplay="true," loop="true" controls=""><a href="./animations/specdec/overview.mp4">Video</a></video></p>
@@ -309,13 +311,13 @@ t \sim p'(x) \\
 <h1>Speculative Sampling</h1>
 <p>Apart from generation from a draft model and parallel verification, speculative sampling is another core part of speculative decoding. During verification, it is the deciding factor for accepting and rejecting tokens. Here is an overview of how speculative sampling works:</p>
 <ol type="1">
-<li>We sample <span class="math inline">\(x \sim q(x)\)</span></li>
+<li>We sample <span class="math inline">\(x \sim q\)</span></li>
 <li>If <span class="math inline">\(q(x) \leq p(x)\)</span>, we accept the token. But if <span class="math inline">\(q(x) \gt p(x)\)</span>, then we reject the sample with a probability <span class="math inline">\((1 - \frac{p(x)}{q(x)})\)</span>. We discard all tokens after this position (if any).</li>
 <li>If the sample was rejected, then we sample the next token from an adjusted distribution <span class="math inline">\(p'(x) = norm(max(0, p(x) - q(x)))\)</span></li>
 </ol>
 <p>There are a few simple but interesting aspects about speculative sampling. We will discuss each of them below. <br></p>
 <section id="why-do-we-sample-from-the-adjusted-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted Distribution?</h2>
+<h2 class="anchored" data-anchor-id="why-do-we-sample-from-the-adjusted-distribution">Why do we sample from the adjusted distribution?</h2>
 <p>One question that instantly comes to mind when reading about speculative sampling for the first time: Why did we sample from the adjusted distribution instead of directly sampling from the target distribution <span class="math inline">\(p(x)\)</span>?</p>
 <p>The answer lies in <strong>probability accounting</strong>. For any token <span class="math inline">\(x\)</span>, the probability of it being output through the acceptance path is:</p>
 <p><span class="math display">\[P(\text{accepted, } x) = \underbrace{q(x)}_{\text{prob of drafting } x} \times \ \underbrace{\min \bigg(1, \frac{p(x)}{q(x)}\bigg)}_{\text{prob of accepting } x} = \min\big(q(x),\ p(x)\big)\]</span></p>
@@ -416,7 +418,7 @@ P(B) = 0.10 + 0.45 \times p'(B) = 0.10 + 0.45 \times \frac{\max(0,0.10−0.40)}{
 \begin{align}
 \beta
 &amp;=
-\mathbb{E}_{x\sim q(x)}
+\mathbb{E}_{x\sim q}
 \bigg[
 \min\big(1,\frac{p(x)}{q(x)}\big)
 \bigg]
@@ -568,7 +570,7 @@ D_{LK}(p,q)
 =
 1-\mathbb{E} \left[D_{LK}(p,q)\right]
 =
-\mathbb{E} \big[\min\!\bigl(p,q\bigr)\big]
+\mathbb{E} \bigg[\min \bigl(p(x),q(x)\bigr)\bigg]
 =
 \mathbb{E} \bigg[\sum_x \min \bigl(p(x),q(x)\bigr)\bigg]
 \tag{7}
