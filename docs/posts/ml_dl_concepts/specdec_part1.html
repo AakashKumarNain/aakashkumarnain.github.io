@@ -356,7 +356,7 @@ t \sim p' \\
 </table>
 <p>For the final output to be distributed as <span class="math inline">\(p(x)\)</span>, every token must satisfy:</p>
 <p><span class="math display">\[P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)\]</span></p>
-<p><brr></brr></p>
+<p><br></p>
 <p>The acceptance path covers <span class="math inline">\(\min(p(x), \ q(x))\)</span> for each token:</p>
 <table class="caption-top table">
 <thead>
@@ -485,7 +485,7 @@ D_{LK}(p,q)
 \sum_x |q(x)-M(x)|.
 \tag{5}
 \]</span></p>
-<p><em>Note: The midpoint distribution <span class="math inline">\(M(x)\)</span> is a construction used to define <span class="math inline">\(D_{LK}\)</span> in a way that makes the symmetry between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> obvious. As we will show below, <span class="math inline">\(D_{LK}\)</span> reduces to the total variation distance <span class="math inline">\(\sum_x \frac{|p(x) - q(x)|}{2}\)</span>, and <span class="math inline">\(M(x)\)</span> never appears again in any subsequential result.</em> <br><br></p>
+<p><em>Note: The midpoint distribution <span class="math inline">\(M(x)\)</span> is a construction used to define <span class="math inline">\(D_{LK}\)</span> in a way that makes the symmetry between <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> obvious. As we will show below, <span class="math inline">\(D_{LK}\)</span> reduces to the total variation distance <span class="math inline">\(\sum_x \frac{|p(x) - q(x)|}{2}\)</span>, and <span class="math inline">\(M(x)\)</span> never appears again in any subsequent result.</em> <br><br></p>
 <p>Why are the two sums in the above expression equal? We can prove it.</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -685,7 +685,7 @@ D_{LK}(p,q)
 </section>
 <section id="choosing-gamma" class="level1">
 <h1>Choosing <span class="math inline">\(\gamma\)</span></h1>
-<p>The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation <span class="math inline">\(\gamma\)</span>, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement <span class="math inline">\((\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})\)</span>, and the optimal <span class="math inline">\(\gamma\)</span> is the one that maximizes it. Let’s analyze if a sweet spot exists. wall time improvement is given as:</p>
+<p>The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation <span class="math inline">\(\gamma\)</span>, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement <span class="math inline">\((\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})\)</span>, and the optimal <span class="math inline">\(\gamma\)</span> is the one that maximizes it. Let’s analyze if a sweet spot exists. Wall time improvement is given as:</p>
 <p><span class="math display">\[
 f(\gamma)
 =

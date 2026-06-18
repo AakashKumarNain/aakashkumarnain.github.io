@@ -118,7 +118,7 @@ For the final output to be distributed as $p(x)$, every token must satisfy:
 
 $$P(x) = P(\text{accepted, } x) + P(\text{rejected, resampled } x) = p(x)$$ 
 
-<brr>
+<br>
 
 The acceptance path covers $\min(p(x), \ q(x))$ for each token:
 
@@ -241,7 +241,7 @@ D_{LK}(p,q)
 \tag{5}
 $$
 
-*Note: The midpoint distribution $M(x)$ is a construction used to define $D_{LK}$ in a way that makes the symmetry between $p$ and $q$ obvious. As we will show below, $D_{LK}$ reduces to the total variation distance $\sum_x \frac{|p(x) - q(x)|}{2}$, and $M(x)$ never appears again in any subsequential result.* <br><br>
+*Note: The midpoint distribution $M(x)$ is a construction used to define $D_{LK}$ in a way that makes the symmetry between $p$ and $q$ obvious. As we will show below, $D_{LK}$ reduces to the total variation distance $\sum_x \frac{|p(x) - q(x)|}{2}$, and $M(x)$ never appears again in any subsequent result.* <br><br>
 
 Why are the two sums in the above expression equal? We can prove it. 
 
@@ -471,7 +471,7 @@ So, a low $\alpha$ (more rejections) increases arithmetic operations, and vice v
 
 # Choosing $\gamma$
 
-The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation $\gamma$, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement $(\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})$, and the optimal $\gamma$ is the one that maximizes it. Let's analyze if a sweet spot exists. wall time improvement is given as:
+The above sections discuss the acceptance rate, the drafter cost, etc., but there is still one important variable left in the equation $\gamma$, the maximum number of draft tokens to generate in one run. The fundamental reason why we are interested in speculative decoding is wall time improvement $(\frac{1-\alpha^{\gamma+1}}{(1-\alpha)(\gamma c + 1)})$, and the optimal $\gamma$ is the one that maximizes it. Let's analyze if a sweet spot exists. Wall time improvement is given as:
 
 $$
 f(\gamma)
