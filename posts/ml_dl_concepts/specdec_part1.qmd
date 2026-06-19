@@ -2,7 +2,7 @@
 title: "Speculative Decoding - The Bits and the Bytes!"
 subtitle: "Why you cannot afford to ignore it — Part 1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
-date: "2026-06-17"
+date: "2026-06-19"
 categories: [LLMs, Inference, Intermediate]
 
 format:
@@ -529,8 +529,9 @@ $$
 
 For $\alpha = 0.8$, it gives $\frac{1}{0.2} = 5$, which is consistent with the computations in the table above. The oracle tells us that five tokens per iteration is a hard ceiling for this acceptance rate, no matter how large the $\gamma$ is. The oracle is not practically achievable though. Why? Because knowing $\beta$ at a position requires running $M_p$ which is the very computation we are trying to avoid, but it serves a useful theoretical ceiling. 
 
+That's all for the first part. Feedback is always welcome! <br>
 
-*That's all for the first part. Feedback is always welcome!*
+*Special thanks to my friend Marc Pickett for providing valuable feedback.*
 
 
 # References
