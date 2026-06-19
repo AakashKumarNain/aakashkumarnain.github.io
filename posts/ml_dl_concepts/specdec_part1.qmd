@@ -3,7 +3,7 @@ title: "Speculative Decoding - The Bits and the Bytes!"
 subtitle: "Why you cannot afford to ignore it — Part 1"
 author: "Aakash Kumar Nain ([@A_K_Nain](https://x.com/A_K_Nain))"
 date: "2026-06-17"
-categories: [LLMs, speculative decoding]
+categories: [LLMs, Inference, Intermediate]
 
 format:
   html:
