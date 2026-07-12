@@ -8,3 +8,10 @@ code {
     color: white;  /* Code text color */
     font-family: 'Courier New', monospace;
 }
+
+/* Fix font color specifically for the citation/appendix code blocks */
+.quarto-appendix-contents .sourceCode,
+.quarto-appendix-contents .sourceCode code,
+.quarto-appendix-contents .sourceCode span {
+    color: white !important;
+}
