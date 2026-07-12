@@ -16,6 +16,14 @@ format:
 
 execute: 
   echo: false
+
+citation:
+  type: "post-weblog"
+  title: "Speculative decoding - the bits and the bytes!"
+  container-title: ""
+  author: "Aakash Nain"
+  issued: "2026-06-19"
+  url: https://aakashkumarnain.github.io/posts/ml_dl_concepts/specdec_part1.html
 ---
 
 # What is speculative decoding and why bother with it?
